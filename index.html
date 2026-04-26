@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chandan Kumar – Cryptography Researcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #14171f;
+      --border: #1e2330;
+      --accent: #c8a96e;
+      --accent-dim: rgba(200,169,110,0.15);
+      --text: #e8e4dc;
+      --muted: #7a8099;
+      --tag-bg: #1a1e2a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(13,15,20,0.85);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.85rem; text-decoration: none;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* LAYOUT */
+    .container { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
+
+    section { padding: 6rem 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    /* HERO */
+    #home {
+      padding-top: 120px;
+      min-height: 100vh;
+      display: flex; align-items: center;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-role {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.6rem;
+    }
+    .hero-bio {
+      font-size: 1.05rem;
+      color: var(--text);
+      opacity: 0.88;
+      max-width: 560px;
+      margin-bottom: 2rem;
+    }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .badge {
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,169,110,0.3);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.3rem 0.75rem;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.55rem 1.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0d0f14;
+    }
+    .btn-primary:hover { background: #d9bb80; }
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Photo */
+    .hero-photo {
+      width: 220px; height: 220px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      position: relative;
+    }
+    .hero-photo::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(200,169,110,0.1), transparent);
+    }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      background: var(--surface);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    .photo-placeholder .icon { font-size: 2.5rem; opacity: 0.4; }
+
+    /* SECTION TITLES */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* RESEARCH AREAS */
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .research-card {
+      background: var(--surface);
+      padding: 1.6rem;
+      transition: background 0.2s;
+    }
+    .research-card:hover { background: #1a1e2a; }
+    .research-card .card-icon { font-size: 1.4rem; margin-bottom: 0.8rem; }
+    .research-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .research-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* PUBLICATIONS */
+    .pub-list { display: flex; flex-direction: column; gap: 0; }
+    .pub-item {
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+    .pub-item:last-child { border-bottom: none; }
+    .pub-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      padding-top: 0.2rem;
+    }
+    .pub-venue-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      margin-bottom: 0.4rem;
+    }
+    .venue-cic { background: rgba(99,179,237,0.12); color: #63b3ed; border: 1px solid rgba(99,179,237,0.25); }
+    .venue-a { background: rgba(72,187,120,0.12); color: #48bb78; border: 1px solid rgba(72,187,120,0.25); }
+    .venue-review { background: rgba(200,169,110,0.12); color: var(--accent); border: 1px solid rgba(200,169,110,0.25); }
+    .venue-other { background: var(--tag-bg); color: var(--muted); border: 1px solid var(--border); }
+    .pub-title {
+      font-weight: 500;
+      font-size: 0.98rem;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      line-height: 1.4;
+    }
+    .pub-authors {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .pub-authors strong { color: var(--text); font-weight: 500; }
+    .pub-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 0.6rem;
+      line-height: 1.5;
+    }
+    .pub-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .pub-link {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+    .pub-link:hover { background: var(--accent-dim); }
+
+    /* NEWS */
+    .news-list { display: flex; flex-direction: column; gap: 0; }
+    .news-item {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding-top: 0.15rem;
+    }
+    .news-text { font-size: 0.9rem; }
+    .news-text a { color: var(--accent); text-decoration: none; }
+    .news-text a:hover { text-decoration: underline; }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .contact-block h3 {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 0.75rem;
+    }
+    .contact-block p, .contact-block a {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.8;
+      text-decoration: none;
+      display: block;
+    }
+    .contact-block a:hover { color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* PLACEHOLDER STYLE */
+    .placeholder {
+      background: repeating-linear-gradient(
+        45deg, var(--surface), var(--surface) 4px,
+        var(--tag-bg) 4px, var(--tag-bg) 8px
+      );
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content > * {
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-content > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero-content > *:nth-child(3) { animation-delay: 0.25s; }
+    .hero-content > *:nth-child(4) { animation-delay: 0.35s; }
+    .hero-content > *:nth-child(5) { animation-delay: 0.45s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-photo { width: 140px; height: 140px; order: -1; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    /* Decorative line */
+    .accent-line {
+      width: 40px; height: 2px;
+      background: var(--accent);
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#home">CK</a>
+  <ul class="nav-links">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="hero-role">PhD Candidate · Cryptography & Security</p>
+        <h1 class="hero-name">Chandan <em>Kumar</em></h1>
+        <div class="badges">
+          <span class="badge">Google PhD Fellow 2021</span>
+          <span class="badge">IIT Kharagpur · SEAL Lab</span>
+          <span class="badge">IACR Member</span>
+        </div>
+        <p class="hero-bio">
+          I design cryptographic primitives and build systems that close the gap between theoretical
+          MPC and real-world deployment. My primary focus is <strong>Function Secret Sharing (FSS)</strong>:
+          compact-key constructions, threshold FSS-based encrypted search, and FSS-powered
+          privacy-preserving ML. I also work on <strong>Trojan-resilient reverse firewalls</strong>
+          for cryptographic applications.
+        </p>
+        <div class="hero-links">
+          <a href="https://drive.google.com/file/d/1oETBiKFaO-IycF_nygJXn-Wi5eEL2p5b/view" class="btn btn-primary" target="_blank">
+            ↓ CV
+          </a>
+          <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=de" class="btn btn-ghost" target="_blank">
+            Google Scholar
+          </a>
+          <a href="https://eprint.iacr.org/" class="btn btn-ghost" target="_blank">
+            ePrint <!-- UPDATE with your ePrint author page -->
+          </a>
+          <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in" class="btn btn-ghost">
+            Email
+          </a>
+        </div>
+      </div>
+
+      <!-- PHOTO: Replace src with your actual photo URL -->
+      <div class="hero-photo">
+        <div class="photo-placeholder">
+          <span class="icon">🧑‍💻</span>
+          <span>Add your photo here<br/><code>img src="photo.jpg"</code></span>
+        </div>
+        <!-- Uncomment and update when you have a photo:
+        <img src="photo.jpg" alt="Chandan Kumar" />
+        -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="container">
+    <p class="section-label">What I work on</p>
+    <h2 class="section-title">Research Areas</h2>
+    <div class="research-grid">
+      <div class="research-card">
+        <div class="card-icon">⚙️</div>
+        <h3>Function Secret Sharing</h3>
+        <p>Compact-key FSS with non-linear decoders. Threshold DPFs. Silent, communication-efficient distributed computation.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-icon">🔍</div>
+        <h3>Searchable Encryption</h3>
+        <p>Threshold encrypted search (ThORY). Multi-server conjunctive SSE with sub-linear complexity and formal leakage bounds (MUSSE).</p>
+      </div>
+      <div class="research-card">
+        <div class="card-icon">🤖</div>
+        <h3>Privacy-Preserving ML</h3>
+        <p>FSS-based secure ML inference. Access-controlled PPML with attribute-based gates. Sub-linear inference costs.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-icon">🛡️</div>
+        <h3>Reverse Firewalls</h3>
+        <p>Trojan-resilient RF in the PC-III hardware model (TERRA). Side-channel and covert-channel analysis of RF implementations.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-icon">🔐</div>
+        <h3>MPC & Secure Computation</h3>
+        <p>Lightweight MPC from FSS primitives. Threshold protocols. Connections to PCG/VOLE-based ZK systems.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-icon">💻</div>
+        <h3>Hardware Security</h3>
+        <p>Side-channel analysis on embedded systems (OP-TEE/TrustZone). EM-based CPA. Hardware Trojan threat modeling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="container">
+    <p class="section-label">Selected works</p>
+    <h2 class="section-title">Publications</h2>
+
+    <div class="pub-list">
+
+      <!-- ======= FIRST-AUTHOR PAPERS ======= -->
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-venue-badge venue-review">Under Revision · CiC</span>
+          <div class="pub-title">ThORY: Threshold Encrypted Search from Function Secret Sharing</div>
+          <div class="pub-authors">
+            <strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-desc">
+            First threshold SSE with sub-linear search complexity from Threshold DPFs. Formally proves conjunctive correctness and simulation security in the two-server model.
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#">ePrint ↗</a> <!-- ADD ePrint link -->
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-venue-badge venue-a">ESORICS 2025 · Core A</span>
+          <div class="pub-title">TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications</div>
+          <div class="pub-authors">
+            <strong>Chandan Kumar</strong>, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-desc">
+            First formally proven reverse firewall tolerating hardware Trojans in the PC-III circuit model. Closes a gap open since Mironov–Stephens-Davidowitz.
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="https://eprint.iacr.org/2025/761" target="_blank">ePrint ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-venue-badge venue-review">Under Review</span>
+          <div class="pub-title">MUSSE: Multi-Server Low-Leakage Conjunctive SSE</div>
+          <div class="pub-authors">
+            <strong>Chandan Kumar</strong>, Nimish Mishra, Sikhar Patranabis, Satrajit Ghosh, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-desc">
+            HQSM primitive via VDMPFs for two-server conjunctive SSE. Achieves concrete leakage bounds below single-server baselines.
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#">ePrint ↗</a> <!-- ADD link -->
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div>
+          <span class="pub-venue-badge venue-cic">IACR CiC Vol.1 Issue.2</span>
+          <div class="pub-title">Compact Key Function Secret Sharing with Non-linear Decoder</div>
+          <div class="pub-authors">
+            <strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-desc">
+            Breaks the linear algebraic barrier limiting prior FSS key sizes. First FSS scheme to achieve compact keys without relaxing correctness.
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank">PDF ↗</a> <!-- ADD link -->
+            <a class="pub-link" href="#" target="_blank">ePrint ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2023</div>
+        <div>
+          <span class="pub-venue-badge venue-other">FGCS · Elsevier</span>
+          <div class="pub-title">RMA-CPABE: Multi-authority CPABE with Reduced Ciphertext Size for IoT</div>
+          <div class="pub-authors">
+            <strong>Chandan Kumar</strong>, Richa Sarma, Ferdous Ahmed Barbhuiya
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank">PDF ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= CO-AUTHOR PAPERS ======= -->
+
+      <div class="pub-item">
+        <div class="pub-year">2026</div>
+        <div>
+          <span class="pub-venue-badge venue-other">ACNS 2026 · Core B</span>
+          <div class="pub-title">X-CHAIN: Enhancing Electronic Supply Chain Security with 3D X-ray Inspection and Blockchain</div>
+          <div class="pub-authors">
+            Shuvodip Maitra, Tishya Sarma Sarkar, <strong>Chandan Kumar</strong>, Abhishek Chakraborty, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank">ePrint ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-venue-badge venue-review">Under Review</span>
+          <div class="pub-title">FACT: Fast and Accelerated Threshold FHE for Real-Time Applications</div>
+          <div class="pub-authors">
+            Siddhartha Chowdhury, Sayani Sinha, Animesh Singh, Shubham Mishra, <strong>Chandan Kumar</strong> et al.
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2023</div>
+        <div>
+          <span class="pub-venue-badge venue-other">ApPLIED @ PODC 2023 · ACM</span>
+          <div class="pub-title">Oblivious Transfer Protocol without Physical Transfer of Hardware Root-of-Trust</div>
+          <div class="pub-authors">
+            Boyapally Harishma, <strong>Chandan Kumar</strong>, Debdeep Mukhopadhyay
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank">PDF ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="container">
+    <p class="section-label">Updates</p>
+    <h2 class="section-title">News</h2>
+    <div class="news-list">
+
+      <div class="news-item">
+        <span class="news-date">Apr 2025</span>
+        <p class="news-text">TERRA accepted at <strong>ESORICS 2025</strong> (Core A), Toulouse, France.</p>
+      </div>
+
+      <div class="news-item">
+        <span class="news-date">2025</span>
+        <p class="news-text">ThORY (Threshold Encrypted Search from FSS) submitted to <strong>IACR CiC</strong>; revision package addressing reviewer feedback complete.</p>
+      </div>
+
+      <div class="news-item">
+        <span class="news-date">Jul 2024</span>
+        <p class="news-text">Compact-key FSS paper published in <strong>IACR Communications in Cryptology</strong>, Vol. 1, Issue 2.</p>
+      </div>
+
+      <div class="news-item">
+        <span class="news-date">2021</span>
+        <p class="news-text">Awarded the <strong>Google PhD Fellowship</strong> in Security, Cryptography, and Privacy.</p>
+      </div>
+
+      <!-- PLACEHOLDER: add more news items as they happen -->
+      <div class="placeholder">
+        📌 Add upcoming events here — paper acceptances, talks, conference attendance, etc.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label">Get in touch</p>
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-grid">
+      <div class="contact-block">
+        <h3>Address</h3>
+        <p>A-307, Computer Science Department<br/>IIT Kharagpur<br/>Kharagpur – 721302, India</p>
+      </div>
+      <div class="contact-block">
+        <h3>Email</h3>
+        <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">cchaudhary278@kgpian.iitkgp.ac.in</a>
+        <a href="mailto:cchaudhary278@gmail.com">cchaudhary278@gmail.com</a>
+      </div>
+      <div class="contact-block">
+        <h3>Profiles</h3>
+        <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=de" target="_blank">Google Scholar ↗</a>
+        <a href="https://www.linkedin.com/in/" target="_blank">LinkedIn ↗</a> <!-- ADD your LinkedIn URL -->
+        <a href="https://github.com/" target="_blank">GitHub ↗</a> <!-- ADD your GitHub URL -->
+      </div>
+      <div class="contact-block">
+        <h3>Advisors</h3>
+        <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank">Prof. Debdeep Mukhopadhyay ↗</a>
+        <a href="https://satcrypt.github.io/" target="_blank">Prof. Satrajit Ghosh ↗</a>
+        <a href="https://research.ibm.com/people/sikhar-patranabis" target="_blank">Dr. Sikhar Patranabis (IBM Research) ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Chandan Kumar · IIT Kharagpur · Last updated April 2026
+  · Built with HTML/CSS · Hosted on GitHub Pages
+</footer>
+
+</body>
+</html>
