@@ -4,561 +4,499 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chandan Kumar · Cryptography Researcher</title>
-  <meta name="description" content="PhD candidate at IIT Kharagpur working on Function Secret Sharing, threshold encrypted search, and Trojan-resilient reverse firewalls. Google PhD Fellow 2021."/>
-
+  <meta name="description" content="PhD candidate at IIT Kharagpur working on Function Secret Sharing, threshold encrypted search, and secure computation. Google PhD Fellow 2021."/>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
 
   <style>
-    /* ── TOKENS ──────────────────────────────────────── */
+    /* ── TOKENS ─────────────────────────────── */
     :root {
-      --bg:         #090b0f;
-      --surface:    #0f1117;
-      --surface2:   #141720;
-      --border:     #1c2030;
-      --border2:    #242840;
-      --accent:     #b8965a;
-      --accent-hi:  #cda96e;
-      --accent-lo:  rgba(184,150,90,0.11);
-      --text:       #e4dfd6;
-      --muted:      #65707f;
-      --muted2:     #8892a0;
-      --mono:       'JetBrains Mono', monospace;
-      --serif:      'Cormorant Garamond', Georgia, serif;
-      --sans:       'DM Sans', system-ui, sans-serif;
+      --bg:         #F7F6F3;
+      --white:      #FFFFFF;
+      --surface:    #FDFCFA;
+      --border:     #E8E4DC;
+      --border-light: #F0EDE8;
+      --ink:        #1A1814;
+      --ink2:       #3D3A35;
+      --muted:      #78746D;
+      --muted2:     #A09C95;
+      --accent:     #1E40AF;
+      --accent-mid: #2563EB;
+      --accent-lo:  #EFF6FF;
+      --accent-hi:  #1D3A9E;
+      --teal:       #0D7377;
+      --teal-lo:    #F0FAFA;
+      --gold:       #92700A;
+      --gold-lo:    #FFF9ED;
+      --serif:      'Lora', Georgia, serif;
+      --sans:       'Outfit', system-ui, sans-serif;
+      --mono:       'Fira Code', monospace;
+      --radius:     6px;
+      --shadow:     0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+      --shadow-md:  0 2px 8px rgba(0,0,0,0.09), 0 8px 32px rgba(0,0,0,0.06);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; font-size: 17px; }
 
     body {
       background: var(--bg);
-      color: var(--text);
+      color: var(--ink);
       font-family: var(--sans);
-      line-height: 1.75;
-      min-height: 100vh;
+      font-weight: 400;
+      line-height: 1.8;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Subtle grain */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      opacity: 0.028;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 300px;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    /* ── NAV ─────────────────────────────────────────── */
+    /* ── NAV ─────────────────────────────────── */
     nav {
-      position: fixed; top: 0; width: 100%; z-index: 100;
-      height: 50px;
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      background: rgba(9,11,15,0.85);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,246,243,0.92);
+      backdrop-filter: blur(16px) saturate(160%);
       border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2.5rem;
-    }
-    .nav-logo {
-      font-family: var(--serif); font-size: 1.1rem; font-weight: 500;
-      color: var(--text); text-decoration: none; letter-spacing: 0.01em;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .nav-logo-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--accent); flex-shrink: 0;
-    }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono); font-size: 0.72rem;
-      color: var(--muted); text-decoration: none;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--accent); }
-
-    /* ── LAYOUT ──────────────────────────────────────── */
-    .container {
-      max-width: 920px; margin: 0 auto;
-      padding: 0 2.5rem; position: relative; z-index: 1;
-    }
-    section {
-      padding: 5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    section:last-of-type { border-bottom: none; }
-
-    /* ── SECTION LABEL ───────────────────────────────── */
-    .section-eyebrow {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase;
-      display: flex; align-items: center; gap: 0.75rem;
-      margin-bottom: 0.45rem;
-    }
-    .section-eyebrow::before {
-      content: ''; width: 18px; height: 1px;
-      background: var(--accent); flex-shrink: 0;
-    }
-    .section-title {
-      font-family: var(--serif); font-size: 2.1rem; font-weight: 400;
-      line-height: 1.15; margin-bottom: 2.5rem;
-      letter-spacing: 0.01em;
-    }
-
-    /* ── HERO / HOME ─────────────────────────────────── */
-    #home {
-      padding-top: 112px;
-      min-height: 100vh;
+      height: 56px;
       display: flex; align-items: center;
     }
-    .hero-layout {
+    .nav-inner {
+      max-width: 1020px; width: 100%; margin: 0 auto;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--serif); font-size: 1rem; font-weight: 500;
+      color: var(--ink); letter-spacing: 0.01em;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-mid); }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em;
+      color: var(--muted); transition: color 0.18s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-mid); }
+
+    /* ── LAYOUT ──────────────────────────────── */
+    .container {
+      max-width: 1020px; margin: 0 auto; padding: 0 2rem;
+    }
+
+    section { padding: 5.5rem 0; }
+    section + section { border-top: 1px solid var(--border-light); }
+
+    .section-label {
+      font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent-mid); margin-bottom: 0.4rem;
+    }
+    .section-title {
+      font-family: var(--serif); font-size: 2rem; font-weight: 500;
+      line-height: 1.2; color: var(--ink); margin-bottom: 2.5rem;
+    }
+
+    /* ── HERO ────────────────────────────────── */
+    #about { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+    .hero-grid {
       display: grid;
-      grid-template-columns: 1fr 236px;
-      gap: 3rem;
-      align-items: start;
-      width: 100%;
-    }
-
-    /* LEFT — text */
-    .hero-left {}
-
-    .hero-affiliation {
-      font-family: var(--mono); font-size: 0.7rem;
-      color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
-      margin-bottom: 0.9rem;
-      display: flex; align-items: center; gap: 0.55rem;
-    }
-    .hero-affiliation::before {
-      content: ''; width: 20px; height: 1px; background: var(--accent); flex-shrink: 0;
+      grid-template-columns: 1fr 220px;
+      gap: 4rem; align-items: start;
     }
 
     .hero-name {
       font-family: var(--serif);
-      font-size: clamp(3rem, 6.5vw, 4.4rem);
-      font-weight: 400; line-height: 1.02;
-      color: var(--text); margin-bottom: 0.25rem;
-      letter-spacing: 0.01em;
+      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      font-weight: 500; line-height: 1.1;
+      color: var(--ink); margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
     }
-    .hero-name-sub {
-      font-family: var(--serif); font-style: italic;
-      font-size: clamp(1.1rem, 2vw, 1.3rem);
-      color: var(--accent); margin-bottom: 1.8rem;
-      letter-spacing: 0.02em;
+    .hero-role {
+      font-size: 1rem; color: var(--muted); margin-bottom: 0.2rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
     }
+    .hero-role-sep { color: var(--border); }
+    .hero-fellow-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: var(--gold-lo); border: 1px solid #DFC278;
+      color: var(--gold); border-radius: var(--radius);
+      font-size: 0.75rem; font-weight: 500; padding: 0.18rem 0.6rem;
+      letter-spacing: 0.01em; margin-bottom: 1.5rem; margin-top: 0.6rem;
+    }
+    .hero-fellow-badge svg { flex-shrink: 0; }
 
-    /* Bio paragraphs */
     .hero-bio {
-      display: flex; flex-direction: column; gap: 0.95rem;
-      margin-bottom: 1.8rem;
+      font-size: 0.96rem; color: var(--ink2); line-height: 1.85;
+      display: flex; flex-direction: column; gap: 0.9rem;
+      max-width: 620px; margin-bottom: 1.8rem;
     }
-    .hero-bio p {
-      font-size: 0.94rem; color: var(--text); opacity: 0.82;
-      line-height: 1.82; max-width: 600px;
-    }
-    .hero-bio a {
-      color: var(--accent-hi); text-decoration: none;
-      border-bottom: 1px solid rgba(184,150,90,0.28);
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .hero-bio a:hover { border-color: var(--accent-hi); opacity: 1; }
-    .hero-bio strong { color: var(--text); font-weight: 500; opacity: 1; }
+    .hero-bio p { opacity: 0.9; }
+    .hero-bio a { color: var(--accent-mid); border-bottom: 1px solid rgba(37,99,235,0.25); transition: border-color 0.15s; }
+    .hero-bio a:hover { border-color: var(--accent-mid); }
+    .hero-bio strong { color: var(--ink); font-weight: 600; }
 
-    /* Education row */
-    .hero-edu {
-      display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.6rem;
-      border: 1px solid var(--border); border-radius: 4px;
-      overflow: hidden;
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem;
     }
-    .edu-pill {
-      display: flex; flex-direction: column; padding: 0.75rem 1.1rem;
-      flex: 1; min-width: 200px;
-      border-right: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .edu-pill:last-child { border-right: none; }
-    .edu-pill-degree {
-      font-size: 0.78rem; font-weight: 500; color: var(--text);
-      line-height: 1.3; margin-bottom: 0.15rem;
-    }
-    .edu-pill-inst {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--accent); letter-spacing: 0.02em;
-    }
-    .edu-pill-year {
-      font-family: var(--mono); font-size: 0.63rem;
-      color: var(--muted); margin-top: 0.1rem;
-    }
-
-    /* Tags */
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem; }
     .hero-tag {
-      font-family: var(--mono); font-size: 0.68rem;
-      color: var(--muted2); border: 1px solid var(--border2);
-      padding: 0.18rem 0.6rem; border-radius: 2px;
-      background: var(--surface); letter-spacing: 0.02em;
+      font-size: 0.75rem; font-weight: 500;
+      background: var(--white); border: 1px solid var(--border);
+      color: var(--ink2); border-radius: 100px;
+      padding: 0.2rem 0.7rem; letter-spacing: 0.01em;
+      transition: all 0.15s;
     }
+    .hero-tag:hover { border-color: var(--accent-mid); color: var(--accent-mid); }
 
-    /* CTA links */
-    .hero-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .btn {
       display: inline-flex; align-items: center; gap: 0.4rem;
-      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em;
-      padding: 0.48rem 1.05rem; border-radius: 3px;
-      text-decoration: none; transition: all 0.18s;
+      font-size: 0.82rem; font-weight: 500; border-radius: var(--radius);
+      padding: 0.5rem 1.1rem; transition: all 0.18s; cursor: pointer;
+      letter-spacing: 0.01em;
     }
-    .btn-primary { background: var(--accent); color: #090b0f; font-weight: 500; }
-    .btn-primary:hover { background: var(--accent-hi); }
-    .btn-ghost { border: 1px solid var(--border2); color: var(--muted2); }
-    .btn-ghost:hover { border-color: rgba(184,150,90,0.4); color: var(--accent); }
+    .btn-primary {
+      background: var(--accent-mid); color: #fff;
+      border: 1px solid var(--accent-mid);
+    }
+    .btn-primary:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+    .btn-outline {
+      background: var(--white); color: var(--ink2);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent-mid); color: var(--accent-mid); }
 
-    /* RIGHT — photo + stats */
-    .hero-right {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 1.4rem;
-      padding-top: 0.5rem;
-    }
+    /* right column */
+    .hero-right { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
 
-    .photo-frame {
-      width: 182px; height: 182px;
-      border-radius: 4px; overflow: hidden;
-      border: 1px solid rgba(184,150,90,0.25);
-      box-shadow:
-        0 0 0 4px rgba(184,150,90,0.05),
-        0 16px 48px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.04);
-      transition: box-shadow 0.3s;
+    .photo-wrap {
+      width: 190px; height: 190px;
+      border-radius: 10px; overflow: hidden;
+      border: 3px solid var(--white);
+      box-shadow: var(--shadow-md), 0 0 0 1px var(--border);
     }
-    .photo-frame:hover {
-      box-shadow:
-        0 0 0 5px rgba(184,150,90,0.1),
-        0 24px 60px rgba(0,0,0,0.65);
-    }
-    .photo-frame img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
+    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .hero-social {
-      display: flex; gap: 0.45rem;
-    }
-    .social-btn {
-      width: 32px; height: 32px; border-radius: 3px;
-      border: 1px solid var(--border); display: flex;
-      align-items: center; justify-content: center;
-      color: var(--muted); text-decoration: none;
-      transition: all 0.18s; background: var(--surface);
-    }
-    .social-btn:hover {
-      border-color: rgba(184,150,90,0.35);
-      color: var(--accent); background: var(--accent-lo);
-    }
-
-    .hero-stats {
-      width: 100%; display: flex; flex-direction: column; gap: 0;
-      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    .stats-card {
+      width: 100%; background: var(--white);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow);
     }
     .stat-row {
-      display: flex; align-items: center;
-      padding: 0.65rem 1rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-      gap: 0.8rem;
+      display: flex; align-items: center; gap: 0.9rem;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border-light);
     }
     .stat-row:last-child { border-bottom: none; }
     .stat-num {
-      font-family: var(--serif); font-size: 1.55rem; font-weight: 400;
-      font-style: italic; color: var(--accent); line-height: 1;
-      min-width: 42px;
+      font-family: var(--serif); font-size: 1.6rem; font-style: italic;
+      color: var(--accent-mid); line-height: 1; min-width: 38px;
     }
-    .stat-label {
-      font-family: var(--mono); font-size: 0.65rem;
-      color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase;
-      line-height: 1.3;
-    }
+    .stat-label { font-size: 0.73rem; color: var(--muted); line-height: 1.35; font-weight: 400; }
 
-    /* ── PUBLICATIONS ─────────────────────────────────── */
-    .pub-controls {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;
+    .social-row { display: flex; gap: 0.4rem; }
+    .social-btn {
+      width: 34px; height: 34px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: all 0.18s;
     }
-    .pub-filter { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .social-btn:hover { border-color: var(--accent-mid); color: var(--accent-mid); box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
+
+    /* ── NEWS ────────────────────────────────── */
+    #news { padding-top: 4rem; padding-bottom: 4rem; }
+    .news-scroll {
+      display: flex; gap: 1rem; overflow-x: auto;
+      padding-bottom: 0.5rem; scroll-snap-type: x mandatory;
+    }
+    .news-scroll::-webkit-scrollbar { height: 4px; }
+    .news-scroll::-webkit-scrollbar-track { background: var(--border-light); border-radius: 99px; }
+    .news-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    .news-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.2rem;
+      min-width: 280px; max-width: 320px;
+      box-shadow: var(--shadow); scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+    .news-date {
+      font-family: var(--mono); font-size: 0.66rem;
+      color: var(--accent-mid); letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+    .news-text { font-size: 0.86rem; color: var(--ink2); line-height: 1.6; }
+    .news-text strong { color: var(--ink); font-weight: 600; }
+
+    /* ── RESEARCH ────────────────────────────── */
+    .research-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .research-card {
+      background: var(--white); padding: 1.6rem 1.5rem;
+      transition: background 0.2s;
+    }
+    .research-card:hover { background: var(--accent-lo); }
+    .rc-icon {
+      width: 36px; height: 36px; border-radius: var(--radius);
+      background: var(--accent-lo); border: 1px solid rgba(37,99,235,0.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.9rem; color: var(--accent-mid);
+    }
+    .rc-num {
+      font-family: var(--mono); font-size: 0.62rem; color: var(--muted2);
+      letter-spacing: 0.1em; margin-bottom: 0.35rem;
+    }
+    .research-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; line-height: 1.4; }
+    .research-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── PUBLICATIONS ────────────────────────── */
+    .pub-controls {
+      display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.8rem;
+    }
     .filter-btn {
-      font-family: var(--mono); font-size: 0.69rem;
-      padding: 0.26rem 0.72rem; border-radius: 2px;
-      border: 1px solid var(--border); background: none;
-      color: var(--muted); cursor: pointer;
-      transition: all 0.15s; letter-spacing: 0.04em;
+      font-size: 0.78rem; font-weight: 500; padding: 0.3rem 0.85rem;
+      border-radius: 100px; border: 1px solid var(--border);
+      background: var(--white); color: var(--muted);
+      cursor: pointer; transition: all 0.15s;
     }
     .filter-btn:hover, .filter-btn.active {
-      border-color: rgba(184,150,90,0.35);
-      color: var(--accent); background: var(--accent-lo);
+      background: var(--accent-lo); border-color: rgba(37,99,235,0.3);
+      color: var(--accent-mid);
     }
 
     .pub-list { display: flex; flex-direction: column; }
-
     .pub-item {
-      padding: 1.45rem 0;
-      border-bottom: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 1.4rem;
-      align-items: start;
-      transition: background 0.15s;
+      padding: 1.5rem 0; border-bottom: 1px solid var(--border-light);
+      display: grid; grid-template-columns: 48px 1fr;
+      gap: 1.4rem; transition: opacity 0.2s;
     }
     .pub-item:last-child { border-bottom: none; }
     .pub-item.hidden { display: none; }
-
     .pub-year {
       font-family: var(--mono); font-size: 0.66rem;
-      color: var(--muted); padding-top: 0.28rem;
-      line-height: 1;
+      color: var(--muted2); padding-top: 0.25rem;
     }
-
-    .pub-venue-badge {
+    .pub-badge {
       display: inline-flex; align-items: center;
-      font-family: var(--mono); font-size: 0.61rem;
-      padding: 0.09rem 0.42rem; border-radius: 2px;
-      margin-bottom: 0.45rem; letter-spacing: 0.04em;
+      font-size: 0.67rem; font-weight: 500; letter-spacing: 0.02em;
+      padding: 0.12rem 0.5rem; border-radius: 100px;
+      margin-bottom: 0.45rem;
     }
-    .venue-cic    { background: rgba(99,179,237,0.09);  color: #7ec8f0; border: 1px solid rgba(99,179,237,0.2); }
-    .venue-a      { background: rgba(72,187,120,0.09);  color: #6dcc96; border: 1px solid rgba(72,187,120,0.2); }
-    .venue-review { background: var(--accent-lo);       color: var(--accent); border: 1px solid rgba(184,150,90,0.22); }
-    .venue-other  { background: rgba(255,255,255,0.03); color: var(--muted2); border: 1px solid var(--border); }
+    .badge-cic   { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .badge-a     { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .badge-review{ background: var(--gold-lo); color: var(--gold); border: 1px solid #DFC278; }
+    .badge-other { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
 
-    .pub-title {
-      font-size: 0.94rem; font-weight: 500;
-      color: var(--text); margin-bottom: 0.22rem; line-height: 1.45;
-    }
-    .pub-authors {
-      font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; line-height: 1.6;
-    }
-    .pub-authors strong { color: var(--text); font-weight: 500; }
-    .pub-desc {
-      font-size: 0.78rem; color: var(--muted); font-style: italic;
-      margin-bottom: 0.55rem; line-height: 1.6; max-width: 660px;
-    }
+    .pub-title { font-size: 0.97rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; line-height: 1.45; }
+    .pub-authors { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.45rem; line-height: 1.6; }
+    .pub-authors strong { color: var(--ink2); font-weight: 600; }
+    .pub-desc { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 0.55rem; line-height: 1.65; max-width: 640px; }
     .pub-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .pub-link {
-      font-family: var(--mono); font-size: 0.68rem;
-      color: var(--accent); text-decoration: none;
-      border: 1px solid rgba(184,150,90,0.22);
-      padding: 0.1rem 0.42rem; border-radius: 2px;
-      transition: all 0.15s;
+      font-family: var(--mono); font-size: 0.67rem; color: var(--accent-mid);
+      border: 1px solid rgba(37,99,235,0.22); padding: 0.1rem 0.5rem;
+      border-radius: 4px; transition: all 0.15s;
     }
-    .pub-link:hover { background: var(--accent-lo); border-color: rgba(184,150,90,0.4); }
+    .pub-link:hover { background: var(--accent-lo); border-color: rgba(37,99,235,0.4); }
 
-    /* ── RESEARCH ─────────────────────────────────────── */
-    .research-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px; overflow: hidden;
-      gap: 1px;
+    /* ── HONOURS ─────────────────────────────── */
+    .honors-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
     }
-    .research-card {
-      background: var(--surface);
-      padding: 1.5rem 1.4rem;
-      transition: background 0.18s;
+    .honor-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow); display: flex; gap: 1rem; align-items: flex-start;
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
-    .research-card:hover { background: var(--surface2); }
-    .card-num {
-      font-family: var(--mono); font-size: 0.62rem;
-      color: var(--accent); letter-spacing: 0.12em;
-      margin-bottom: 0.65rem; display: block; opacity: 0.75;
+    .honor-card:hover { box-shadow: var(--shadow-md); border-color: rgba(37,99,235,0.2); }
+    .honor-icon {
+      width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
     }
-    .research-card h3 {
-      font-size: 0.88rem; font-weight: 500;
-      color: var(--text); margin-bottom: 0.4rem; line-height: 1.4;
+    .honor-body {}
+    .honor-title { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.15rem; line-height: 1.4; }
+    .honor-meta { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+    .honor-year {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--accent-mid);
+      letter-spacing: 0.05em; margin-top: 0.2rem;
     }
-    .research-card p { font-size: 0.77rem; color: var(--muted); line-height: 1.68; }
 
-    /* ── NEWS ─────────────────────────────────────────── */
-    .news-list { display: flex; flex-direction: column; gap: 0; }
-    .news-item {
-      display: grid; grid-template-columns: 90px 1fr;
-      gap: 1.4rem; padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
-      align-items: baseline;
+    /* ── SERVICE / EXPERIENCE ────────────────── */
+    .exp-list { display: flex; flex-direction: column; gap: 0; }
+    .exp-item {
+      display: grid; grid-template-columns: 120px 1fr;
+      gap: 1.5rem; padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border-light);
     }
-    .news-item:last-child { border-bottom: none; }
-    .news-date {
+    .exp-item:last-child { border-bottom: none; }
+    .exp-when {
       font-family: var(--mono); font-size: 0.67rem;
-      color: var(--accent); letter-spacing: 0.04em; white-space: nowrap;
+      color: var(--muted2); padding-top: 0.25rem; line-height: 1.5;
     }
-    .news-text {
-      font-size: 0.86rem; color: var(--text); opacity: 0.82; line-height: 1.65;
-    }
-    .news-text strong { color: var(--text); font-weight: 500; opacity: 1; }
+    .exp-role { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.1rem; }
+    .exp-where { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .exp-detail { font-size: 0.82rem; color: var(--ink2); line-height: 1.65; opacity: 0.85; }
 
-    /* ── RESOURCES ────────────────────────────────────── */
-    .resources-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.2rem;
+    /* ── CONTACT ─────────────────────────────── */
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
     }
-    .resource-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 3px; padding: 1.2rem 1.3rem;
+    .contact-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.4rem 1.5rem;
+      box-shadow: var(--shadow);
     }
-    .resource-card-title {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--accent); letter-spacing: 0.16em; text-transform: uppercase;
-      margin-bottom: 0.85rem;
+    .contact-card-label {
+      font-family: var(--mono); font-size: 0.64rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.7rem;
     }
-    .resource-links { list-style: none; display: flex; flex-direction: column; gap: 0.42rem; }
-    .resource-links a {
-      font-size: 0.81rem; color: var(--text); text-decoration: none;
-      display: flex; align-items: center; gap: 0.4rem;
-      opacity: 0.72; transition: opacity 0.14s, color 0.14s;
+    .contact-card a, .contact-card p {
+      display: block; font-size: 0.88rem; color: var(--ink2);
+      line-height: 1.9; transition: color 0.15s;
     }
-    .resource-links a:hover { opacity: 1; color: var(--accent); }
-    .resource-links a::before { content: '↗'; font-size: 0.65rem; color: var(--muted); flex-shrink: 0; }
+    .contact-card a:hover { color: var(--accent-mid); }
 
-    /* ── CONTACT ──────────────────────────────────────── */
-    .contact-layout {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    }
-    .contact-block h3 {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.14em; margin-bottom: 0.6rem;
-    }
-    .contact-block p,
-    .contact-block a {
-      font-size: 0.86rem; color: var(--text); opacity: 0.82;
-      line-height: 1.9; text-decoration: none; display: block;
-    }
-    .contact-block a:hover { color: var(--accent); opacity: 1; }
-
-    /* ── FOOTER ───────────────────────────────────────── */
+    /* ── FOOTER ──────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 1.8rem 2.5rem;
+      padding: 1.8rem 2rem;
       display: flex; align-items: center; justify-content: space-between;
-      position: relative; z-index: 1;
+      max-width: 1020px; margin: 0 auto;
     }
-    .footer-copy {
-      font-family: var(--mono); font-size: 0.69rem; color: var(--muted);
+    .footer-copy { font-size: 0.78rem; color: var(--muted2); }
+    .footer-copy a { color: var(--muted2); border-bottom: 1px solid var(--border); }
+    .footer-copy a:hover { color: var(--accent-mid); }
+
+    /* ── SCROLL REVEAL ───────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
     }
-    .footer-copy a { color: var(--muted); text-decoration: none; }
-    .footer-copy a:hover { color: var(--accent); }
-    .footer-right {
-      font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* stagger children */
+    .stagger > * {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+    .stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.07s; }
+    .stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.14s; }
+    .stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.21s; }
+    .stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.28s; }
+    .stagger.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.35s; }
+    .stagger.visible > *:nth-child(7) { opacity: 1; transform: none; transition-delay: 0.42s; }
+    .stagger.visible > *:nth-child(8) { opacity: 1; transform: none; transition-delay: 0.49s; }
+
+    /* Hero doesn't use reveal — immediate */
+    #about .hero-grid { opacity: 1; transform: none; }
+    #about .hero-left > * {
+      animation: heroIn 0.55s ease both;
+    }
+    #about .hero-left > *:nth-child(1) { animation-delay: 0.05s; }
+    #about .hero-left > *:nth-child(2) { animation-delay: 0.10s; }
+    #about .hero-left > *:nth-child(3) { animation-delay: 0.15s; }
+    #about .hero-left > *:nth-child(4) { animation-delay: 0.20s; }
+    #about .hero-left > *:nth-child(5) { animation-delay: 0.25s; }
+    #about .hero-left > *:nth-child(6) { animation-delay: 0.30s; }
+    #about .hero-right { animation: heroIn 0.6s 0.12s ease both; }
+
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
     }
 
-    /* ── ANIMATIONS ───────────────────────────────────── */
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .hero-left > * {
-      animation: riseIn 0.55s ease both;
-    }
-    .hero-left > *:nth-child(1) { animation-delay: 0.04s; }
-    .hero-left > *:nth-child(2) { animation-delay: 0.10s; }
-    .hero-left > *:nth-child(3) { animation-delay: 0.16s; }
-    .hero-left > *:nth-child(4) { animation-delay: 0.22s; }
-    .hero-left > *:nth-child(5) { animation-delay: 0.28s; }
-    .hero-left > *:nth-child(6) { animation-delay: 0.34s; }
-    .hero-left > *:nth-child(7) { animation-delay: 0.40s; }
-    .hero-right {
-      animation: riseIn 0.6s 0.12s ease both;
-    }
-
-    /* ── RESPONSIVE ───────────────────────────────────── */
-    @media (max-width: 740px) {
-      .hero-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    /* ── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 760px) {
+      html { font-size: 16px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-right { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
-      .photo-frame { width: 130px; height: 130px; }
-      .hero-stats { width: auto; flex: 1; }
-      .research-grid { grid-template-columns: 1fr 1fr; }
-      .contact-layout { grid-template-columns: 1fr; }
+      .photo-wrap { width: 140px; height: 140px; }
+      .stats-card { flex: 1; }
+      .research-grid { grid-template-columns: repeat(2, 1fr); }
+      .honors-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.3rem; }
       .nav-links { display: none; }
       footer { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
     @media (max-width: 520px) {
       .research-grid { grid-template-columns: 1fr; }
-      .hero-edu { flex-direction: column; }
-      .edu-pill { border-right: none; border-bottom: 1px solid var(--border); }
-      .edu-pill:last-child { border-bottom: none; }
+    }
+
+    /* ── MISC ────────────────────────────────── */
+    .divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .divider-line { flex: 1; height: 1px; background: var(--border); }
+    .divider-text { font-size: 0.78rem; color: var(--muted2); white-space: nowrap; }
+
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.55rem;
+      border-radius: 100px; border: 1px solid var(--border);
+      background: var(--white); color: var(--muted);
     }
   </style>
 </head>
 <body>
 
-<!-- ── NAV ──────────────────────────────────────────── -->
+<!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#home">
-    <span class="nav-logo-dot"></span>Chandan Kumar
-  </a>
-  <ul class="nav-links">
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#research">Research</a></li>
-    <li><a href="#news">News</a></li>
-    <li><a href="#resources">Resources</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#about">
+      <span class="nav-dot"></span>Chandan Kumar
+    </a>
+    <ul class="nav-links">
+      <li><a href="#news">News</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#honors">Honors</a></li>
+      <li><a href="#service">Service</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
 </nav>
 
-<!-- ── HOME / ABOUT (merged) ────────────────────────── -->
-<section id="home">
+<!-- ── ABOUT ── -->
+<section id="about">
   <div class="container">
-    <div class="hero-layout">
-
-      <!-- LEFT: identity + bio + education + tags + links -->
+    <div class="hero-grid">
+      <!-- LEFT -->
       <div class="hero-left">
-
-        <p class="hero-affiliation">PhD Candidate · SEAL Lab · IIT Kharagpur</p>
+        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;">
+          PhD Candidate · SEAL Lab · IIT Kharagpur
+        </p>
 
         <h1 class="hero-name">Chandan Kumar</h1>
-        <p class="hero-name-sub">Cryptography &amp; Secure Computation</p>
+
+        <div class="hero-role">
+          <span>Cryptography &amp; Secure Computation</span>
+          <span class="hero-role-sep">·</span>
+          <span>IBM Research Collaborator</span>
+        </div>
+
+        <div class="hero-fellow-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Google PhD Fellow 2021 · Security, Cryptography &amp; Privacy
+        </div>
 
         <div class="hero-bio">
           <p>
-            I design cryptographic primitives at the intersection of theory and real systems.
-            My core focus is <strong>Function Secret Sharing (FSS)</strong> — a lightweight primitive
-            for distributing computation over untrusted servers — and its dual,
-            <strong>Homomorphic Secret Sharing (HSS)</strong>. I work on compact-key FSS
-            constructions, threshold FSS-based encrypted search, and
-            FSS-powered privacy-preserving ML inference. <strong>Fully Homomorphic Encryption (FHE)</strong>
-            is a concurrent thread, particularly threshold variants and their hardware acceleration.
+            I build cryptographic primitives at the intersection of theory and deployable systems.
+            My core focus is <strong>Function Secret Sharing (FSS)</strong> — a lightweight primitive for distributing computation over untrusted servers — and its applications in encrypted search, secure ML inference, and distributed protocols.
           </p>
           <p>
-            A parallel line of work studies <strong>Trojan-resilient reverse firewalls</strong>
-            — cryptographic wrappers that sanitize a party's outgoing messages to prevent
-            subliminal exfiltration, even when the underlying hardware is malicious.
-            My ESORICS 2025 paper, <strong>TERRA</strong>, is the first formally proven RF
-            tolerating hardware Trojans in the PC-III circuit model. I am currently investigating
-            how covert channels inside MPC gadgets can defeat even well-designed firewalls.
+            A parallel thread investigates <strong>Trojan-resilient reverse firewalls</strong>: cryptographic wrappers that sanitize outgoing messages even when the underlying hardware is malicious.
+            My ESORICS 2025 paper, <strong>TERRA</strong>, is the first formally proven RF tolerating hardware Trojans in the PC-III circuit model, closing a gap open since Mironov–Stephens-Davidowitz (2015).
           </p>
           <p>
-            I did my B.Tech in CSE at <a href="https://www.iiitg.ac.in/" target="_blank" rel="noopener">IIIT Guwahati</a>
-            and grew up in Varanasi — a city that teaches patience with long problems.
-            I hold the <strong>Google PhD Fellowship 2021</strong> in Security, Cryptography and Privacy,
-            and I collaborate closely with
-            <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a>
-            at IBM Research India.
+            I collaborate closely with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a> at IBM Research India.
+            I completed my B.Tech in CSE at <a href="https://www.iiitg.ac.in/" target="_blank" rel="noopener">IIIT Guwahati</a> in 2020.
           </p>
         </div>
 
-        <!-- Education -->
-        <div class="hero-edu">
-          <div class="edu-pill">
-            <span class="edu-pill-degree">PhD · Computer Science &amp; Engineering</span>
-            <span class="edu-pill-inst">IIT Kharagpur</span>
-            <span class="edu-pill-year">2020 – present</span>
-          </div>
-          <div class="edu-pill">
-            <span class="edu-pill-degree">B.Tech · Computer Science &amp; Engineering</span>
-            <span class="edu-pill-inst">IIIT Guwahati</span>
-            <span class="edu-pill-year">2016 – 2020</span>
-          </div>
-        </div>
-
-        <!-- Research tags -->
         <div class="hero-tags">
           <span class="hero-tag">FSS / HSS</span>
           <span class="hero-tag">Threshold Encrypted Search</span>
@@ -570,39 +508,39 @@
           <span class="hero-tag">Side-Channel Analysis</span>
         </div>
 
-        <!-- CTA links -->
-        <div class="hero-links">
-          <a href="https://drive.google.com/file/d/1oETBiKFaO-IycF_nygJXn-Wi5eEL2p5b/view" class="btn btn-primary" target="_blank" rel="noopener">↓ Curriculum Vitae</a>
-          <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=de" class="btn btn-ghost" target="_blank" rel="noopener">Google Scholar</a>
-          <a href="https://eprint.iacr.org/search?q=chandan+kumar" class="btn btn-ghost" target="_blank" rel="noopener">IACR ePrint</a>
-          <a href="mailto:cchaudhary278@gmail.com" class="btn btn-ghost">Email</a>
+        <div class="hero-ctas">
+          <a href="https://drive.google.com/file/d/1oETBiKFaO-IycF_nygJXn-Wi5eEL2p5b/view" class="btn btn-primary" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Curriculum Vitae
+          </a>
+          <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" class="btn btn-outline" target="_blank" rel="noopener">Google Scholar</a>
+          <a href="https://eprint.iacr.org/search?q=chandan+kumar" class="btn btn-outline" target="_blank" rel="noopener">IACR ePrint</a>
+          <a href="mailto:cchaudhary278@gmail.com" class="btn btn-outline">Email</a>
         </div>
-
       </div>
 
-      <!-- RIGHT: photo + social + stats -->
+      <!-- RIGHT -->
       <div class="hero-right">
-
-        <div class="photo-frame">
-          <img src="chandan.jpg" alt="Chandan Kumar" loading="eager" decoding="async" width="182" height="182"/>
+        <div class="photo-wrap">
+          <img src="chandan.jpg" alt="Chandan Kumar" loading="eager" width="190" height="190"/>
         </div>
 
-        <div class="hero-social">
-          <a class="social-btn" href="https://github.com/ck-chaudhary" target="_blank" rel="noopener" title="GitHub">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        <div class="social-row">
+          <a class="social-btn" href="https://github.com/ck-chaudhary" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
-          <a class="social-btn" href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener" title="LinkedIn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <a class="social-btn" href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-          <a class="social-btn" href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=de" target="_blank" rel="noopener" title="Google Scholar">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/></svg>
+          <a class="social-btn" href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/></svg>
           </a>
         </div>
 
-        <div class="hero-stats">
+        <div class="stats-card">
           <div class="stat-row">
             <span class="stat-num">10+</span>
-            <span class="stat-label">Publications<br/>across top venues</span>
+            <span class="stat-label">Publications across<br/>top venues</span>
           </div>
           <div class="stat-row">
             <span class="stat-num">4</span>
@@ -610,28 +548,126 @@
           </div>
           <div class="stat-row">
             <span class="stat-num">★</span>
-            <span class="stat-label">Google PhD Fellow<br/>2021</span>
+            <span class="stat-label">Google PhD<br/>Fellow 2021</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-num">5+</span>
+            <span class="stat-label">Years of PhD<br/>research</span>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── PUBLICATIONS ───────────────────────────────── -->
+<!-- ── NEWS ── -->
+<section id="news">
+  <div class="container">
+    <p class="section-label">Updates</p>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Recent News</h2>
+    <div class="news-scroll stagger">
+      <div class="news-card">
+        <div class="news-date">Sep 2025</div>
+        <div class="news-text">Presenting <strong>TERRA</strong> at <strong>ESORICS 2025</strong>, Toulouse, France. First Trojan-resilient reverse firewall with formal proofs in the PC-III model.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">2025</div>
+        <div class="news-text">Major revision of <strong>ThORY</strong> submitted to <strong>IACR CiC</strong> — addressing 33 detailed reviewer requirements on threshold encrypted search.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">2025</div>
+        <div class="news-text"><strong>MUSSE</strong> submitted to <strong>Eurocrypt 2026</strong> — multi-server conjunctive SSE achieving sub-linear search complexity via VDMPFs.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">2025</div>
+        <div class="news-text">Extended abstract on <strong>MUSSE</strong> presented at <strong>TPMPC 2026</strong> workshop.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">Jul 2024</div>
+        <div class="news-text">Compact-key FSS paper published in <strong>IACR Communications in Cryptology</strong>, Vol. 1, Issue 2 — first FSS with non-linear decoder achieving compact keys.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">2023</div>
+        <div class="news-text">Invited to <strong>MPC Retreat, IISc Bengaluru</strong> and <strong>Winter School in Cryptography, IIT Madras</strong>.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">2021</div>
+        <div class="news-text">Awarded the <strong>Google PhD Fellowship</strong> in Security, Cryptography, and Privacy — one of ~50 awarded globally that year.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESEARCH ── -->
+<section id="research">
+  <div class="container">
+    <p class="section-label reveal">Research areas</p>
+    <h2 class="section-title reveal">What I Work On</h2>
+
+    <div class="research-grid stagger">
+      <div class="research-card">
+        <div class="rc-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="rc-num">01 · FSS / HSS</div>
+        <h3>Function Secret Sharing</h3>
+        <p>Compact-key FSS with non-linear decoders, breaking the linear algebraic barrier on key size. Threshold DPFs for silent, communication-efficient distributed computation without interaction. Applications in ORAM, PIR, and zero-knowledge.</p>
+      </div>
+      <div class="research-card">
+        <div class="rc-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="rc-num">02 · SSE</div>
+        <h3>Encrypted Search</h3>
+        <p>ThORY: first threshold SSE with sub-linear search complexity, built from Threshold DPFs. MUSSE: multi-server conjunctive SSE via VDMPFs achieving concrete leakage bounds below single-server baselines. Formally proven in the simulation-based model.</p>
+      </div>
+      <div class="research-card">
+        <div class="rc-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="rc-num">03 · PPML</div>
+        <h3>Privacy-Preserving ML</h3>
+        <p>FSS-based secure inference with access-controlled policy gates. Sub-linear inference costs at deployment scale. AC-PPML integrates attribute-based policy enforcement with FSS-powered inference, targeting practical deployment over two-server configurations.</p>
+      </div>
+      <div class="research-card">
+        <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="rc-num">04 · RF</div>
+        <h3>Reverse Firewalls</h3>
+        <p>TERRA: Trojan-resilient reverse firewall in the PC-III hardware model — first formally proven RF tolerating hardware Trojans, closing a gap open since Mironov–Stephens-Davidowitz (2015). Ongoing work on covert-channel analysis of RF implementations over MPC gadgets.</p>
+      </div>
+      <div class="research-card">
+        <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="rc-num">05 · FHE / MPC</div>
+        <h3>Secure Computation</h3>
+        <p>Threshold FHE and hardware acceleration (FACT, under review at S&P). Lightweight MPC from FSS primitives with connections to VOLE-based ZK and PCG techniques. Oblivious transfer without physical hardware root-of-trust transfer.</p>
+      </div>
+      <div class="research-card">
+        <div class="rc-icon" style="background:#FFF7ED;border-color:rgba(194,120,40,0.2);color:#C2783A;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="rc-num">06 · HW-SEC</div>
+        <h3>Hardware Security</h3>
+        <p>EM-based CPA on OP-TEE/TrustZone running on Raspberry Pi. Hardware Trojan threat modeling at the circuit level. HardCODE: hardware-based circuit obfuscation using data encryption. PUF-blockchain integration for electronic supply chain security.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PUBLICATIONS ── -->
 <section id="publications">
   <div class="container">
-    <p class="section-eyebrow">Selected works</p>
-    <h2 class="section-title">Publications</h2>
+    <p class="section-label reveal">Selected works</p>
+    <h2 class="section-title reveal">Publications</h2>
 
-    <div class="pub-controls">
-      <div class="pub-filter">
-        <button class="filter-btn active" onclick="filterPubs('all',this)">All</button>
-        <button class="filter-btn" onclick="filterPubs('first',this)">First Author</button>
-        <button class="filter-btn" onclick="filterPubs('published',this)">Published</button>
-        <button class="filter-btn" onclick="filterPubs('review',this)">Under Review</button>
-      </div>
+    <div class="pub-controls reveal">
+      <button class="filter-btn active" onclick="filterPubs('all',this)">All</button>
+      <button class="filter-btn" onclick="filterPubs('first',this)">First Author</button>
+      <button class="filter-btn" onclick="filterPubs('published',this)">Published</button>
+      <button class="filter-btn" onclick="filterPubs('review',this)">Under Review</button>
     </div>
 
     <div class="pub-list">
@@ -639,32 +675,32 @@
       <div class="pub-item" data-type="first review">
         <div class="pub-year">2025</div>
         <div>
-          <span class="pub-venue-badge venue-review">Under Revision · IACR CiC</span>
+          <span class="pub-badge badge-review">Under Revision · IACR CiC</span>
           <div class="pub-title">ThORY: Threshold Encrypted Search from Function Secret Sharing</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">First threshold SSE with sub-linear search complexity, built from Threshold DPFs. Formally proves conjunctive correctness and simulation security in the two-server model.</div>
-          <div class="pub-links"><a class="pub-link" href="#">ePrint ↗</a></div>
+          <div class="pub-desc">First threshold SSE achieving sub-linear search complexity, constructed from Threshold DPFs. Formally proves conjunctive correctness and simulation security in the two-server model. Addresses 33 detailed reviewer requirements in current revision.</div>
+          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
         </div>
       </div>
 
       <div class="pub-item" data-type="first review">
         <div class="pub-year">2025</div>
         <div>
-          <span class="pub-venue-badge venue-review">Under Review · Eurocrypt 2026</span>
+          <span class="pub-badge badge-review">Under Review · Eurocrypt 2026</span>
           <div class="pub-title">MUSSE: Multi-Server Low-Leakage Conjunctive SSE</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Sikhar Patranabis, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">HQSM primitive via VDMPFs for two-server conjunctive SSE. Achieves concrete leakage bounds below single-server baselines.</div>
-          <div class="pub-links"><a class="pub-link" href="#">ePrint ↗</a></div>
+          <div class="pub-desc">Introduces the HQSM primitive via Verifiable DPF Multi-Pointfunctions (VDMPFs) for two-server conjunctive SSE. Achieves concrete leakage bounds below single-server baselines. Presented at TPMPC 2026.</div>
+          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
         </div>
       </div>
 
       <div class="pub-item" data-type="first published">
         <div class="pub-year">2025</div>
         <div>
-          <span class="pub-venue-badge venue-a">ESORICS 2025 · Core A</span>
+          <span class="pub-badge badge-a">ESORICS 2025 · Core A</span>
           <div class="pub-title">TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">First formally proven reverse firewall tolerating hardware Trojans in the PC-III circuit model, closing a gap open since Mironov–Stephens-Davidowitz.</div>
+          <div class="pub-desc">First formally proven reverse firewall tolerating hardware Trojans in the PC-III circuit model, closing a gap open since Mironov–Stephens-Davidowitz (2015). Extends prior RF definitions to the malicious hardware setting with full simulation proofs.</div>
           <div class="pub-links">
             <a class="pub-link" href="https://eprint.iacr.org/2025/761" target="_blank" rel="noopener">ePrint ↗</a>
             <a class="pub-link" href="https://dl.acm.org/doi/abs/10.1007/978-3-032-07891-9_12" target="_blank" rel="noopener">Paper ↗</a>
@@ -675,18 +711,46 @@
       <div class="pub-item" data-type="first published">
         <div class="pub-year">2024</div>
         <div>
-          <span class="pub-venue-badge venue-cic">IACR CiC · Vol.1 Issue.2</span>
+          <span class="pub-badge badge-cic">IACR CiC · Vol.1 Issue.2</span>
           <div class="pub-title">Compact Key Function Secret Sharing with Non-linear Decoder</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">Breaks the linear algebraic barrier limiting prior FSS key sizes. First FSS scheme achieving compact keys without relaxing correctness.</div>
+          <div class="pub-desc">Breaks the linear algebraic barrier limiting prior FSS key sizes. First FSS scheme achieving compact keys without relaxing correctness. Introduces a non-linear decoding mechanism that enables exponential key-size reduction.</div>
           <div class="pub-links"><a class="pub-link" href="https://cic.iacr.org/p/1/2/8" target="_blank" rel="noopener">Paper ↗</a></div>
+        </div>
+      </div>
+
+      <div class="pub-item" data-type="review">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-badge badge-review">Under Review · IEEE S&P 2026</span>
+          <div class="pub-title">FACT: Fast and Accelerated Threshold FHE for Real-Time Applications</div>
+          <div class="pub-authors">Siddhartha Chowdhury, Sayani Sinha, Animesh Singh, Shubham Mishra, <strong>Chandan Kumar</strong>, Sikhar Patranabis, Pratyay Mukherjee, Ayantika Chatterjee, Debdeep Mukhopadhyay</div>
+        </div>
+      </div>
+
+      <div class="pub-item" data-type="published">
+        <div class="pub-year">2026</div>
+        <div>
+          <span class="pub-badge badge-other">ACNS 2026 · Core B</span>
+          <div class="pub-title">X-CHAIN: Enhancing Electronic Supply Chain Security with 3D X-ray Inspection and Blockchain</div>
+          <div class="pub-authors">Shuvodip Maitra, Tishya Sarma Sarkar, <strong>Chandan Kumar</strong>, Abhishek Chakraborty, Debdeep Mukhopadhyay</div>
+        </div>
+      </div>
+
+      <div class="pub-item" data-type="published">
+        <div class="pub-year">2025</div>
+        <div>
+          <span class="pub-badge badge-other">ePrint 2025/1989</span>
+          <div class="pub-title">HardCODE: Hardware-based Circuit Obfuscation using Data Encryption</div>
+          <div class="pub-authors">Akashdeep Saha, Sayani Sinha, <strong>Chandan Kumar</strong>, Animesh Singh, Siddhartha Chowdhury, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
+          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/2025/1989" target="_blank" rel="noopener">ePrint ↗</a></div>
         </div>
       </div>
 
       <div class="pub-item" data-type="first published">
         <div class="pub-year">2023</div>
         <div>
-          <span class="pub-venue-badge venue-other">FGCS · Elsevier</span>
+          <span class="pub-badge badge-other">FGCS · Elsevier</span>
           <div class="pub-title">RMA-CPABE: Multi-authority CPABE with Reduced Ciphertext Size for IoT</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Richa Sarma, Ferdous Ahmed Barbhuiya</div>
           <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0167739X22002783" target="_blank" rel="noopener">Paper ↗</a></div>
@@ -694,36 +758,9 @@
       </div>
 
       <div class="pub-item" data-type="published">
-        <div class="pub-year">2026</div>
-        <div>
-          <span class="pub-venue-badge venue-other">ACNS 2026 · Core B</span>
-          <div class="pub-title">X-CHAIN: Enhancing Electronic Supply Chain Security with 3D X-ray Inspection and Blockchain</div>
-          <div class="pub-authors">Shuvodip Maitra, Tishya Sarma Sarkar, <strong>Chandan Kumar</strong>, Abhishek Chakraborty, Debdeep Mukhopadhyay</div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="review">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-venue-badge venue-review">Under Review · IEEE S&P</span>
-          <div class="pub-title">FACT: Fast and Accelerated Threshold FHE for Real-Time Applications</div>
-          <div class="pub-authors">Siddhartha Chowdhury, Sayani Sinha, Animesh Singh, Shubham Mishra, <strong>Chandan Kumar</strong>, Sikhar Patranabis, Pratyay Mukherjee, Ayantika Chatterjee, Debdeep Mukhopadhyay</div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-venue-badge venue-other">ePrint 2025</span>
-          <div class="pub-title">HardCODE: Hardware-based Circuit Obfuscation using Data Encryption</div>
-          <div class="pub-authors">Akashdeep Saha, Sayani Sinha, <strong>Chandan Kumar</strong>, Animesh Singh, Siddhartha Chowdhury, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
         <div class="pub-year">2023</div>
         <div>
-          <span class="pub-venue-badge venue-other">ApPLIED @ PODC 2023 · ACM</span>
+          <span class="pub-badge badge-other">ApPLIED @ PODC 2023 · ACM</span>
           <div class="pub-title">Oblivious Transfer Protocol without Physical Transfer of Hardware Root-of-Trust</div>
           <div class="pub-authors">Boyapally Harishma, <strong>Chandan Kumar</strong>, Debdeep Mukhopadhyay</div>
           <div class="pub-links"><a class="pub-link" href="https://dl.acm.org/doi/pdf/10.1145/3584684.3597273" target="_blank" rel="noopener">Paper ↗</a></div>
@@ -733,27 +770,17 @@
       <div class="pub-item" data-type="published">
         <div class="pub-year">2022</div>
         <div>
-          <span class="pub-venue-badge venue-other">J. Systems Architecture · Elsevier</span>
+          <span class="pub-badge badge-other">J. Systems Architecture · Elsevier</span>
           <div class="pub-title">MACFI: Multi-Authority Access Control with Efficient Ciphertext and Secret Key Size for Fog-Enhanced IoT</div>
           <div class="pub-authors">Richa Sharma, <strong>Chandan Kumar</strong>, Ferdous A. Barbhuiya</div>
           <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S1383762121002393" target="_blank" rel="noopener">Paper ↗</a></div>
         </div>
       </div>
 
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2021</div>
-        <div>
-          <span class="pub-venue-badge venue-other">SRDS 2021 · IEEE</span>
-          <div class="pub-title">A Secure Access and Accountability Framework for Provisioning Services in Named Data Networks</div>
-          <div class="pub-authors">N. H. Sultan, V. Varadharajan, <strong>Chandan Kumar</strong>, S. Camtepe, S. Nepal</div>
-          <div class="pub-links"><a class="pub-link" href="https://ieeexplore.ieee.org/abstract/document/9603629" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
       <div class="pub-item" data-type="first published">
         <div class="pub-year">2021</div>
         <div>
-          <span class="pub-venue-badge venue-other">AsianHOST 2021 · IEEE</span>
+          <span class="pub-badge badge-other">AsianHOST 2021 · IEEE</span>
           <div class="pub-title">Auto-PUFChain: An Automated Interaction Tool for PUFs and Blockchain in Electronic Supply Chain</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Urbi Chatterjee, Debdeep Mukhopadhyay</div>
           <div class="pub-links"><a class="pub-link" href="https://ieeexplore.ieee.org/abstract/document/9699720" target="_blank" rel="noopener">Paper ↗</a></div>
@@ -763,7 +790,17 @@
       <div class="pub-item" data-type="published">
         <div class="pub-year">2021</div>
         <div>
-          <span class="pub-venue-badge venue-other">SUSCOM · Elsevier</span>
+          <span class="pub-badge badge-other">SRDS 2021 · IEEE</span>
+          <div class="pub-title">A Secure Access and Accountability Framework for Provisioning Services in Named Data Networks</div>
+          <div class="pub-authors">N. H. Sultan, V. Varadharajan, <strong>Chandan Kumar</strong>, S. Camtepe, S. Nepal</div>
+          <div class="pub-links"><a class="pub-link" href="https://ieeexplore.ieee.org/abstract/document/9603629" target="_blank" rel="noopener">Paper ↗</a></div>
+        </div>
+      </div>
+
+      <div class="pub-item" data-type="published">
+        <div class="pub-year">2021</div>
+        <div>
+          <span class="pub-badge badge-other">SUSCOM · Elsevier</span>
           <div class="pub-title">PAC-FIT: An Efficient Privacy-Preserving Access Control Scheme for Fog-Enabled IoT</div>
           <div class="pub-authors">Richa Sharma, <strong>Chandan Kumar</strong>, Ferdous A. Barbhuiya</div>
           <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S2210537921000202" target="_blank" rel="noopener">Paper ↗</a></div>
@@ -774,168 +811,188 @@
   </div>
 </section>
 
-<!-- ── RESEARCH ───────────────────────────────────── -->
-<section id="research">
+<!-- ── HONORS ── -->
+<section id="honors">
   <div class="container">
-    <p class="section-eyebrow">What I work on</p>
-    <h2 class="section-title">Research Areas</h2>
-    <div class="research-grid">
-      <div class="research-card">
-        <span class="card-num">01 · FSS / HSS</span>
-        <h3>Function Secret Sharing</h3>
-        <p>Compact-key FSS with non-linear decoders. Threshold DPFs. Silent, communication-efficient distributed computation without interaction.</p>
+    <p class="section-label reveal">Recognition</p>
+    <h2 class="section-title reveal">Honours &amp; Awards</h2>
+
+    <div class="honors-grid stagger">
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--gold-lo);">⭐</div>
+        <div class="honor-body">
+          <div class="honor-title">Google PhD Fellowship</div>
+          <div class="honor-meta">Security, Cryptography &amp; Privacy track. One of ~50 fellowships awarded globally that year, covering tuition and a research stipend across the PhD.</div>
+          <div class="honor-year">2021</div>
+        </div>
       </div>
-      <div class="research-card">
-        <span class="card-num">02 · SSE</span>
-        <h3>Encrypted Search</h3>
-        <p>Threshold encrypted search (ThORY). Multi-server conjunctive SSE with sub-linear complexity and formal leakage bounds (MUSSE).</p>
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--accent-lo);">🏛️</div>
+        <div class="honor-body">
+          <div class="honor-title">Invited — MPC Retreat, IISc Bengaluru</div>
+          <div class="honor-meta">Invited participant at the annual MPC research retreat hosted by the Cryptography &amp; Security group at IISc, presenting ongoing work in FSS and encrypted search.</div>
+          <div class="honor-year">2023</div>
+        </div>
       </div>
-      <div class="research-card">
-        <span class="card-num">03 · PPML</span>
-        <h3>Privacy-Preserving ML</h3>
-        <p>FSS-based secure inference. Access-controlled PPML with attribute-based policy gates. Sub-linear inference costs at deployment scale.</p>
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--teal-lo);">🎓</div>
+        <div class="honor-body">
+          <div class="honor-title">Winter School in Cryptography, IIT Madras</div>
+          <div class="honor-meta">Selected participant at the IIT Madras winter school covering advanced topics in modern cryptography, covering FHE, MPC, and lattice-based primitives.</div>
+          <div class="honor-year">2023</div>
+        </div>
       </div>
-      <div class="research-card">
-        <span class="card-num">04 · RF</span>
-        <h3>Reverse Firewalls</h3>
-        <p>Trojan-resilient RF in the PC-III hardware model (TERRA). Covert-channel analysis of RF implementations over MPC gadgets.</p>
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--accent-lo);">📄</div>
+        <div class="honor-body">
+          <div class="honor-title">IACR CiC Publication — Volume 1</div>
+          <div class="honor-meta">Published in the inaugural volume of IACR Communications in Cryptology, the IACR's new gold open-access journal launched in 2024.</div>
+          <div class="honor-year">2024</div>
+        </div>
       </div>
-      <div class="research-card">
-        <span class="card-num">05 · FHE / MPC</span>
-        <h3>Secure Computation</h3>
-        <p>Threshold FHE and its acceleration. Lightweight MPC from FSS primitives. Connections to VOLE-based ZK and PCG techniques.</p>
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--teal-lo);">🌍</div>
+        <div class="honor-body">
+          <div class="honor-title">TPMPC 2026 — Extended Abstract</div>
+          <div class="honor-meta">Extended abstract on MUSSE accepted and presented at the Theory and Practice of Multi-Party Computation workshop, a leading invite-only MPC workshop.</div>
+          <div class="honor-year">2025</div>
+        </div>
       </div>
-      <div class="research-card">
-        <span class="card-num">06 · HW-SEC</span>
-        <h3>Hardware Security</h3>
-        <p>EM-based CPA on OP-TEE/TrustZone running on Raspberry Pi. Hardware Trojan threat modeling at the circuit level.</p>
+      <div class="honor-card">
+        <div class="honor-icon" style="background:var(--gold-lo);">🔒</div>
+        <div class="honor-body">
+          <div class="honor-title">ESORICS 2025 — Core A Acceptance</div>
+          <div class="honor-meta">TERRA accepted at ESORICS 2025 (Core A rated), one of the premier venues for security and cryptography research in Europe, presented in Toulouse, France.</div>
+          <div class="honor-year">2025</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── NEWS ──────────────────────────────────────── -->
-<section id="news">
+<!-- ── SERVICE & EXPERIENCE ── -->
+<section id="service">
   <div class="container">
-    <p class="section-eyebrow">Updates</p>
-    <h2 class="section-title">News</h2>
-    <div class="news-list">
-      <div class="news-item">
-        <span class="news-date">Sep 2025</span>
-        <span class="news-text">Presenting <strong>TERRA</strong> at <strong>ESORICS 2025</strong>, Toulouse, France.</span>
+    <p class="section-label reveal">Professional</p>
+    <h2 class="section-title reveal">Service &amp; Experience</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;" class="reveal">
+
+      <div>
+        <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Reviewing</h3>
+        <div class="exp-list">
+          <div class="exp-item" style="grid-template-columns:1fr;">
+            <div>
+              <div class="exp-role">Program Reviewer</div>
+              <div class="exp-where">ESORICS, ACNS, IEEE Transactions on Computers</div>
+              <div class="exp-detail">Reviewed submissions on cryptographic protocols, MPC, and hardware security.</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="news-item">
-        <span class="news-date">2025</span>
-        <span class="news-text">Major revision of <strong>ThORY</strong> submitted to IACR CiC — addressing 33 detailed reviewer requirements.</span>
+
+      <div>
+        <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Teaching</h3>
+        <div class="exp-list">
+          <div class="exp-item" style="grid-template-columns:1fr;">
+            <div>
+              <div class="exp-role">Teaching Assistant</div>
+              <div class="exp-where">IIT Kharagpur</div>
+              <div class="exp-detail">Courses in cryptography, algorithms, and computer security at undergraduate and postgraduate level.</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="news-item">
-        <span class="news-date">2025</span>
-        <span class="news-text"><strong>MUSSE</strong> submitted to Eurocrypt 2026.</span>
+
+    </div>
+
+    <div style="margin-top:3rem;" class="reveal">
+      <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Education</h3>
+      <div class="exp-list">
+        <div class="exp-item">
+          <div class="exp-when">2020 – present</div>
+          <div>
+            <div class="exp-role">PhD · Computer Science &amp; Engineering</div>
+            <div class="exp-where">IIT Kharagpur · SEAL Lab</div>
+            <div class="exp-detail">
+              Advised by Prof. Debdeep Mukhopadhyay and Prof. Satrajit Ghosh.
+              Thesis: <em>Design and Implementation of Advanced Cryptographic Primitives in Distributed Settings.</em>
+              Collaborating with Dr. Sikhar Patranabis (IBM Research India). Supported by Google PhD Fellowship 2021.
+            </div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-when">2016 – 2020</div>
+          <div>
+            <div class="exp-role">B.Tech · Computer Science &amp; Engineering</div>
+            <div class="exp-where">IIIT Guwahati</div>
+            <div class="exp-detail">Graduated with first class. Final-year thesis on multi-authority attribute-based encryption for IoT, leading to FGCS and J. Systems Architecture publications.</div>
+          </div>
+        </div>
       </div>
-      <div class="news-item">
-        <span class="news-date">2025</span>
-        <span class="news-text">Presented a 2-page extended abstract on MUSSE at <strong>TPMPC 2026</strong>.</span>
-      </div>
-      <div class="news-item">
-        <span class="news-date">Jul 2024</span>
-        <span class="news-text">Compact-key FSS paper published in <strong>IACR Communications in Cryptology</strong>, Vol. 1, Issue 2.</span>
-      </div>
-      <div class="news-item">
-        <span class="news-date">2023</span>
-        <span class="news-text">Invited to <strong>MPC Retreat, IISc Bengaluru</strong> and <strong>Winter School in Cryptography, IIT Madras</strong>.</span>
-      </div>
-      <div class="news-item">
-        <span class="news-date">2021</span>
-        <span class="news-text">Awarded the <strong>Google PhD Fellowship</strong> in Security, Cryptography, and Privacy.</span>
+    </div>
+
+    <div style="margin-top:3rem;" class="reveal">
+      <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Talks &amp; Presentations</h3>
+      <div class="exp-list">
+        <div class="exp-item">
+          <div class="exp-when">Sep 2025</div>
+          <div>
+            <div class="exp-role">TERRA — ESORICS 2025</div>
+            <div class="exp-where">Toulouse, France</div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-when">2025</div>
+          <div>
+            <div class="exp-role">MUSSE — TPMPC 2026</div>
+            <div class="exp-where">Extended abstract presentation at Theory and Practice of MPC workshop</div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-when">2023</div>
+          <div>
+            <div class="exp-role">MPC Retreat — IISc Bengaluru</div>
+            <div class="exp-where">Invited talk on FSS and threshold encrypted search</div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-when">2023</div>
+          <div>
+            <div class="exp-role">Winter School in Cryptography</div>
+            <div class="exp-where">IIT Madras</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── RESOURCES ─────────────────────────────────── -->
-<section id="resources">
-  <div class="container">
-    <p class="section-eyebrow">For the community</p>
-    <h2 class="section-title">Resources</h2>
-    <div class="resources-grid">
-      <div class="resource-card">
-        <div class="resource-card-title">Conference Deadlines</div>
-        <ul class="resource-links">
-          <li><a href="https://sec-deadlines.github.io/" target="_blank" rel="noopener">Security &amp; Privacy Deadlines</a></li>
-          <li><a href="https://mpc-deadlines.github.io/" target="_blank" rel="noopener">MPC Conference Deadlines</a></li>
-          <li><a href="https://iacr.org/cryptodb/data/acceptance.php" target="_blank" rel="noopener">IACR Acceptance Ratios</a></li>
-        </ul>
-      </div>
-      <div class="resource-card">
-        <div class="resource-card-title">Research Groups</div>
-        <ul class="resource-links">
-          <li><a href="https://www.csa.iisc.ac.in/~cris/" target="_blank" rel="noopener">CRIS, IISc Bengaluru</a></li>
-          <li><a href="https://cs.au.dk/research/cryptography-and-security" target="_blank" rel="noopener">Aarhus Crypto Group</a></li>
-          <li><a href="https://www.tii.ae/cryptography" target="_blank" rel="noopener">Technology Innovation Institute</a></li>
-          <li><a href="https://ivi.fnwi.uva.nl/tcs/" target="_blank" rel="noopener">TCS, Univ. of Amsterdam</a></li>
-        </ul>
-      </div>
-      <div class="resource-card">
-        <div class="resource-card-title">FSS &amp; MPC Reading</div>
-        <ul class="resource-links">
-          <li><a href="https://www.iacr.org/archive/eurocrypt2015/90560300/90560300.pdf" target="_blank" rel="noopener">FSS — Boyle et al. (Eurocrypt'15)</a></li>
-          <li><a href="https://dl.acm.org/doi/pdf/10.1145/2976749.2978429" target="_blank" rel="noopener">FSS Extensions (CCS'16)</a></li>
-          <li><a href="https://www.mpcalliance.org/learn" target="_blank" rel="noopener">MPC Alliance Learning Hub</a></li>
-          <li><a href="https://www.csa.iisc.ac.in/~arpita/StudyGroupOT15.html" target="_blank" rel="noopener">OT Reading Group (Arpita Patra)</a></li>
-        </ul>
-      </div>
-      <div class="resource-card">
-        <div class="resource-card-title">Courses</div>
-        <ul class="resource-links">
-          <li><a href="https://cseweb.ucsd.edu/~mihir/cse207/slides.html" target="_blank" rel="noopener">Cryptography — Bellare (UCSD)</a></li>
-          <li><a href="https://people.csail.mit.edu/vinodv/CS294/" target="_blank" rel="noopener">Post-Quantum Crypto — Vaikuntanathan</a></li>
-          <li><a href="https://www.tifr.res.in/~prahladh/teaching/2021-22/pseudorandom/" target="_blank" rel="noopener">Pseudorandomness — Harsha (TIFR)</a></li>
-        </ul>
-      </div>
-      <div class="resource-card">
-        <div class="resource-card-title">Research Tools</div>
-        <ul class="resource-links">
-          <li><a href="https://www.connectedpapers.com" target="_blank" rel="noopener">Connected Papers</a></li>
-          <li><a href="https://app.litmaps.com/" target="_blank" rel="noopener">LitMaps</a></li>
-          <li><a href="https://eprint.iacr.org/" target="_blank" rel="noopener">IACR ePrint Archive</a></li>
-          <li><a href="https://scholar.google.com" target="_blank" rel="noopener">Google Scholar</a></li>
-        </ul>
-      </div>
-      <div class="resource-card">
-        <div class="resource-card-title">Workshops</div>
-        <ul class="resource-links">
-          <li><a href="https://tpmpc.org/" target="_blank" rel="noopener">TPMPC Workshop</a></li>
-          <li><a href="https://www.cscml.org/" target="_blank" rel="noopener">CSCML</a></li>
-          <li><a href="https://satml.org/" target="_blank" rel="noopener">SaTML</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CONTACT ────────────────────────────────────── -->
+<!-- ── CONTACT ── -->
 <section id="contact">
   <div class="container">
-    <p class="section-eyebrow">Get in touch</p>
-    <h2 class="section-title">Contact</h2>
-    <div class="contact-layout">
-      <div class="contact-block">
-        <h3>Address</h3>
-        <p>A-307, Department of Computer Science &amp; Engineering<br/>IIT Kharagpur, Kharagpur – 721302, India</p>
+    <p class="section-label reveal">Get in touch</p>
+    <h2 class="section-title reveal">Contact</h2>
+
+    <div class="contact-grid reveal">
+      <div class="contact-card">
+        <div class="contact-card-label">Address</div>
+        <p>A-307, Department of Computer Science &amp; Engineering<br/>IIT Kharagpur, West Bengal – 721302, India</p>
       </div>
-      <div class="contact-block">
-        <h3>Email</h3>
+      <div class="contact-card">
+        <div class="contact-card-label">Email</div>
         <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">cchaudhary278@kgpian.iitkgp.ac.in</a>
         <a href="mailto:cchaudhary278@gmail.com">cchaudhary278@gmail.com</a>
       </div>
-      <div class="contact-block">
-        <h3>Profiles</h3>
-        <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=de" target="_blank" rel="noopener">Google Scholar ↗</a>
+      <div class="contact-card">
+        <div class="contact-card-label">Online Profiles</div>
+        <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
         <a href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener">LinkedIn ↗</a>
         <a href="https://github.com/ck-chaudhary" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://eprint.iacr.org/search?q=chandan+kumar" target="_blank" rel="noopener">IACR ePrint ↗</a>
       </div>
-      <div class="contact-block">
-        <h3>Advisors</h3>
+      <div class="contact-card">
+        <div class="contact-card-label">Advisors</div>
         <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay ↗</a>
         <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh ↗</a>
         <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis, IBM Research ↗</a>
@@ -944,38 +1001,54 @@
   </div>
 </section>
 
-<!-- ── FOOTER ─────────────────────────────────────── -->
-<footer>
-  <span class="footer-copy">
-    Chandan Kumar · IIT Kharagpur · Last updated May 2026 ·
-    <a href="https://github.com/ck-chaudhary/ck-chaudhary.github.io" target="_blank" rel="noopener">Source ↗</a>
-  </span>
-  <span class="footer-right">cchaudhary278@gmail.com</span>
-</footer>
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--border);">
+  <footer>
+    <span class="footer-copy">
+      Chandan Kumar · IIT Kharagpur · Last updated May 2026 ·
+      <a href="https://github.com/ck-chaudhary/ck-chaudhary.github.io" target="_blank" rel="noopener">Source ↗</a>
+    </span>
+    <span class="footer-copy">cchaudhary278@gmail.com</span>
+  </footer>
+</div>
 
 <script>
-  /* Publication filter */
-  function filterPubs(type, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.pub-item').forEach(item => {
-      if (type === 'all') { item.classList.remove('hidden'); return; }
-      item.classList.toggle('hidden', !(item.dataset.type || '').includes(type));
-    });
-  }
+/* ── Pub filter ── */
+function filterPubs(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.pub-item').forEach(item => {
+    if (type === 'all') { item.classList.remove('hidden'); return; }
+    item.classList.toggle('hidden', !(item.dataset.type || '').includes(type));
+  });
+}
 
-  /* Active nav via IntersectionObserver */
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting)
-        navLinks.forEach(a =>
-          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)
-        );
-    });
-  }, { rootMargin: '-38% 0px -56% 0px' });
-  sections.forEach(s => io.observe(s));
+/* ── Scroll reveal ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal, .stagger').forEach(el => io.observe(el));
+
+/* ── Active nav ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const navIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a =>
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)
+      );
+    }
+  });
+}, { rootMargin: '-40% 0px -54% 0px' });
+sections.forEach(s => navIO.observe(s));
 </script>
+
 </body>
 </html>
