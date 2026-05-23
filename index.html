@@ -129,6 +129,8 @@
       font-size: 0.96rem; color: var(--ink2); line-height: 1.85;
       display: flex; flex-direction: column; gap: 0.9rem;
       max-width: 620px; margin-bottom: 1.8rem;
+      text-align: justify;
+      hyphens: auto;
     }
     .hero-bio p { opacity: 0.9; }
     .hero-bio a { color: var(--accent-mid); border-bottom: 1px solid rgba(37,99,235,0.25); transition: border-color 0.15s; }
@@ -379,7 +381,6 @@
     }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* stagger children */
     .stagger > * {
       opacity: 0; transform: translateY(18px);
       transition: opacity 0.45s ease, transform 0.45s ease;
@@ -393,7 +394,6 @@
     .stagger.visible > *:nth-child(7) { opacity: 1; transform: none; transition-delay: 0.42s; }
     .stagger.visible > *:nth-child(8) { opacity: 1; transform: none; transition-delay: 0.49s; }
 
-    /* Hero doesn't use reveal — immediate */
     #about .hero-grid { opacity: 1; transform: none; }
     #about .hero-left > * {
       animation: heroIn 0.55s ease both;
@@ -484,17 +484,16 @@
 
         <div class="hero-bio">
           <p>
-            Welcome. I am a PhD candidate at the <a href="https://cse.iitkgp.ac.in/" target="_blank" rel="noopener">Department of Computer Science &amp; Engineering, IIT Kharagpur</a>, advised by <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay</a> and <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh</a>.
-          </p>
-
-          <p>
-            My research designs cryptographic primitives that bridge theory and deployable systems. At the center of my work is <strong>Function Secret Sharing (FSS)</strong> — a lightweight primitive that distributes computation across non-colluding servers — and its use in encrypted search, privacy-preserving ML inference, and distributed protocols.
+            I am a PhD candidate at the <a href="https://cse.iitkgp.ac.in/" target="_blank" rel="noopener">Department of Computer Science &amp; Engineering, IIT Kharagpur</a>, advised by <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay</a> and <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh</a>.
           </p>
           <p>
-            In a parallel line of work, I study <strong>Trojan-resilient reverse firewalls</strong>: cryptographic wrappers that sanitize outgoing messages even when the underlying hardware is adversarial. Our ESORICS 2025 paper, <strong>TERRA</strong>, gives the first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015).
+            My research is in applied cryptography. The main thread is <strong>Function Secret Sharing (FSS)</strong> — a primitive that distributes computation across non-colluding servers — and its use in encrypted search, private ML inference, and multi-server protocols. Both the theory and the implementations matter to me.
           </p>
           <p>
-            I collaborate closely with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a> at IBM Research India, and completed my B.Tech in CSE at <a href="https://www.iiitg.ac.in/" target="_blank" rel="noopener">IIIT Guwahati</a> in 2020.
+            A second line of work concerns reverse firewalls in hardware-adversarial settings. Our ESORICS 2025 paper <strong>TERRA</strong> formalises Trojan-resilient reverse firewalls in the PC-III circuit model and gives the first concrete instantiations with formal security proofs, addressing a gap left open by Mironov and Stephens-Davidowitz (2015).
+          </p>
+          <p>
+            I collaborate closely with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a> at IBM Research India and with <a href="https://sites.google.com/view/suvradip/" target="_blank" rel="noopener">Dr. Suvradip Chakraborty</a> at Visa Research USA.
           </p>
         </div>
 
@@ -540,11 +539,11 @@
 
         <div class="stats-card">
           <div class="stat-row">
-            <span class="stat-num">10+</span>
+            <span class="stat-num">13+</span>
             <span class="stat-label">Publications across<br/>top venues</span>
           </div>
           <div class="stat-row">
-            <span class="stat-num">4</span>
+            <span class="stat-num">6+</span>
             <span class="stat-label">First-author<br/>papers</span>
           </div>
           <div class="stat-row">
@@ -565,7 +564,7 @@
     <div class="news-scroll stagger">
       <div class="news-card">
         <div class="news-date">2026</div>
-        <div class="news-text">Awarded a <strong>student stipend</strong> to attend <strong>TPMPC 2026</strong> — the Theory and Practice of Multi-Party Computation workshop, where I will present our work on multi-server SSE.</div>
+        <div class="news-text">Awarded a <strong>student stipend</strong> to attend <strong>TPMPC 2026</strong> — the Theory and Practice of Multi-Party Computation workshop in Aarhus, Denmark.</div>
       </div>
       <div class="news-card">
         <div class="news-date">2026</div>
@@ -573,7 +572,7 @@
       </div>
       <div class="news-card">
         <div class="news-date">Sep 2025</div>
-        <div class="news-text">Presented <strong>TERRA</strong> at <strong>ESORICS 2025</strong>, Toulouse — the first Trojan-resilient reverse firewall with formal guarantees in the PC-III model.</div>
+        <div class="news-text">Presented <strong>TERRA</strong> at <strong>ESORICS 2025</strong>, Toulouse — a Trojan-resilient reverse firewall with formal security proofs in the PC-III circuit model.</div>
       </div>
       <div class="news-card">
         <div class="news-date">2023</div>
@@ -596,7 +595,7 @@
         </div>
         <div class="rc-num">01 · FSS / HSS</div>
         <h3>Function Secret Sharing</h3>
-        <p>Compact-key FSS with non-linear decoders that breaks the linear-algebraic barrier on key size, together with Threshold DPFs for silent, communication-efficient distributed computation. Downstream applications span ORAM, PIR, and zero-knowledge.</p>
+        <p>Compact-key DPF and DCF constructions that reduce key size by replacing linear decoding with a non-linear decoder, without relaxing correctness. A second thread covers Threshold DPFs: point functions whose output is secret-shared across servers, enabling communication-efficient distributed computation.</p>
       </div>
       <div class="research-card">
         <div class="rc-icon">
@@ -604,7 +603,7 @@
         </div>
         <div class="rc-num">02 · SSE</div>
         <h3>Encrypted Search</h3>
-        <p>ThORY is the first threshold SSE scheme to achieve sub-linear search, built atop Threshold DPFs. MUSSE extends this to multi-server conjunctive queries via VDMPFs, attaining concrete leakage bounds tighter than single-server baselines — each with simulation-based proofs.</p>
+        <p>ThORY gives sub-linear search in the threshold SSE setting, built from Threshold DPFs with a seed-homomorphic PRG and Shamir secret sharing. MUSSE handles conjunctive queries across two servers via VDMPFs, with leakage provably below single-server schemes OXT and HXT. Both carry simulation-based security proofs.</p>
       </div>
       <div class="research-card">
         <div class="rc-icon">
@@ -612,7 +611,7 @@
         </div>
         <div class="rc-num">03 · PPML</div>
         <h3>Privacy-Preserving ML</h3>
-        <p>FSS-based secure inference with access-controlled policy gates, aimed at sub-linear inference costs at deployment scale. AC-PPML weaves attribute-based policy enforcement into FSS-powered inference, targeting practical two-server deployments.</p>
+        <p>AC-PPML integrates attribute-based access control into FSS-based private ML inference without modifying the underlying inference protocol. Authorized parties recover the output; unauthorized parties see something computationally indistinguishable from uniform. The construction targets practical two-server deployments on GPU hardware.</p>
       </div>
       <div class="research-card">
         <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
@@ -620,7 +619,7 @@
         </div>
         <div class="rc-num">04 · RF</div>
         <h3>Reverse Firewalls</h3>
-        <p>TERRA introduces the first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015). Follow-up work examines covert-channel leakage in RF implementations built over MPC gadgets.</p>
+        <p>TERRA formalises Trojan-resilient reverse firewalls in the PC-III circuit model and gives concrete instantiations for Coin Tossing and Oblivious Transfer, addressing a gap left open since Mironov and Stephens-Davidowitz (2015). Follow-up work (LEAK³) identifies a covert channel in PC-III's secret multiplication and proposes countermeasures validated on real hardware.</p>
       </div>
       <div class="research-card">
         <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
@@ -628,7 +627,7 @@
         </div>
         <div class="rc-num">05 · FHE / MPC</div>
         <h3>Secure Computation</h3>
-        <p>Threshold FHE with hardware acceleration (FACT) and lightweight MPC constructions distilled from FSS primitives, with connections to VOLE-based ZK and PCG techniques. Also: oblivious transfer that avoids the physical transfer of a hardware root-of-trust.</p>
+        <p>Threshold FHE with hardware acceleration (FACT) and MPC constructions built from FSS primitives. Also: an oblivious transfer protocol that avoids the physical transfer of a hardware root-of-trust, presented at ApPLIED @ PODC 2023.</p>
       </div>
       <div class="research-card">
         <div class="rc-icon" style="background:#FFF7ED;border-color:rgba(194,120,40,0.2);color:#C2783A;">
@@ -636,7 +635,7 @@
         </div>
         <div class="rc-num">06 · HW-SEC</div>
         <h3>Hardware Security</h3>
-        <p>EM-based correlation power analysis on OP-TEE/TrustZone (Raspberry Pi), circuit-level Hardware Trojan threat modeling, HardCODE — hardware circuit obfuscation via data encryption, and PUF–blockchain integration for electronic supply-chain security.</p>
+        <p>Correlation power analysis on OP-TEE/TrustZone (Raspberry Pi), circuit-level hardware Trojan threat modeling, HardCODE — circuit obfuscation via data encryption, and PUF-blockchain integration for electronic supply-chain security.</p>
       </div>
     </div>
   </div>
@@ -663,7 +662,7 @@
           <span class="pub-badge badge-review">Under Revision · IACR CiC</span>
           <div class="pub-title">ThORY: Threshold Encrypted Search from Function Secret Sharing</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">The first threshold SSE construction to achieve sub-linear search, built from Threshold DPFs. We prove conjunctive correctness and simulation security in the two-server model; the current revision addresses 33 detailed reviewer requirements.</div>
+          <div class="pub-desc">The first threshold SSE scheme with sub-linear search complexity, built on Threshold DPFs with a seed-homomorphic PRG and Shamir secret sharing. An LWR-based variant achieves post-quantum security with no structural changes.</div>
           <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
         </div>
       </div>
@@ -674,7 +673,7 @@
           <span class="pub-badge badge-review">Under Review</span>
           <div class="pub-title">MUSSE: Multi-Server Low-Leakage Conjunctive SSE</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Sikhar Patranabis, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">Introduces the HQSM primitive via Verifiable DPF Multi-Point functions (VDMPFs) for two-server conjunctive SSE, achieving concrete leakage bounds below single-server baselines. An extended abstract was presented at TPMPC 2026.</div>
+          <div class="pub-desc">Introduces Vectorised DMPFs (VDMPFs) for two-server conjunctive SSE with no inter-server interaction. Leakage is strictly below single-server baselines OXT and HXT, with concrete bounds proved via simulation.</div>
           <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
         </div>
       </div>
@@ -685,7 +684,7 @@
           <span class="pub-badge badge-a">ESORICS 2025 · Core A</span>
           <div class="pub-title">TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">The first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015). We lift prior RF definitions to the malicious-hardware setting with full simulation proofs.</div>
+          <div class="pub-desc">Identifies that Trojan-affected reverse firewall implementations can break exfiltration-resistance. Formalises Trojan-resilient RFs in the PC-III circuit model and gives concrete instantiations for Coin Tossing and Oblivious Transfer, with full simulation proofs.</div>
           <div class="pub-links">
             <a class="pub-link" href="https://eprint.iacr.org/2025/761" target="_blank" rel="noopener">ePrint ↗</a>
             <a class="pub-link" href="https://dl.acm.org/doi/abs/10.1007/978-3-032-07891-9_12" target="_blank" rel="noopener">Paper ↗</a>
@@ -699,7 +698,7 @@
           <span class="pub-badge badge-cic">IACR CiC · Vol.1 Issue.2</span>
           <div class="pub-title">Compact Key Function Secret Sharing with Non-linear Decoder</div>
           <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">Breaks the linear-algebraic barrier that capped prior FSS key sizes. The first FSS scheme to achieve compact keys without relaxing correctness, via a non-linear decoding mechanism that yields exponential key-size reduction.</div>
+          <div class="pub-desc">Constructs the most compact p-party FSS keys for point and comparison functions at the time of publication. The DPF achieves a 2<sup>n/2</sup>-factor key reduction over Boyle–Gilboa–Ishai (Eurocrypt 2015); the DCF reduces by q<sup>p−1</sup>. The gain trades linear decoding for a non-linear decoder.</div>
           <div class="pub-links"><a class="pub-link" href="https://cic.iacr.org/p/1/2/8" target="_blank" rel="noopener">Paper ↗</a></div>
         </div>
       </div>
@@ -807,7 +806,7 @@
         <div class="honor-icon" style="background:var(--gold-lo);">⭐</div>
         <div class="honor-body">
           <div class="honor-title">Google PhD Fellowship</div>
-          <div class="honor-meta">Awarded in the Security, Cryptography &amp; Privacy track — one of roughly 50 fellowships granted worldwide that year. Covers tuition and a research stipend for the duration of the PhD.</div>
+          <div class="honor-meta">Awarded in the Security, Cryptography &amp; Privacy track by Google Asia Pacific. Covers tuition and a research stipend for the duration of the PhD.</div>
           <div class="honor-year">2021</div>
         </div>
       </div>
@@ -823,7 +822,7 @@
         <div class="honor-icon" style="background:var(--teal-lo);">🎓</div>
         <div class="honor-body">
           <div class="honor-title">Winter School in Cryptography — IIT Madras</div>
-          <div class="honor-meta">Selected participant at the IIT Madras winter school on modern cryptography, with sessions on FHE, MPC, and lattice-based primitives.</div>
+          <div class="honor-meta">Selected participant at the IIT Madras winter school on modern cryptography, with sessions covering FHE, MPC, and lattice-based primitives.</div>
           <div class="honor-year">2023</div>
         </div>
       </div>
@@ -831,7 +830,7 @@
         <div class="honor-icon" style="background:var(--accent-lo);">📄</div>
         <div class="honor-body">
           <div class="honor-title">IACR CiC — Inaugural Volume</div>
-          <div class="honor-meta">Featured in the inaugural volume of IACR Communications in Cryptology — the IACR's gold open-access journal launched in 2024.</div>
+          <div class="honor-meta">Published in the inaugural volume of IACR Communications in Cryptology, the IACR's gold open-access journal launched in 2024.</div>
           <div class="honor-year">2024</div>
         </div>
       </div>
@@ -839,15 +838,15 @@
         <div class="honor-icon" style="background:var(--teal-lo);">🌍</div>
         <div class="honor-body">
           <div class="honor-title">TPMPC 2026 — Student Stipend</div>
-          <div class="honor-meta">Awarded a student stipend to attend TPMPC 2026, a leading invite-only workshop on the Theory and Practice of Multi-Party Computation, where I present our work on MUSSE.</div>
-          <div class="honor-year">2025</div>
+          <div class="honor-meta">Awarded a student stipend to attend TPMPC 2026 (Theory and Practice of Multi-Party Computation) in Aarhus, Denmark.</div>
+          <div class="honor-year">2026</div>
         </div>
       </div>
       <div class="honor-card">
         <div class="honor-icon" style="background:var(--gold-lo);">🔒</div>
         <div class="honor-body">
           <div class="honor-title">ESORICS 2025 — Core A Acceptance</div>
-          <div class="honor-meta">TERRA accepted at ESORICS 2025 (Core A), among Europe's premier venues for security and cryptography research, and presented in Toulouse, France.</div>
+          <div class="honor-meta">TERRA accepted at ESORICS 2025 (Core A) and presented in Toulouse, France.</div>
           <div class="honor-year">2025</div>
         </div>
       </div>
@@ -869,8 +868,8 @@
           <div class="exp-item" style="grid-template-columns:1fr;">
             <div>
               <div class="exp-role">Program Reviewer</div>
-              <div class="exp-where">ESORICS, ACNS, IEEE Transactions on Computers</div>
-              <div class="exp-detail">Reviewed submissions on cryptographic protocols, MPC, and hardware security.</div>
+              <div class="exp-where">IACR CiC, IEEE TIFS, CANS, ASIACCS, ESORICS, Elsevier FGCS, SUSCOM</div>
+              <div class="exp-detail">Sub-reviewer for CRYPTO, ASIACRYPT, CCS, IEEE S&amp;P, NDSS, USENIX Security.</div>
             </div>
           </div>
         </div>
@@ -882,8 +881,8 @@
           <div class="exp-item" style="grid-template-columns:1fr;">
             <div>
               <div class="exp-role">Teaching Assistant</div>
-              <div class="exp-where">IIT Kharagpur</div>
-              <div class="exp-detail">Courses in cryptography, algorithms, and computer security at undergraduate and postgraduate level.</div>
+              <div class="exp-where">IIT Kharagpur · 2020–present</div>
+              <div class="exp-detail">Foundations of Cryptography, Cryptographic Protocol Theory, Algorithm Design and Analysis, Programming and Data Structures.</div>
             </div>
           </div>
         </div>
@@ -908,8 +907,8 @@
           <div class="exp-when">2016 – 2020</div>
           <div>
             <div class="exp-role">B.Tech · Computer Science &amp; Engineering</div>
-            <div class="exp-where">IIIT Guwahati</div>
-            <div class="exp-detail">Graduated with first class. Final-year thesis on multi-authority attribute-based encryption for IoT, which led to publications in FGCS and J. Systems Architecture.</div>
+            <div class="exp-where">IIIT Guwahati · CPI 8.64/10</div>
+            <div class="exp-detail">Final-year thesis on multi-authority attribute-based encryption for IoT, which led to publications in FGCS and J. Systems Architecture.</div>
           </div>
         </div>
       </div>
@@ -923,13 +922,6 @@
           <div>
             <div class="exp-role">TERRA — ESORICS 2025</div>
             <div class="exp-where">Toulouse, France</div>
-          </div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-when">2025</div>
-          <div>
-            <div class="exp-role">MUSSE — TPMPC 2026</div>
-            <div class="exp-where">Extended abstract presentation at Theory and Practice of MPC workshop</div>
           </div>
         </div>
         <div class="exp-item">
