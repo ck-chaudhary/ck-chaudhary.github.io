@@ -1,1037 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chandan Kumar · Cryptography Researcher</title>
-  <meta name="description" content="PhD candidate at IIT Kharagpur working on Function Secret Sharing, threshold encrypted search, and secure computation. Google PhD Fellow 2021."/>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chandan Kumar</title>
+<meta name="description" content="Chandan Kumar, PhD candidate at IIT Kharagpur. Cryptography: function secret sharing, searchable encryption, secure computation.">
 
-  <style>
-    /* ── TOKENS ─────────────────────────────── */
-    :root {
-      --bg:         #F7F6F3;
-      --white:      #FFFFFF;
-      --surface:    #FDFCFA;
-      --border:     #E8E4DC;
-      --border-light: #F0EDE8;
-      --ink:        #1A1814;
-      --ink2:       #3D3A35;
-      --muted:      #78746D;
-      --muted2:     #A09C95;
-      --accent:     #1E40AF;
-      --accent-mid: #2563EB;
-      --accent-lo:  #EFF6FF;
-      --accent-hi:  #1D3A9E;
-      --teal:       #0D7377;
-      --teal-lo:    #F0FAFA;
-      --gold:       #92700A;
-      --gold-lo:    #FFF9ED;
-      --serif:      'Lora', Georgia, serif;
-      --sans:       'Outfit', system-ui, sans-serif;
-      --mono:       'Fira Code', monospace;
-      --radius:     6px;
-      --shadow:     0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
-      --shadow-md:  0 2px 8px rgba(0,0,0,0.09), 0 8px 32px rgba(0,0,0,0.06);
-    }
+<style>
+body {
+  font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #222;
+  background: #fff;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 17px; }
+a { color: #20669c; text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-weight: 400;
-      line-height: 1.8;
-      -webkit-font-smoothing: antialiased;
-    }
+nav { margin: 28px 0 40px; font-size: 15px; }
+nav a { margin-right: 14px; color: #555; }
+nav a:hover { color: #20669c; }
 
-    a { color: inherit; text-decoration: none; }
+h1 { font-size: 30px; font-weight: 600; margin: 0 0 2px; }
+h2 {
+  font-size: 21px;
+  font-weight: 600;
+  margin: 48px 0 16px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
 
-    /* ── NAV ─────────────────────────────────── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(247,246,243,0.92);
-      backdrop-filter: blur(16px) saturate(160%);
-      border-bottom: 1px solid var(--border);
-      height: 56px;
-      display: flex; align-items: center;
-    }
-    .nav-inner {
-      max-width: 1020px; width: 100%; margin: 0 auto;
-      padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo {
-      font-family: var(--serif); font-size: 1rem; font-weight: 500;
-      color: var(--ink); letter-spacing: 0.01em;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-mid); }
-    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em;
-      color: var(--muted); transition: color 0.18s;
-    }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent-mid); }
+.subtitle { color: #555; margin: 0 0 24px; }
 
-    /* ── LAYOUT ──────────────────────────────── */
-    .container {
-      max-width: 1020px; margin: 0 auto; padding: 0 2rem;
-    }
+.about { overflow: hidden; }
+.about img {
+  float: right;
+  width: 170px;
+  margin: 4px 0 12px 24px;
+  border-radius: 3px;
+}
+.about p { margin: 0 0 14px; }
 
-    section { padding: 5.5rem 0; }
-    section + section { border-top: 1px solid var(--border-light); }
+.contact-lines { font-size: 15px; color: #555; margin-top: 18px; }
+.contact-lines a { margin-right: 12px; }
 
-    .section-label {
-      font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--accent-mid); margin-bottom: 0.4rem;
-    }
-    .section-title {
-      font-family: var(--serif); font-size: 2rem; font-weight: 500;
-      line-height: 1.2; color: var(--ink); margin-bottom: 2.5rem;
-    }
+table.news { border-collapse: collapse; width: 100%; }
+table.news td { vertical-align: top; padding: 5px 0; }
+table.news td.date { white-space: nowrap; color: #777; width: 95px; font-size: 15px; padding-right: 18px; }
 
-    /* ── HERO ────────────────────────────────── */
-    #about { padding-top: 4.5rem; padding-bottom: 4.5rem; }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 220px;
-      gap: 4rem; align-items: start;
-    }
+ul.pubs { list-style: none; padding: 0; margin: 0; }
+ul.pubs li { margin-bottom: 16px; }
+.pub-title { font-weight: 600; }
+.pub-authors { font-size: 15px; }
+.pub-venue { font-size: 15px; font-style: italic; color: #555; }
+.pub-links { font-size: 14px; }
+.me { font-weight: 600; }
 
-    .hero-name {
-      font-family: var(--serif);
-      font-size: clamp(2.4rem, 5vw, 3.5rem);
-      font-weight: 500; line-height: 1.1;
-      color: var(--ink); margin-bottom: 0.3rem;
-      letter-spacing: -0.01em;
-    }
-    .hero-role {
-      font-size: 1rem; color: var(--muted); margin-bottom: 0.2rem;
-      display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
-    }
-    .hero-role-sep { color: var(--border); }
-    .hero-fellow-badge {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      background: var(--gold-lo); border: 1px solid #DFC278;
-      color: var(--gold); border-radius: var(--radius);
-      font-size: 0.75rem; font-weight: 500; padding: 0.18rem 0.6rem;
-      letter-spacing: 0.01em; margin-bottom: 1.5rem; margin-top: 0.6rem;
-    }
-    .hero-fellow-badge svg { flex-shrink: 0; }
+ul.plain { padding-left: 20px; margin: 0; }
+ul.plain li { margin-bottom: 8px; }
 
-    .hero-bio {
-      font-size: 0.96rem; color: var(--ink2); line-height: 1.85;
-      display: flex; flex-direction: column; gap: 0.9rem;
-      max-width: 620px; margin-bottom: 1.8rem;
-    }
-    .hero-bio p { opacity: 0.9; }
-    .hero-bio a { color: var(--accent-mid); border-bottom: 1px solid rgba(37,99,235,0.25); transition: border-color 0.15s; }
-    .hero-bio a:hover { border-color: var(--accent-mid); }
-    .hero-bio strong { color: var(--ink); font-weight: 600; }
+dl.edu dt { font-weight: 600; }
+dl.edu dd { margin: 0 0 14px; color: #444; }
+.edu-when { font-weight: normal; color: #777; font-size: 15px; }
 
-    .hero-tags {
-      display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem;
-    }
-    .hero-tag {
-      font-size: 0.75rem; font-weight: 500;
-      background: var(--white); border: 1px solid var(--border);
-      color: var(--ink2); border-radius: 100px;
-      padding: 0.2rem 0.7rem; letter-spacing: 0.01em;
-      transition: all 0.15s;
-    }
-    .hero-tag:hover { border-color: var(--accent-mid); color: var(--accent-mid); }
+footer {
+  margin-top: 60px;
+  padding-top: 14px;
+  border-top: 1px solid #ddd;
+  font-size: 14px;
+  color: #888;
+}
 
-    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      font-size: 0.82rem; font-weight: 500; border-radius: var(--radius);
-      padding: 0.5rem 1.1rem; transition: all 0.18s; cursor: pointer;
-      letter-spacing: 0.01em;
-    }
-    .btn-primary {
-      background: var(--accent-mid); color: #fff;
-      border: 1px solid var(--accent-mid);
-    }
-    .btn-primary:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
-    .btn-outline {
-      background: var(--white); color: var(--ink2);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover { border-color: var(--accent-mid); color: var(--accent-mid); }
-
-    /* right column */
-    .hero-right { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
-
-    .photo-wrap {
-      width: 190px; height: 190px;
-      border-radius: 10px; overflow: hidden;
-      border: 3px solid var(--white);
-      box-shadow: var(--shadow-md), 0 0 0 1px var(--border);
-    }
-    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .stats-card {
-      width: 100%; background: var(--white);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      overflow: hidden; box-shadow: var(--shadow);
-    }
-    .stat-row {
-      display: flex; align-items: center; gap: 0.9rem;
-      padding: 0.7rem 1rem;
-      border-bottom: 1px solid var(--border-light);
-    }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-num {
-      font-family: var(--serif); font-size: 1.6rem; font-style: italic;
-      color: var(--accent-mid); line-height: 1; min-width: 38px;
-    }
-    .stat-label { font-size: 0.73rem; color: var(--muted); line-height: 1.35; font-weight: 400; }
-
-    .social-row { display: flex; gap: 0.4rem; }
-    .social-btn {
-      width: 34px; height: 34px; border-radius: var(--radius);
-      border: 1px solid var(--border); background: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--muted); transition: all 0.18s;
-    }
-    .social-btn:hover { border-color: var(--accent-mid); color: var(--accent-mid); box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
-
-    /* ── NEWS ────────────────────────────────── */
-    #news { padding-top: 4rem; padding-bottom: 4rem; }
-    .news-scroll {
-      display: flex; gap: 1rem; overflow-x: auto;
-      padding-bottom: 0.5rem; scroll-snap-type: x mandatory;
-    }
-    .news-scroll::-webkit-scrollbar { height: 4px; }
-    .news-scroll::-webkit-scrollbar-track { background: var(--border-light); border-radius: 99px; }
-    .news-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-    .news-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1rem 1.2rem;
-      min-width: 280px; max-width: 320px;
-      box-shadow: var(--shadow); scroll-snap-align: start;
-      flex-shrink: 0;
-    }
-    .news-date {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--accent-mid); letter-spacing: 0.06em;
-      margin-bottom: 0.35rem;
-    }
-    .news-text { font-size: 0.86rem; color: var(--ink2); line-height: 1.6; }
-    .news-text strong { color: var(--ink); font-weight: 600; }
-
-    /* ── RESEARCH ────────────────────────────── */
-    .research-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-      background: var(--border); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-    }
-    .research-card {
-      background: var(--white); padding: 1.6rem 1.5rem;
-      transition: background 0.2s;
-    }
-    .research-card:hover { background: var(--accent-lo); }
-    .rc-icon {
-      width: 36px; height: 36px; border-radius: var(--radius);
-      background: var(--accent-lo); border: 1px solid rgba(37,99,235,0.15);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 0.9rem; color: var(--accent-mid);
-    }
-    .rc-num {
-      font-family: var(--mono); font-size: 0.62rem; color: var(--muted2);
-      letter-spacing: 0.1em; margin-bottom: 0.35rem;
-    }
-    .research-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; line-height: 1.4; }
-    .research-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
-
-    /* ── PUBLICATIONS ────────────────────────── */
-    .pub-controls {
-      display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.8rem;
-    }
-    .filter-btn {
-      font-size: 0.78rem; font-weight: 500; padding: 0.3rem 0.85rem;
-      border-radius: 100px; border: 1px solid var(--border);
-      background: var(--white); color: var(--muted);
-      cursor: pointer; transition: all 0.15s;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--accent-lo); border-color: rgba(37,99,235,0.3);
-      color: var(--accent-mid);
-    }
-
-    .pub-list { display: flex; flex-direction: column; }
-    .pub-item {
-      padding: 1.5rem 0; border-bottom: 1px solid var(--border-light);
-      display: grid; grid-template-columns: 48px 1fr;
-      gap: 1.4rem; transition: opacity 0.2s;
-    }
-    .pub-item:last-child { border-bottom: none; }
-    .pub-item.hidden { display: none; }
-    .pub-year {
-      font-family: var(--mono); font-size: 0.66rem;
-      color: var(--muted2); padding-top: 0.25rem;
-    }
-    .pub-badge {
-      display: inline-flex; align-items: center;
-      font-size: 0.67rem; font-weight: 500; letter-spacing: 0.02em;
-      padding: 0.12rem 0.5rem; border-radius: 100px;
-      margin-bottom: 0.45rem;
-    }
-    .badge-cic   { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
-    .badge-a     { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
-    .badge-review{ background: var(--gold-lo); color: var(--gold); border: 1px solid #DFC278; }
-    .badge-other { background: #F1ECE2; color: #6B5E48; border: 1px solid #D9D2C4; }
-    .badge-b     { background: #F5EFFA; color: #6B2FA8; border: 1px solid #DCC8EE; }
-    .badge-journal { background: #FBF0F1; color: #9B2C3C; border: 1px solid #ECCBCF; }
-
-    .pub-title { font-size: 0.97rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; line-height: 1.45; }
-    .pub-authors { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.45rem; line-height: 1.6; }
-    .pub-authors strong { color: var(--ink2); font-weight: 600; }
-    .pub-desc { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 0.55rem; line-height: 1.65; max-width: 640px; }
-    .pub-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-    .pub-link {
-      font-family: var(--mono); font-size: 0.67rem; color: var(--accent-mid);
-      border: 1px solid rgba(37,99,235,0.22); padding: 0.1rem 0.5rem;
-      border-radius: 4px; transition: all 0.15s;
-    }
-    .pub-link:hover { background: var(--accent-lo); border-color: rgba(37,99,235,0.4); }
-
-    /* ── HONOURS ─────────────────────────────── */
-    .honors-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
-    }
-    .honor-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.3rem 1.4rem;
-      box-shadow: var(--shadow); display: flex; gap: 1rem; align-items: flex-start;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-    .honor-card:hover { box-shadow: var(--shadow-md); border-color: rgba(37,99,235,0.2); }
-    .honor-icon {
-      width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius);
-      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-    }
-    .honor-body {}
-    .honor-title { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.15rem; line-height: 1.4; }
-    .honor-meta { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
-    .honor-year {
-      font-family: var(--mono); font-size: 0.65rem; color: var(--accent-mid);
-      letter-spacing: 0.05em; margin-top: 0.2rem;
-    }
-
-    /* ── SERVICE / EXPERIENCE ────────────────── */
-    .exp-list { display: flex; flex-direction: column; gap: 0; }
-    .exp-item {
-      display: grid; grid-template-columns: 120px 1fr;
-      gap: 1.5rem; padding: 1.2rem 0;
-      border-bottom: 1px solid var(--border-light);
-    }
-    .exp-item:last-child { border-bottom: none; }
-    .exp-when {
-      font-family: var(--mono); font-size: 0.67rem;
-      color: var(--muted2); padding-top: 0.25rem; line-height: 1.5;
-    }
-    .exp-role { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.1rem; }
-    .exp-where { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
-    .exp-detail { font-size: 0.82rem; color: var(--ink2); line-height: 1.65; opacity: 0.85; }
-
-    /* ── CONTACT ─────────────────────────────── */
-    .contact-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-    }
-    .contact-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.4rem 1.5rem;
-      box-shadow: var(--shadow);
-    }
-    .contact-card-label {
-      font-family: var(--mono); font-size: 0.64rem; font-weight: 500;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.7rem;
-    }
-    .contact-card a, .contact-card p {
-      display: block; font-size: 0.88rem; color: var(--ink2);
-      line-height: 1.9; transition: color 0.15s;
-    }
-    .contact-card a:hover { color: var(--accent-mid); }
-
-    /* ── FOOTER ──────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.8rem 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      max-width: 1020px; margin: 0 auto;
-    }
-    .footer-copy { font-size: 0.78rem; color: var(--muted2); }
-    .footer-copy a { color: var(--muted2); border-bottom: 1px solid var(--border); }
-    .footer-copy a:hover { color: var(--accent-mid); }
-
-    /* ── SCROLL REVEAL ───────────────────────── */
-    .reveal {
-      opacity: 0; transform: translateY(22px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* stagger children */
-    .stagger > * {
-      opacity: 0; transform: translateY(18px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
-    .stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
-    .stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.07s; }
-    .stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.14s; }
-    .stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.21s; }
-    .stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.28s; }
-    .stagger.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.35s; }
-    .stagger.visible > *:nth-child(7) { opacity: 1; transform: none; transition-delay: 0.42s; }
-    .stagger.visible > *:nth-child(8) { opacity: 1; transform: none; transition-delay: 0.49s; }
-
-    /* Hero doesn't use reveal — immediate */
-    #about .hero-grid { opacity: 1; transform: none; }
-    #about .hero-left > * {
-      animation: heroIn 0.55s ease both;
-    }
-    #about .hero-left > *:nth-child(1) { animation-delay: 0.05s; }
-    #about .hero-left > *:nth-child(2) { animation-delay: 0.10s; }
-    #about .hero-left > *:nth-child(3) { animation-delay: 0.15s; }
-    #about .hero-left > *:nth-child(4) { animation-delay: 0.20s; }
-    #about .hero-left > *:nth-child(5) { animation-delay: 0.25s; }
-    #about .hero-left > *:nth-child(6) { animation-delay: 0.30s; }
-    #about .hero-right { animation: heroIn 0.6s 0.12s ease both; }
-
-    @keyframes heroIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    /* ── RESPONSIVE ──────────────────────────── */
-    @media (max-width: 760px) {
-      html { font-size: 16px; }
-      .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .hero-right { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
-      .photo-wrap { width: 140px; height: 140px; }
-      .stats-card { flex: 1; }
-      .research-grid { grid-template-columns: repeat(2, 1fr); }
-      .honors-grid { grid-template-columns: 1fr; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .exp-item { grid-template-columns: 1fr; gap: 0.3rem; }
-      .nav-links { display: none; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-    }
-    @media (max-width: 520px) {
-      .research-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── MISC ────────────────────────────────── */
-    .divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .divider-line { flex: 1; height: 1px; background: var(--border); }
-    .divider-text { font-size: 0.78rem; color: var(--muted2); white-space: nowrap; }
-
-    .chip {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.55rem;
-      border-radius: 100px; border: 1px solid var(--border);
-      background: var(--white); color: var(--muted);
-    }
-  </style>
+@media (max-width: 600px) {
+  .about img { float: none; display: block; margin: 0 0 16px; }
+  h1 { font-size: 26px; }
+}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="nav-inner">
-    <a class="nav-logo" href="#about">
-      <span class="nav-dot"></span>Chandan Kumar
-    </a>
-    <ul class="nav-links">
-      <li><a href="#news">News</a></li>
-      <li><a href="#research">Research</a></li>
-      <li><a href="#publications">Publications</a></li>
-      <li><a href="#honors">Honors</a></li>
-      <li><a href="#service">Service</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </div>
+  <a href="#about">about</a>
+  <a href="#news">news</a>
+  <a href="#publications">publications</a>
+  <a href="#awards">awards</a>
+  <a href="#service">service</a>
+  <a href="#contact">contact</a>
+  <a href="https://drive.google.com/file/d/1oETBiKFaO-IycF_nygJXn-Wi5eEL2p5b/view" target="_blank" rel="noopener">cv</a>
 </nav>
 
-<!-- ── ABOUT ── -->
-<section id="about">
-  <div class="container">
-    <div class="hero-grid">
-      <!-- LEFT -->
-      <div class="hero-left">
-        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;">
-          PhD Candidate · SEAL Lab · IIT Kharagpur
-        </p>
+<div class="about" id="about">
+  <img src="chandan.jpg" alt="Chandan Kumar">
 
-        <h1 class="hero-name">Chandan Kumar</h1>
+  <h1>Chandan Kumar</h1>
+  <p class="subtitle">PhD candidate, <a href="https://cse.iitkgp.ac.in/" target="_blank" rel="noopener">Department of Computer Science and Engineering, IIT Kharagpur</a></p>
 
-        <div class="hero-role">
-          <span>Cryptography &amp; Secure Computation</span>
-        </div>
+  <p>
+    I am a PhD candidate at IIT Kharagpur, advised by
+    <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay</a> and
+    <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh</a>.
+    I also work closely with
+    <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a>
+    at IBM Research India. My PhD is supported by a Google PhD Fellowship (2021) in Security, Privacy and Cryptography.
+  </p>
 
-        <div class="hero-fellow-badge">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          Google PhD Fellow 2021 · Security, Cryptography &amp; Privacy
-        </div>
+  <p>
+    I work on cryptographic protocols for distributed settings. Much of my recent work builds on
+    function secret sharing (FSS): compact-key FSS constructions, threshold searchable encryption
+    (ThORY, MUSSE), and FSS-based privacy-preserving machine learning. I am also interested in
+    cryptographic reverse firewalls&mdash;our ESORICS 2025 paper TERRA constructs a reverse firewall
+    that remains secure in the presence of hardware Trojans&mdash;and in hardware security topics
+    such as PUFs and electronic supply-chain protection.
+  </p>
 
-        <div class="hero-bio">
-          <p>
-            Welcome. I am a PhD candidate at the <a href="https://cse.iitkgp.ac.in/" target="_blank" rel="noopener">Department of Computer Science &amp; Engineering, IIT Kharagpur</a>, advised by <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay</a> and <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh</a>.
-          </p>
+  <p>
+    Before joining IIT Kharagpur, I received my B.Tech in Computer Science and Engineering from
+    <a href="https://www.iiitg.ac.in/" target="_blank" rel="noopener">IIIT Guwahati</a> in 2020.
+  </p>
 
-          <p>
-            My research designs cryptographic primitives that bridge theory and deployable systems. At the center of my work is <strong>Function Secret Sharing (FSS)</strong> — a lightweight primitive that distributes computation across non-colluding servers — and its use in encrypted search, privacy-preserving ML inference, and distributed protocols.
-          </p>
-          <p>
-            In a parallel line of work, I study <strong>Trojan-resilient reverse firewalls</strong>: cryptographic wrappers that sanitize outgoing messages even when the underlying hardware is adversarial. Our ESORICS 2025 paper, <strong>TERRA</strong>, gives the first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015).
-          </p>
-          <p>
-            I collaborate closely with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a> at IBM Research India, and completed my B.Tech in CSE at <a href="https://www.iiitg.ac.in/" target="_blank" rel="noopener">IIIT Guwahati</a> in 2020.
-          </p>
-        </div>
-
-        <div class="hero-tags">
-          <span class="hero-tag">FSS / HSS</span>
-          <span class="hero-tag">Threshold Encrypted Search</span>
-          <span class="hero-tag">Privacy-Preserving ML</span>
-          <span class="hero-tag">FHE</span>
-          <span class="hero-tag">Reverse Firewalls</span>
-          <span class="hero-tag">MPC</span>
-          <span class="hero-tag">Attribute-Based Encryption</span>
-          <span class="hero-tag">Side-Channel Analysis</span>
-        </div>
-
-        <div class="hero-ctas">
-          <a href="https://drive.google.com/file/d/1oETBiKFaO-IycF_nygJXn-Wi5eEL2p5b/view" class="btn btn-primary" target="_blank" rel="noopener">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Curriculum Vitae
-          </a>
-          <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" class="btn btn-outline" target="_blank" rel="noopener">Google Scholar</a>
-          <a href="https://eprint.iacr.org/search?q=chandan+kumar" class="btn btn-outline" target="_blank" rel="noopener">IACR ePrint</a>
-          <a href="mailto:cchaudhary278@gmail.com" class="btn btn-outline">Email</a>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="hero-right">
-        <div class="photo-wrap">
-          <img src="chandan.jpg" alt="Chandan Kumar" loading="eager" width="190" height="190"/>
-        </div>
-
-        <div class="social-row">
-          <a class="social-btn" href="https://github.com/ck-chaudhary" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          </a>
-          <a class="social-btn" href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-          <a class="social-btn" href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/></svg>
-          </a>
-        </div>
-
-        <div class="stats-card">
-          <div class="stat-row">
-            <span class="stat-num">10+</span>
-            <span class="stat-label">Publications across<br/>top venues</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-num">4</span>
-            <span class="stat-label">First-author<br/>papers</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-num">★</span>
-            <span class="stat-label">Google PhD<br/>Fellow 2021</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── NEWS ── -->
-<section id="news">
-  <div class="container">
-    <p class="section-label">Updates</p>
-    <h2 class="section-title" style="margin-bottom:1.5rem;">Recent News</h2>
-    <div class="news-scroll stagger">
-      <div class="news-card">
-        <div class="news-date">2026</div>
-        <div class="news-text">Awarded a <strong>student stipend</strong> to attend <strong>TPMPC 2026</strong> — the Theory and Practice of Multi-Party Computation workshop, where I will present our work on multi-server SSE.</div>
-      </div>
-      <div class="news-card">
-        <div class="news-date">2026</div>
-        <div class="news-text"><strong>X-CHAIN</strong> accepted at <strong>ACNS 2026</strong> — combining 3D X-ray inspection with blockchain to strengthen electronic supply-chain security.</div>
-      </div>
-      <div class="news-card">
-        <div class="news-date">Sep 2025</div>
-        <div class="news-text">Presented <strong>TERRA</strong> at <strong>ESORICS 2025</strong>, Toulouse — the first Trojan-resilient reverse firewall with formal guarantees in the PC-III model.</div>
-      </div>
-      <div class="news-card">
-        <div class="news-date">2023</div>
-        <div class="news-text">Invited to the <strong>MPC Retreat Workshop</strong> at <strong>IISc Bengaluru</strong> to present ongoing work on Function Secret Sharing and threshold encrypted search.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── RESEARCH ── -->
-<section id="research">
-  <div class="container">
-    <p class="section-label reveal">Research areas</p>
-    <h2 class="section-title reveal">What I Work On</h2>
-
-    <div class="research-grid stagger">
-      <div class="research-card">
-        <div class="rc-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        </div>
-        <div class="rc-num">01 · FSS / HSS</div>
-        <h3>Function Secret Sharing</h3>
-        <p>Compact-key FSS with non-linear decoders that breaks the linear-algebraic barrier on key size, together with Threshold DPFs for silent, communication-efficient distributed computation. Downstream applications span ORAM, PIR, and zero-knowledge.</p>
-      </div>
-      <div class="research-card">
-        <div class="rc-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="rc-num">02 · SSE</div>
-        <h3>Encrypted Search</h3>
-        <p>ThORY is the first threshold SSE scheme to achieve sub-linear search, built atop Threshold DPFs. MUSSE extends this to multi-server conjunctive queries via VDMPFs, attaining concrete leakage bounds tighter than single-server baselines — each with simulation-based proofs.</p>
-      </div>
-      <div class="research-card">
-        <div class="rc-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <div class="rc-num">03 · PPML</div>
-        <h3>Privacy-Preserving ML</h3>
-        <p>FSS-based secure inference with access-controlled policy gates, aimed at sub-linear inference costs at deployment scale. AC-PPML weaves attribute-based policy enforcement into FSS-powered inference, targeting practical two-server deployments.</p>
-      </div>
-      <div class="research-card">
-        <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="rc-num">04 · RF</div>
-        <h3>Reverse Firewalls</h3>
-        <p>TERRA introduces the first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015). Follow-up work examines covert-channel leakage in RF implementations built over MPC gadgets.</p>
-      </div>
-      <div class="research-card">
-        <div class="rc-icon" style="background:var(--teal-lo);border-color:rgba(13,115,119,0.2);color:var(--teal);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-        </div>
-        <div class="rc-num">05 · FHE / MPC</div>
-        <h3>Secure Computation</h3>
-        <p>Threshold FHE with hardware acceleration (FACT) and lightweight MPC constructions distilled from FSS primitives, with connections to VOLE-based ZK and PCG techniques. Also: oblivious transfer that avoids the physical transfer of a hardware root-of-trust.</p>
-      </div>
-      <div class="research-card">
-        <div class="rc-icon" style="background:#FFF7ED;border-color:rgba(194,120,40,0.2);color:#C2783A;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <div class="rc-num">06 · HW-SEC</div>
-        <h3>Hardware Security</h3>
-        <p>EM-based correlation power analysis on OP-TEE/TrustZone (Raspberry Pi), circuit-level Hardware Trojan threat modeling, HardCODE — hardware circuit obfuscation via data encryption, and PUF–blockchain integration for electronic supply-chain security.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PUBLICATIONS ── -->
-<section id="publications">
-  <div class="container">
-    <p class="section-label reveal">Selected works</p>
-    <h2 class="section-title reveal">Publications</h2>
-
-    <div class="pub-controls reveal">
-      <button class="filter-btn active" onclick="filterPubs('all',this)">All</button>
-      <button class="filter-btn" onclick="filterPubs('first',this)">First Author</button>
-      <button class="filter-btn" onclick="filterPubs('published',this)">Published</button>
-      <button class="filter-btn" onclick="filterPubs('review',this)">Under Review</button>
-    </div>
-
-    <div class="pub-list">
-
-      <div class="pub-item" data-type="first review">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-badge badge-review">Under Revision · IACR CiC</span>
-          <div class="pub-title">ThORY: Threshold Encrypted Search from Function Secret Sharing</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">The first threshold SSE construction to achieve sub-linear search, built from Threshold DPFs. We prove conjunctive correctness and simulation security in the two-server model; the current revision addresses 33 detailed reviewer requirements.</div>
-          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="first review">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-badge badge-review">Under Review</span>
-          <div class="pub-title">MUSSE: Multi-Server Low-Leakage Conjunctive SSE</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Sikhar Patranabis, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">Introduces the HQSM primitive via Verifiable DPF Multi-Point functions (VDMPFs) for two-server conjunctive SSE, achieving concrete leakage bounds below single-server baselines. An extended abstract was presented at TPMPC 2026.</div>
-          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/" target="_blank" rel="noopener">ePrint ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="first published">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-badge badge-a">ESORICS 2025 · Core A</span>
-          <div class="pub-title">TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">The first formally proven reverse firewall that tolerates hardware Trojans in the PC-III circuit model, closing a problem open since Mironov–Stephens-Davidowitz (2015). We lift prior RF definitions to the malicious-hardware setting with full simulation proofs.</div>
-          <div class="pub-links">
-            <a class="pub-link" href="https://eprint.iacr.org/2025/761" target="_blank" rel="noopener">ePrint ↗</a>
-            <a class="pub-link" href="https://dl.acm.org/doi/abs/10.1007/978-3-032-07891-9_12" target="_blank" rel="noopener">Paper ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="first published">
-        <div class="pub-year">2024</div>
-        <div>
-          <span class="pub-badge badge-cic">IACR CiC · Vol.1 Issue.2</span>
-          <div class="pub-title">Compact Key Function Secret Sharing with Non-linear Decoder</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-desc">Breaks the linear-algebraic barrier that capped prior FSS key sizes. The first FSS scheme to achieve compact keys without relaxing correctness, via a non-linear decoding mechanism that yields exponential key-size reduction.</div>
-          <div class="pub-links"><a class="pub-link" href="https://cic.iacr.org/p/1/2/8" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="review">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-badge badge-other">IACR ePrint</span>
-          <div class="pub-title">FACT: Fast and Accelerated Threshold FHE for Real-Time Applications</div>
-          <div class="pub-authors">Siddhartha Chowdhury, Sayani Sinha, Animesh Singh, Shubham Mishra, <strong>Chandan Kumar</strong>, Sikhar Patranabis, Pratyay Mukherjee, Ayantika Chatterjee, Debdeep Mukhopadhyay</div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2026</div>
-        <div>
-          <span class="pub-badge badge-b">ACNS 2026 · Core B</span>
-          <div class="pub-title">X-CHAIN: Enhancing Electronic Supply Chain Security with 3D X-ray Inspection and Blockchain</div>
-          <div class="pub-authors">Shuvodip Maitra, Tishya Sarma Sarkar, <strong>Chandan Kumar</strong>, Abhishek Chakraborty, Debdeep Mukhopadhyay</div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2025</div>
-        <div>
-          <span class="pub-badge badge-other">ePrint 2025/1989</span>
-          <div class="pub-title">HardCODE: Hardware-based Circuit Obfuscation using Data Encryption</div>
-          <div class="pub-authors">Akashdeep Saha, Sayani Sinha, <strong>Chandan Kumar</strong>, Animesh Singh, Siddhartha Chowdhury, Sikhar Patranabis, Debdeep Mukhopadhyay</div>
-          <div class="pub-links"><a class="pub-link" href="https://eprint.iacr.org/2025/1989" target="_blank" rel="noopener">ePrint ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="first published">
-        <div class="pub-year">2023</div>
-        <div>
-          <span class="pub-badge badge-journal">FGCS · Elsevier</span>
-          <div class="pub-title">RMA-CPABE: Multi-authority CPABE with Reduced Ciphertext Size for IoT</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Richa Sarma, Ferdous Ahmed Barbhuiya</div>
-          <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0167739X22002783" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2023</div>
-        <div>
-          <span class="pub-badge badge-b">ApPLIED @ PODC 2023 · ACM</span>
-          <div class="pub-title">Oblivious Transfer Protocol without Physical Transfer of Hardware Root-of-Trust</div>
-          <div class="pub-authors">Boyapally Harishma, <strong>Chandan Kumar</strong>, Debdeep Mukhopadhyay</div>
-          <div class="pub-links"><a class="pub-link" href="https://dl.acm.org/doi/pdf/10.1145/3584684.3597273" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2022</div>
-        <div>
-          <span class="pub-badge badge-journal">J. Systems Architecture · Elsevier</span>
-          <div class="pub-title">MACFI: Multi-Authority Access Control with Efficient Ciphertext and Secret Key Size for Fog-Enhanced IoT</div>
-          <div class="pub-authors">Richa Sharma, <strong>Chandan Kumar</strong>, Ferdous A. Barbhuiya</div>
-          <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S1383762121002393" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="first published">
-        <div class="pub-year">2021</div>
-        <div>
-          <span class="pub-badge badge-b">AsianHOST 2021 · IEEE</span>
-          <div class="pub-title">Auto-PUFChain: An Automated Interaction Tool for PUFs and Blockchain in Electronic Supply Chain</div>
-          <div class="pub-authors"><strong>Chandan Kumar</strong>, Urbi Chatterjee, Debdeep Mukhopadhyay</div>
-          <div class="pub-links"><a class="pub-link" href="https://ieeexplore.ieee.org/abstract/document/9699720" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2021</div>
-        <div>
-          <span class="pub-badge badge-b">SRDS 2021 · IEEE</span>
-          <div class="pub-title">A Secure Access and Accountability Framework for Provisioning Services in Named Data Networks</div>
-          <div class="pub-authors">N. H. Sultan, V. Varadharajan, <strong>Chandan Kumar</strong>, S. Camtepe, S. Nepal</div>
-          <div class="pub-links"><a class="pub-link" href="https://ieeexplore.ieee.org/abstract/document/9603629" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item" data-type="published">
-        <div class="pub-year">2021</div>
-        <div>
-          <span class="pub-badge badge-journal">SUSCOM · Elsevier</span>
-          <div class="pub-title">PAC-FIT: An Efficient Privacy-Preserving Access Control Scheme for Fog-Enabled IoT</div>
-          <div class="pub-authors">Richa Sharma, <strong>Chandan Kumar</strong>, Ferdous A. Barbhuiya</div>
-          <div class="pub-links"><a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S2210537921000202" target="_blank" rel="noopener">Paper ↗</a></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ── HONORS ── -->
-<section id="honors">
-  <div class="container">
-    <p class="section-label reveal">Recognition</p>
-    <h2 class="section-title reveal">Honours &amp; Awards</h2>
-
-    <div class="honors-grid stagger">
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--gold-lo);">⭐</div>
-        <div class="honor-body">
-          <div class="honor-title">Google PhD Fellowship</div>
-          <div class="honor-meta">Awarded in the Security, Cryptography &amp; Privacy track — one of roughly 50 fellowships granted worldwide that year. Covers tuition and a research stipend for the duration of the PhD.</div>
-          <div class="honor-year">2021</div>
-        </div>
-      </div>
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--accent-lo);">🏛️</div>
-        <div class="honor-body">
-          <div class="honor-title">MPC Retreat — IISc Bengaluru</div>
-          <div class="honor-meta">Invited to the annual MPC research retreat hosted by the Cryptography &amp; Security group at IISc, where I presented ongoing work on FSS and encrypted search.</div>
-          <div class="honor-year">2023</div>
-        </div>
-      </div>
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--teal-lo);">🎓</div>
-        <div class="honor-body">
-          <div class="honor-title">Winter School in Cryptography — IIT Madras</div>
-          <div class="honor-meta">Selected participant at the IIT Madras winter school on modern cryptography, with sessions on FHE, MPC, and lattice-based primitives.</div>
-          <div class="honor-year">2023</div>
-        </div>
-      </div>
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--accent-lo);">📄</div>
-        <div class="honor-body">
-          <div class="honor-title">IACR CiC — Inaugural Volume</div>
-          <div class="honor-meta">Featured in the inaugural volume of IACR Communications in Cryptology — the IACR's gold open-access journal launched in 2024.</div>
-          <div class="honor-year">2024</div>
-        </div>
-      </div>
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--teal-lo);">🌍</div>
-        <div class="honor-body">
-          <div class="honor-title">TPMPC 2026 — Student Stipend</div>
-          <div class="honor-meta">Awarded a student stipend to attend TPMPC 2026, a leading invite-only workshop on the Theory and Practice of Multi-Party Computation, where I present our work on MUSSE.</div>
-          <div class="honor-year">2025</div>
-        </div>
-      </div>
-      <div class="honor-card">
-        <div class="honor-icon" style="background:var(--gold-lo);">🔒</div>
-        <div class="honor-body">
-          <div class="honor-title">ESORICS 2025 — Core A Acceptance</div>
-          <div class="honor-meta">TERRA accepted at ESORICS 2025 (Core A), among Europe's premier venues for security and cryptography research, and presented in Toulouse, France.</div>
-          <div class="honor-year">2025</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── SERVICE & EXPERIENCE ── -->
-<section id="service">
-  <div class="container">
-    <p class="section-label reveal">Professional</p>
-    <h2 class="section-title reveal">Service &amp; Experience</h2>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;" class="reveal">
-
-      <div>
-        <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Reviewing</h3>
-        <div class="exp-list">
-          <div class="exp-item" style="grid-template-columns:1fr;">
-            <div>
-              <div class="exp-role">Program Reviewer</div>
-              <div class="exp-where">ESORICS, ACNS, IEEE Transactions on Computers</div>
-              <div class="exp-detail">Reviewed submissions on cryptographic protocols, MPC, and hardware security.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Teaching</h3>
-        <div class="exp-list">
-          <div class="exp-item" style="grid-template-columns:1fr;">
-            <div>
-              <div class="exp-role">Teaching Assistant</div>
-              <div class="exp-where">IIT Kharagpur</div>
-              <div class="exp-detail">Courses in cryptography, algorithms, and computer security at undergraduate and postgraduate level.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div style="margin-top:3rem;" class="reveal">
-      <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Education</h3>
-      <div class="exp-list">
-        <div class="exp-item">
-          <div class="exp-when">2020 – present</div>
-          <div>
-            <div class="exp-role">PhD · Computer Science &amp; Engineering</div>
-            <div class="exp-where">IIT Kharagpur · SEAL Lab</div>
-            <div class="exp-detail">
-              Advised by Prof. Debdeep Mukhopadhyay and Prof. Satrajit Ghosh, with ongoing collaboration with Dr. Sikhar Patranabis (IBM Research India). Supported by the Google PhD Fellowship 2021. Thesis: <em>Design and Implementation of Advanced Cryptographic Primitives in Distributed Settings.</em>
-            </div>
-          </div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-when">2016 – 2020</div>
-          <div>
-            <div class="exp-role">B.Tech · Computer Science &amp; Engineering</div>
-            <div class="exp-where">IIIT Guwahati</div>
-            <div class="exp-detail">Graduated with first class. Final-year thesis on multi-authority attribute-based encryption for IoT, which led to publications in FGCS and J. Systems Architecture.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:3rem;" class="reveal">
-      <h3 style="font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">Talks &amp; Presentations</h3>
-      <div class="exp-list">
-        <div class="exp-item">
-          <div class="exp-when">Sep 2025</div>
-          <div>
-            <div class="exp-role">TERRA — ESORICS 2025</div>
-            <div class="exp-where">Toulouse, France</div>
-          </div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-when">2025</div>
-          <div>
-            <div class="exp-role">MUSSE — TPMPC 2026</div>
-            <div class="exp-where">Extended abstract presentation at Theory and Practice of MPC workshop</div>
-          </div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-when">2023</div>
-          <div>
-            <div class="exp-role">MPC Retreat — IISc Bengaluru</div>
-            <div class="exp-where">Invited talk on FSS and threshold encrypted search</div>
-          </div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-when">2023</div>
-          <div>
-            <div class="exp-role">Winter School in Cryptography</div>
-            <div class="exp-where">IIT Madras</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CONTACT ── -->
-<section id="contact">
-  <div class="container">
-    <p class="section-label reveal">Get in touch</p>
-    <h2 class="section-title reveal">Contact</h2>
-
-    <div class="contact-grid reveal">
-      <div class="contact-card">
-        <div class="contact-card-label">Address</div>
-        <p>A-307, Department of Computer Science &amp; Engineering<br/>IIT Kharagpur, West Bengal – 721302, India</p>
-      </div>
-      <div class="contact-card">
-        <div class="contact-card-label">Email</div>
-        <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">cchaudhary278@kgpian.iitkgp.ac.in</a>
-        <a href="mailto:cchaudhary278@gmail.com">cchaudhary278@gmail.com</a>
-      </div>
-      <div class="contact-card">
-        <div class="contact-card-label">Online Profiles</div>
-        <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
-        <a href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a href="https://github.com/ck-chaudhary" target="_blank" rel="noopener">GitHub ↗</a>
-        <a href="https://eprint.iacr.org/search?q=chandan+kumar" target="_blank" rel="noopener">IACR ePrint ↗</a>
-      </div>
-      <div class="contact-card">
-        <div class="contact-card-label">Advisors</div>
-        <a href="https://sites.google.com/view/debdeepmukhopadhyay/home" target="_blank" rel="noopener">Prof. Debdeep Mukhopadhyay ↗</a>
-        <a href="https://satcrypt.github.io/" target="_blank" rel="noopener">Prof. Satrajit Ghosh ↗</a>
-        <a href="https://researcher.watson.ibm.com/researcher/view.php?person=in-sikhar.patranabis" target="_blank" rel="noopener">Dr. Sikhar Patranabis, IBM Research ↗</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<div style="border-top:1px solid var(--border);">
-  <footer>
-    <span class="footer-copy">
-      Chandan Kumar · IIT Kharagpur · Last updated May 2026 ·
-      <a href="https://github.com/ck-chaudhary/ck-chaudhary.github.io" target="_blank" rel="noopener">Source ↗</a>
-    </span>
-    <span class="footer-copy">cchaudhary278@gmail.com</span>
-  </footer>
+  <p class="contact-lines">
+    <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">email</a>
+    <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&amp;hl=en" target="_blank" rel="noopener">google scholar</a>
+    <a href="https://eprint.iacr.org/search?q=chandan+kumar" target="_blank" rel="noopener">iacr eprint</a>
+    <a href="https://github.com/ck-chaudhary" target="_blank" rel="noopener">github</a>
+    <a href="https://www.linkedin.com/in/cchaudhary278/" target="_blank" rel="noopener">linkedin</a>
+  </p>
 </div>
 
-<script>
-/* ── Pub filter ── */
-function filterPubs(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.pub-item').forEach(item => {
-    if (type === 'all') { item.classList.remove('hidden'); return; }
-    item.classList.toggle('hidden', !(item.dataset.type || '').includes(type));
-  });
-}
+<h2 id="news">news</h2>
+<table class="news">
+  <tr>
+    <td class="date">May 2026</td>
+    <td>Received a student stipend to attend TPMPC 2026, where I will present our work on multi-server searchable encryption (MUSSE).</td>
+  </tr>
+  <tr>
+    <td class="date">2026</td>
+    <td>X-CHAIN accepted at ACNS 2026.</td>
+  </tr>
+  <tr>
+    <td class="date">Sep 2025</td>
+    <td>Presented TERRA at ESORICS 2025 in Toulouse, France.</td>
+  </tr>
+  <tr>
+    <td class="date">2024</td>
+    <td>Our paper on compact-key FSS appeared in the inaugural volume of IACR Communications in Cryptology.</td>
+  </tr>
+  <tr>
+    <td class="date">2023</td>
+    <td>Attended the MPC Retreat at IISc Bengaluru and presented ongoing work on FSS and threshold encrypted search. Also attended the Winter School in Cryptography at IIT Madras.</td>
+  </tr>
+</table>
 
-/* ── Scroll reveal ── */
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.08 });
+<h2 id="publications">publications</h2>
 
-document.querySelectorAll('.reveal, .stagger').forEach(el => io.observe(el));
+<p style="font-size:15px;color:#555;">See also <a href="https://scholar.google.com/citations?user=OXVAX88AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>. Author ordering follows the venue's convention.</p>
 
-/* ── Active nav ── */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
-const navIO = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navLinks.forEach(a =>
-        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)
-      );
-    }
-  });
-}, { rootMargin: '-40% 0px -54% 0px' });
-sections.forEach(s => navIO.observe(s));
-</script>
+<h3>preprints and papers under submission</h3>
+<ul class="pubs">
+  <li>
+    <span class="pub-title">ThORY: Threshold Encrypted Search from Function Secret Sharing</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Sikhar Patranabis, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">Under revision at IACR Communications in Cryptology</span>
+  </li>
+  <li>
+    <span class="pub-title">MUSSE: Multi-Server Low-Leakage Conjunctive SSE</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Nimish Mishra, Sikhar Patranabis, Satrajit Ghosh, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">Under submission. An extended abstract was presented at TPMPC 2026.</span>
+  </li>
+  <li>
+    <span class="pub-title">FACT: Fast and Accelerated Threshold FHE for Real-Time Applications</span><br>
+    <span class="pub-authors">Siddhartha Chowdhury, Sayani Sinha, Animesh Singh, Shubham Mishra, <span class="me">Chandan Kumar</span>, Sikhar Patranabis, Pratyay Mukherjee, Ayantika Chatterjee, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">IACR ePrint</span>
+  </li>
+  <li>
+    <span class="pub-title">HardCODE: Hardware-based Circuit Obfuscation using Data Encryption</span><br>
+    <span class="pub-authors">Akashdeep Saha, Sayani Sinha, <span class="me">Chandan Kumar</span>, Animesh Singh, Siddhartha Chowdhury, Sikhar Patranabis, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">IACR ePrint 2025/1989</span>
+    <span class="pub-links">[<a href="https://eprint.iacr.org/2025/1989" target="_blank" rel="noopener">eprint</a>]</span>
+  </li>
+</ul>
+
+<h3>conference and journal papers</h3>
+<ul class="pubs">
+  <li>
+    <span class="pub-title">X-CHAIN: Enhancing Electronic Supply Chain Security with 3D X-ray Inspection and Blockchain</span><br>
+    <span class="pub-authors">Shuvodip Maitra, Tishya Sarma Sarkar, <span class="me">Chandan Kumar</span>, Abhishek Chakraborty, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">ACNS 2026</span>
+  </li>
+  <li>
+    <span class="pub-title">TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">ESORICS 2025</span>
+    <span class="pub-links">[<a href="https://eprint.iacr.org/2025/761" target="_blank" rel="noopener">eprint</a>] [<a href="https://dl.acm.org/doi/abs/10.1007/978-3-032-07891-9_12" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">Compact Key Function Secret Sharing with Non-linear Decoder</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Sikhar Patranabis, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">IACR Communications in Cryptology, Vol. 1, Issue 2, 2024</span>
+    <span class="pub-links">[<a href="https://cic.iacr.org/p/1/2/8" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">RMA-CPABE: Multi-authority CPABE with Reduced Ciphertext Size for IoT</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Richa Sarma, Ferdous Ahmed Barbhuiya</span><br>
+    <span class="pub-venue">Future Generation Computer Systems (Elsevier), 2023</span>
+    <span class="pub-links">[<a href="https://www.sciencedirect.com/science/article/pii/S0167739X22002783" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">Oblivious Transfer Protocol without Physical Transfer of Hardware Root-of-Trust</span><br>
+    <span class="pub-authors">Boyapally Harishma, <span class="me">Chandan Kumar</span>, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">ApPLIED workshop at PODC 2023 (ACM)</span>
+    <span class="pub-links">[<a href="https://dl.acm.org/doi/pdf/10.1145/3584684.3597273" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">MACFI: Multi-Authority Access Control with Efficient Ciphertext and Secret Key Size for Fog-Enhanced IoT</span><br>
+    <span class="pub-authors">Richa Sarma, <span class="me">Chandan Kumar</span>, Ferdous Ahmed Barbhuiya</span><br>
+    <span class="pub-venue">Journal of Systems Architecture (Elsevier), 2022</span>
+    <span class="pub-links">[<a href="https://www.sciencedirect.com/science/article/pii/S1383762121002393" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">Auto-PUFChain: An Automated Interaction Tool for PUFs and Blockchain in Electronic Supply Chain</span><br>
+    <span class="pub-authors"><span class="me">Chandan Kumar</span>, Urbi Chatterjee, Debdeep Mukhopadhyay</span><br>
+    <span class="pub-venue">AsianHOST 2021 (IEEE)</span>
+    <span class="pub-links">[<a href="https://ieeexplore.ieee.org/abstract/document/9699720" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">A Secure Access and Accountability Framework for Provisioning Services in Named Data Networks</span><br>
+    <span class="pub-authors">Nazatul H. Sultan, Vijay Varadharajan, <span class="me">Chandan Kumar</span>, Seyit Camtepe, Surya Nepal</span><br>
+    <span class="pub-venue">SRDS 2021 (IEEE)</span>
+    <span class="pub-links">[<a href="https://ieeexplore.ieee.org/abstract/document/9603629" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+  <li>
+    <span class="pub-title">PAC-FIT: An Efficient Privacy-Preserving Access Control Scheme for Fog-Enabled IoT</span><br>
+    <span class="pub-authors">Richa Sarma, <span class="me">Chandan Kumar</span>, Ferdous Ahmed Barbhuiya</span><br>
+    <span class="pub-venue">Sustainable Computing (Elsevier), 2021</span>
+    <span class="pub-links">[<a href="https://www.sciencedirect.com/science/article/pii/S2210537921000202" target="_blank" rel="noopener">paper</a>]</span>
+  </li>
+</ul>
+
+<h2 id="awards">awards</h2>
+<ul class="plain">
+  <li><a href="https://research.google/programs-and-events/phd-fellowship/" target="_blank" rel="noopener">Google PhD Fellowship</a>, 2021 &mdash; Security, Privacy and Cryptography track.</li>
+  <li>Student stipend to attend TPMPC 2026 (Theory and Practice of Multi-Party Computation).</li>
+  <li>Invited to the MPC Retreat at IISc Bengaluru, 2023.</li>
+  <li>Selected participant, Winter School in Cryptography, IIT Madras, 2023.</li>
+</ul>
+
+<h2 id="service">service and teaching</h2>
+<ul class="plain">
+  <li>Reviewer: ESORICS, ACNS, IEEE Transactions on Computers.</li>
+  <li>Teaching assistant at IIT Kharagpur for courses in cryptography, algorithms, and computer security.</li>
+</ul>
+
+<h2 id="education">education</h2>
+<dl class="edu">
+  <dt>PhD, Computer Science and Engineering <span class="edu-when">&mdash; IIT Kharagpur, 2020&ndash;present</span></dt>
+  <dd>SEAL lab. Thesis: Design and Implementation of Advanced Cryptographic Primitives in Distributed Settings.</dd>
+  <dt>B.Tech, Computer Science and Engineering <span class="edu-when">&mdash; IIIT Guwahati, 2016&ndash;2020</span></dt>
+  <dd>Final-year thesis on multi-authority attribute-based encryption for IoT.</dd>
+</dl>
+
+<h2 id="contact">contact</h2>
+<p>
+  A-307, Department of Computer Science and Engineering<br>
+  IIT Kharagpur, West Bengal 721302, India
+</p>
+<p>
+  <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">cchaudhary278@kgpian.iitkgp.ac.in</a><br>
+  <a href="mailto:cchaudhary278@gmail.com">cchaudhary278@gmail.com</a>
+</p>
+
+<footer>
+  Chandan Kumar &middot; last updated July 2026 &middot;
+  <a href="https://github.com/ck-chaudhary/ck-chaudhary.github.io" target="_blank" rel="noopener">source</a>
+</footer>
 
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
