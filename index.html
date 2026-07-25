@@ -76,16 +76,6 @@ h3{
 .profile-card h1{font-size:25px; font-weight:600; margin:0 0 4px; color:var(--navy); letter-spacing:-.005em}
 .profile-role{font-size:15px; color:var(--muted); margin:0 0 2px}
 .profile-affil{font-size:15px; margin:0 0 16px}
-.status{
-  display:inline-block; font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
-  font-size:11.5px; letter-spacing:.04em; color:var(--teal-dk);
-  background:var(--wash); border:1px solid #bcd7e5; border-radius:99px;
-  padding:3px 11px; margin-bottom:18px;
-}
-.status .dot{
-  display:inline-block; width:6px; height:6px; border-radius:50%;
-  background:var(--teal); margin-right:6px; vertical-align:1px;
-}
 .icon-row{margin:0; display:flex; justify-content:center; gap:9px}
 .icon-row a{
   width:36px; height:36px; border-radius:50%; border:1px solid var(--grid);
@@ -183,7 +173,7 @@ footer{
   .icon-row a:hover{transform:none}
 }
 @media print{
-  nav,.icon-row,.status{display:none}
+  nav,.icon-row{display:none}
   body{max-width:none;font-size:11pt}
   a{color:#000;text-decoration:none}
   h2{page-break-after:avoid}
@@ -211,7 +201,6 @@ footer{
     <h1>Chandan Kumar</h1>
     <p class="profile-role">PhD Candidate in Cryptography</p>
     <p class="profile-affil"><a href="https://cse.iitkgp.ac.in/" target="_blank" rel="noopener">IIT Kharagpur</a></p>
-    <p class="status"><span class="dot"></span>Defending November 2026</p>
     <p class="icon-row">
       <a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in" title="Email" aria-label="Email">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7.5 9 5.5 9-5.5"/></svg>
@@ -240,7 +229,6 @@ footer{
       and I collaborate closely with
       <a href="https://sites.google.com/site/sikharpatranabis/home" target="_blank" rel="noopener">Dr. Sikhar Patranabis</a>
       at IBM Research India. My PhD is supported by a Google PhD Fellowship (2021) in Security, Cryptography, and Privacy.
-      I expect to defend my thesis in November 2026.
     </p>
     <p>
       My research focuses on applied cryptography, with an emphasis on secure computation and
@@ -454,7 +442,7 @@ footer{
 <h2 id="education">Education<a class="hash" href="#education" aria-label="Link to Education">#</a></h2>
 <dl class="edu">
   <dt>PhD, Computer Science and Engineering <span class="edu-when">&mdash; IIT Kharagpur, September 2020&ndash;present</span></dt>
-  <dd>SEAL lab. Thesis: <em>Design and Implementation of Advanced Cryptographic Primitives in Distributed Settings</em>. Expected defense: November 2026.</dd>
+  <dd>SEAL lab. Thesis: <em>Design and Implementation of Advanced Cryptographic Primitives in Distributed Settings</em>.</dd>
   <dt>B.Tech, Computer Science and Engineering <span class="edu-when">&mdash; IIIT Guwahati, 2016&ndash;2020</span></dt>
   <dd>CPI 8.64/10. Final-year thesis on multi-authority attribute-based encryption for IoT.</dd>
 </dl>
