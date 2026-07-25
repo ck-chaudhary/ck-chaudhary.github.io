@@ -119,7 +119,7 @@ mjx-container{overflow-x:auto;overflow-y:hidden}
 <script>
 window.MathJax = {
   tex: {inlineMath: [['$','$']], displayMath: [['$$','$$']]},
-  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code']}
+  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code','svg']}
 };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -160,6 +160,37 @@ to be yes, and the price is unusually cheap &mdash; one or two comparisons at th
 protocol, performed by a party that was going to add up the shares anyway.
 </p>
 
+
+<figure>
+<svg viewBox="0 0 700 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="At a glance: the problem, the idea, and the result.">
+ <g font-family="Georgia,serif">
+  <rect x="4" y="18" width="216" height="132" rx="5" fill="#fdf1ec" stroke="#e0bcac"/>
+  <text x="112" y="42" text-anchor="middle" fill="#b4552d" font-size="11.5" letter-spacing="1.6">THE PROBLEM</text>
+  <text x="112" y="70" text-anchor="middle" fill="#7d3c1c" font-size="26">2ᵖ⁻¹</text>
+  <text x="112" y="94" text-anchor="middle" fill="#8a4a26" font-size="12.5">seeds per row for a DPF,</text>
+  <text x="112" y="112" text-anchor="middle" fill="#8a4a26" font-size="12.5">qᵖ⁻¹ for a comparison</text>
+  <text x="112" y="130" text-anchor="middle" fill="#8a4a26" font-size="12.5">function. Megabyte keys.</text>
+
+  <rect x="242" y="18" width="216" height="132" rx="5" fill="#fbf7ef" stroke="#ddc99b"/>
+  <text x="350" y="42" text-anchor="middle" fill="#8a6d1f" font-size="11.5" letter-spacing="1.6">THE IDEA</text>
+  <text x="350" y="68" text-anchor="middle" fill="#6f5716" font-size="12.5">Sharing already lives in the</text>
+  <text x="350" y="86" text-anchor="middle" fill="#6f5716" font-size="12.5">exponent — so one seed per</text>
+  <text x="350" y="104" text-anchor="middle" fill="#6f5716" font-size="12.5">row is enough. Publish the</text>
+  <text x="350" y="122" text-anchor="middle" fill="#6f5716" font-size="12.5">corrections; let the decoder</text>
+  <text x="350" y="140" text-anchor="middle" fill="#6f5716" font-size="12.5">compare, not just add.</text>
+
+  <rect x="480" y="18" width="216" height="132" rx="5" fill="#eef6fa" stroke="#a8cee0"/>
+  <text x="588" y="42" text-anchor="middle" fill="#1d6a8f" font-size="11.5" letter-spacing="1.6">THE RESULT</text>
+  <text x="588" y="72" text-anchor="middle" fill="#15516e" font-size="26">4 MB</text>
+  <text x="588" y="96" text-anchor="middle" fill="#1d6a8f" font-size="12.5">where prior work needed 32,</text>
+  <text x="588" y="114" text-anchor="middle" fill="#1d6a8f" font-size="12.5">plus the first p-party DCF</text>
+  <text x="588" y="132" text-anchor="middle" fill="#1d6a8f" font-size="12.5">small enough to deploy.</text>
+
+  <text x="350" y="12" text-anchor="middle" fill="#8fa3b0" font-size="11" letter-spacing="2">AT A GLANCE</text>
+ </g>
+</svg>
+</figure>
+
 <h2>The setting, in one picture</h2>
 
 <p>
@@ -190,17 +221,17 @@ $f(x)$ &mdash; without any single server ever learning which function it was hel
   <g font-family="Georgia,serif" font-size="13">
     <rect x="226" y="20" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
     <text x="280" y="39" text-anchor="middle" fill="#1a2e4a">server 1</text>
-    <text x="280" y="55" text-anchor="middle" fill="#5a6570" font-size="12">key $k_1$</text>
+    <text x="280" y="55" text-anchor="middle" fill="#5a6570" font-size="12">key k₁</text>
 
     <rect x="226" y="86" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
     <text x="280" y="105" text-anchor="middle" fill="#1a2e4a">server 2</text>
-    <text x="280" y="121" text-anchor="middle" fill="#5a6570" font-size="12">key $k_2$</text>
+    <text x="280" y="121" text-anchor="middle" fill="#5a6570" font-size="12">key k₂</text>
 
     <text x="280" y="160" text-anchor="middle" fill="#8fa3b0" font-size="18">&#8942;</text>
 
     <rect x="226" y="178" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
     <text x="280" y="197" text-anchor="middle" fill="#1a2e4a">server p</text>
-    <text x="280" y="213" text-anchor="middle" fill="#5a6570" font-size="12">key $k_p$</text>
+    <text x="280" y="213" text-anchor="middle" fill="#5a6570" font-size="12">key kₚ</text>
   </g>
 
   <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#ar)">
@@ -216,7 +247,7 @@ $f(x)$ &mdash; without any single server ever learning which function it was hel
   <text x="512" y="137" text-anchor="middle" fill="#cfe6f2" font-family="Georgia,serif" font-size="12">combine</text>
 
   <path d="M570 123 L 626 123" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar)" fill="none"/>
-  <text x="662" y="119" text-anchor="middle" fill="#1a2e4a" font-family="Georgia,serif" font-size="15">$f(x)$</text>
+  <text x="662" y="119" text-anchor="middle" fill="#1a2e4a" font-family="Georgia,serif" font-size="15">f(x)</text>
   <text x="662" y="139" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="11">and nothing more</text>
 
   <text x="280" y="243" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="12" font-style="italic">any p&#8722;1 of these keys reveal nothing about f</text>
@@ -255,6 +286,86 @@ into two dimensions &mdash; $\mu$ columns by $\nu$ rows &mdash; so that a key on
 describe a row vector and a column vector rather than the whole grid.
 </p>
 
+
+<figure>
+<svg viewBox="0 0 700 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The one-dimensional evaluation table is folded into a two-dimensional grid so keys describe a row and a column instead of the whole table.">
+ <defs>
+  <marker id="fx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+   <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+  </marker>
+ </defs>
+ <g font-family="Georgia,serif">
+  <text x="150" y="22" text-anchor="middle" fill="#1a2e4a" font-size="13.5">the flat table</text>
+  <text x="150" y="39" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">2ⁿ cells — hopeless to share directly</text>
+  <rect x="22" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="33" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="44" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="55" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="66" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="77" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="88" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="99" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="110" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="121" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="132" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="143" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="154" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="165" y="52" width="9" height="26" fill="#1d6a8f" stroke="#c9d5dd"/>
+  <rect x="176" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="187" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="198" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="209" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="220" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="231" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="242" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="253" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="264" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <rect x="275" y="52" width="9" height="26" fill="#e8eef2" stroke="#c9d5dd"/>
+  <text x="150" y="96" text-anchor="middle" fill="#1d6a8f" font-size="11.5">one cell holds β</text>
+
+  <path d="M300 66 L360 66" stroke="#8fa3b0" stroke-width="1.3" marker-end="url(#fx)" fill="none"/>
+  <text x="330" y="58" text-anchor="middle" fill="#5a6570" font-size="11.5" font-style="italic">fold</text>
+
+  <text x="500" y="22" text-anchor="middle" fill="#1a2e4a" font-size="13.5">the folded grid</text>
+  <text x="500" y="39" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">ν rows × μ columns</text>
+  <rect x="420" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="447" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="474" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="501" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="528" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="555" y="52" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="420" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="447" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="474" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="501" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="528" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="555" y="79" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="420" y="106" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="447" y="106" width="25" height="25" fill="#1d6a8f" stroke="#c9d5dd"/>
+  <rect x="474" y="106" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="501" y="106" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="528" y="106" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="555" y="106" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="420" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="447" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="474" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="501" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="528" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="555" y="133" width="25" height="25" fill="#fff" stroke="#c9d5dd"/>
+  <rect x="418" y="104" width="164" height="25" fill="none" stroke="#b4552d" stroke-width="1.6"/>
+  <text x="600" y="121" fill="#b4552d" font-size="12">target row γ</text>
+  <rect x="445" y="50" width="25" height="112" fill="none" stroke="#8a6d1f" stroke-width="1.6" stroke-dasharray="3 2"/>
+  <text x="458" y="180" text-anchor="middle" fill="#8a6d1f" font-size="12">column δ</text>
+
+  <line x1="22" y1="205" x2="678" y2="205" stroke="#dde5ea"/>
+  <text x="350" y="226" text-anchor="middle" fill="#5a6570" font-size="12.5" font-style="italic">
+    A key now describes one row vector and one column vector — the whole design question is what has to sit in each.
+  </text>
+ </g>
+</svg>
+<figcaption>Splitting α into a row half and a column half is what makes p-party FSS tractable at all. Every scheme below differs only in what it must store per row.</figcaption>
+</figure>
+
 <p>
 That reshaping is where the schemes differ, and where the cost lives. In BGI15, built from
 plain PRGs, every row needs $2^{p-1}$ seeds, because the correction machinery has to work for
@@ -268,7 +379,7 @@ out of the secret key entirely.
 <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of how many seeds each scheme stores per row of the evaluation table.">
   <g font-family="Georgia,serif">
     <text x="105" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">Boyle et al. 2015</text>
-    <text x="105" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">$2^{p-1}$ seeds per row</text>
+    <text x="105" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">2ᵖ⁻¹ seeds per row</text>
     <text x="350" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">Riposte</text>
     <text x="350" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">2 seeds per row</text>
     <text x="595" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">This work</text>
@@ -320,9 +431,9 @@ out of the secret key entirely.
   <text x="609" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#8a6d1f">public</text>
 
   <g font-family="Georgia,serif" font-size="12" fill="#5a6570" text-anchor="middle">
-    <text x="105" y="200">key grows with $2^{p-1}$</text>
-    <text x="350" y="200">key grows with $2\nu + \mu$</text>
-    <text x="595" y="200">secret part: $\nu$ seeds</text>
+    <text x="105" y="200">key grows with 2ᵖ⁻¹</text>
+    <text x="350" y="200">key grows with 2ν + μ</text>
+    <text x="595" y="200">secret part: ν seeds</text>
     <text x="595" y="216" fill="#8a6d1f">rest moves out of the key</text>
   </g>
 </svg>
@@ -345,6 +456,32 @@ parameter $\lambda = 256$, group size $|\mathbb{G}| = 256$.
 <tr class="hi"><td>This work</td><td>seed-homomorphic PRG</td><td>~4 MB</td></tr>
 </tbody>
 </table>
+
+<figure>
+<svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart comparing DPF key sizes: Boyle et al. 32 megabytes, Riposte 6 megabytes, this work about 4 megabytes.">
+ <g font-family="Georgia,serif">
+  <text x="14" y="18" fill="#5a6570" font-size="12" font-style="italic">DPF key size — p = 5, n = 32, 2¹⁶ rows × 2¹⁶ columns, λ = 256</text>
+
+  <text x="14" y="55" fill="#1a2e4a" font-size="13">Boyle et al. 2015</text>
+  <rect x="176" y="40" width="480" height="22" rx="2" fill="#b4552d"/>
+  <text x="666" y="56" text-anchor="end" fill="#fff" font-size="12.5">32 MB</text>
+
+  <text x="14" y="108" fill="#1a2e4a" font-size="13">Riposte</text>
+  <rect x="176" y="93" width="90" height="22" rx="2" fill="#c9922f"/>
+  <text x="276" y="109" fill="#8a6d1f" font-size="12.5">6 MB</text>
+
+  <text x="14" y="161" fill="#1a2e4a" font-size="13">This work</text>
+  <rect x="176" y="146" width="60" height="22" rx="2" fill="#1d6a8f"/>
+  <text x="246" y="162" fill="#1d6a8f" font-size="12.5">~4 MB</text>
+
+  <line x1="176" y1="32" x2="176" y2="180" stroke="#c9d5dd"/>
+  <text x="176" y="196" text-anchor="middle" fill="#8fa3b0" font-size="11">0</text>
+  <text x="656" y="196" text-anchor="middle" fill="#8fa3b0" font-size="11">32 MB</text>
+ </g>
+</svg>
+<figcaption>Same parameters, same functionality. The bar you want is the short one — and for the comparison function the gap is exponential rather than a constant factor.</figcaption>
+</figure>
+
 
 <p>
 For the comparison function the gap is not a constant factor but an exponential one. The only
@@ -489,6 +626,37 @@ picks the answer by comparison. In exchange, the key size collapses from $q^{p-1
 row to the same one-seed-per-row structure as the DPF.
 </p>
 
+
+<figure>
+<svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The threshold splits the input domain into rows entirely below, one mixed row, and rows entirely above.">
+ <g font-family="Georgia,serif">
+  <text x="350" y="20" text-anchor="middle" fill="#5a6570" font-size="12.5" font-style="italic">a comparison function cuts the domain in one place — but the cut lands inside a row</text>
+
+  <rect x="40" y="44" width="270" height="42" rx="3" fill="#f2f5f7" stroke="#c9d5dd"/>
+  <text x="175" y="62" text-anchor="middle" fill="#5a6570" font-size="13">rows 00, 01</text>
+  <text x="175" y="79" text-anchor="middle" fill="#8fa3b0" font-size="12">every entry 1ᴳ</text>
+
+  <rect x="310" y="44" width="150" height="42" rx="3" fill="#fdf3e0" stroke="#ddc99b"/>
+  <text x="385" y="62" text-anchor="middle" fill="#8a6d1f" font-size="13">row 10</text>
+  <text x="385" y="79" text-anchor="middle" fill="#8a6d1f" font-size="12">1ᴳ then β</text>
+
+  <rect x="460" y="44" width="200" height="42" rx="3" fill="#e8f2f8" stroke="#a8cee0"/>
+  <text x="560" y="62" text-anchor="middle" fill="#1d6a8f" font-size="13">row 11</text>
+  <text x="560" y="79" text-anchor="middle" fill="#1d6a8f" font-size="12">every entry β</text>
+
+  <path d="M347 96 L347 118" stroke="#b4552d" stroke-width="1.4" fill="none"/>
+  <circle cx="347" cy="96" r="4" fill="#b4552d"/>
+  <text x="347" y="136" text-anchor="middle" fill="#b4552d" font-size="12.5">threshold α = 1001</text>
+
+  <line x1="40" y1="158" x2="660" y2="158" stroke="#c9d5dd"/>
+  <text x="40" y="176" fill="#8fa3b0" font-size="11.5">0000</text>
+  <text x="660" y="176" text-anchor="end" fill="#8fa3b0" font-size="11.5">1111</text>
+  <text x="350" y="176" text-anchor="middle" fill="#5a6570" font-size="11.5" font-style="italic">three row types → three correction words → a decoder that must choose</text>
+ </g>
+</svg>
+<figcaption>The DPF had one special row. The DCF has three kinds, and the middle one is why addition alone can no longer finish the job.</figcaption>
+</figure>
+
 <h3>Three correction words, three kinds of row</h3>
 
 <p>
@@ -522,40 +690,40 @@ $\beta$" from "this row happens to contain $\beta$ at this column".
   <path d="M350 54 L350 84" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
 
   <rect x="216" y="88" width="268" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="350" y="106" text-anchor="middle" fill="#1a2e4a" font-size="13">compute $\mathsf{Res}_1$ with $CW_1$</text>
-  <text x="350" y="123" text-anchor="middle" fill="#5a6570" font-size="12">does it equal $cw^1_{\delta^*}$ ?</text>
+  <text x="350" y="106" text-anchor="middle" fill="#1a2e4a" font-size="13">compute Res₁ with CW₁</text>
+  <text x="350" y="123" text-anchor="middle" fill="#5a6570" font-size="12">does it equal cw¹ at δ* ?</text>
 
   <path d="M216 110 L120 110 L120 172" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
   <text x="163" y="103" text-anchor="middle" fill="#1d6a8f" font-size="12" font-style="italic">yes</text>
   <rect x="50" y="176" width="140" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
-  <text x="120" y="196" text-anchor="middle" fill="#1d6a8f" font-size="13">output $1_\mathbb{G}$</text>
+  <text x="120" y="196" text-anchor="middle" fill="#1d6a8f" font-size="13">output 1ᴳ</text>
   <text x="120" y="211" text-anchor="middle" fill="#5a6570" font-size="11">below the threshold</text>
 
   <path d="M350 132 L350 162" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
   <text x="372" y="152" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">no</text>
 
   <rect x="216" y="166" width="268" height="60" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="350" y="185" text-anchor="middle" fill="#1a2e4a" font-size="13">compute $\mathsf{Res}_2$, $\mathsf{Res}_3$ with $CW_3$</text>
-  <text x="350" y="202" text-anchor="middle" fill="#5a6570" font-size="12">on columns $\delta^*$ and $\delta^*\!\pm\!1$</text>
+  <text x="350" y="185" text-anchor="middle" fill="#1a2e4a" font-size="13">compute Res₂, Res₃ with CW₃</text>
+  <text x="350" y="202" text-anchor="middle" fill="#5a6570" font-size="12">on columns δ* and δ*±1</text>
   <text x="350" y="219" text-anchor="middle" fill="#5a6570" font-size="12">do they agree?</text>
 
   <path d="M484 196 L580 196 L580 258" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
   <text x="536" y="189" text-anchor="middle" fill="#1d6a8f" font-size="12" font-style="italic">yes</text>
   <rect x="510" y="262" width="140" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
-  <text x="580" y="282" text-anchor="middle" fill="#1d6a8f" font-size="13">output $\mathsf{Res}_2 = \beta$</text>
-  <text x="580" y="297" text-anchor="middle" fill="#5a6570" font-size="11">row is entirely $\beta$</text>
+  <text x="580" y="282" text-anchor="middle" fill="#1d6a8f" font-size="13">output Res₂ = β</text>
+  <text x="580" y="297" text-anchor="middle" fill="#5a6570" font-size="11">row is entirely β</text>
 
   <path d="M350 226 L350 262" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
   <text x="372" y="250" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">no</text>
 
   <rect x="216" y="266" width="268" height="44" rx="4" fill="#fdf8ee" stroke="#d8c79a"/>
-  <text x="350" y="284" text-anchor="middle" fill="#8a6d1f" font-size="13">compute $\mathsf{Res}_4$ with $CW_2$</text>
+  <text x="350" y="284" text-anchor="middle" fill="#8a6d1f" font-size="13">compute Res₄ with CW₂</text>
   <text x="350" y="301" text-anchor="middle" fill="#8a6d1f" font-size="12">the mixed row</text>
 
   <path d="M350 310 L350 340" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
   <rect x="255" y="344" width="190" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
-  <text x="350" y="364" text-anchor="middle" fill="#1d6a8f" font-size="13">output $\mathsf{Res}_4$</text>
-  <text x="350" y="379" text-anchor="middle" fill="#5a6570" font-size="11">$1_\mathbb{G}$ or $\beta$, per column</text>
+  <text x="350" y="364" text-anchor="middle" fill="#1d6a8f" font-size="13">output Res₄</text>
+  <text x="350" y="379" text-anchor="middle" fill="#5a6570" font-size="11">1ᴳ or β, per column</text>
   </g>
 </svg>
 <figcaption>The non-linear decoder. At most two comparisons stand between the partial results and the answer &mdash; cheap for a client that was already going to aggregate shares.</figcaption>
@@ -603,23 +771,23 @@ that servers only ever see masked values.
 
   <rect x="8" y="96" width="104" height="66" rx="4" fill="#1d6a8f"/>
   <text x="60" y="122" text-anchor="middle" fill="#fff" font-size="14">client</text>
-  <text x="60" y="141" text-anchor="middle" fill="#cfe6f2" font-size="12">input $x$</text>
+  <text x="60" y="141" text-anchor="middle" fill="#cfe6f2" font-size="12">input x</text>
 
   <path d="M112 129 L166 129" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar3)" fill="none"/>
-  <text x="139" y="120" text-anchor="middle" fill="#5a6570" font-size="11.5">$x - r$</text>
+  <text x="139" y="120" text-anchor="middle" fill="#5a6570" font-size="11.5">x − r</text>
 
   <rect x="170" y="34" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="245" y="55" text-anchor="middle" fill="#1a2e4a" font-size="13">server 1 &nbsp;$[W]_1$</text>
+  <text x="245" y="55" text-anchor="middle" fill="#1a2e4a" font-size="13">server 1 &nbsp;[W]₁</text>
   <text x="245" y="73" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
 
   <rect x="170" y="100" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="245" y="121" text-anchor="middle" fill="#1a2e4a" font-size="13">server 2 &nbsp;$[W]_2$</text>
+  <text x="245" y="121" text-anchor="middle" fill="#1a2e4a" font-size="13">server 2 &nbsp;[W]₂</text>
   <text x="245" y="139" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
 
   <text x="245" y="178" text-anchor="middle" fill="#8fa3b0" font-size="17">&#8942;</text>
 
   <rect x="170" y="192" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="245" y="213" text-anchor="middle" fill="#1a2e4a" font-size="13">server p &nbsp;$[W]_p$</text>
+  <text x="245" y="213" text-anchor="middle" fill="#1a2e4a" font-size="13">server p &nbsp;[W]ₚ</text>
   <text x="245" y="231" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
 
   <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#ar3)">
@@ -634,10 +802,10 @@ that servers only ever see masked values.
 
   <path d="M548 129 L604 129" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar3)" fill="none"/>
   <rect x="608" y="104" width="84" height="50" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
-  <text x="650" y="126" text-anchor="middle" fill="#1d6a8f" font-size="13">$\mathsf{ReLU}$</text>
+  <text x="650" y="126" text-anchor="middle" fill="#1d6a8f" font-size="13">ReLU</text>
   <text x="650" y="143" text-anchor="middle" fill="#5a6570" font-size="11">next layer</text>
 
-  <text x="350" y="16" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">servers see only masked values &mdash; never $x$, never the activations</text>
+  <text x="350" y="16" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">servers see only masked values &mdash; never x, never the activations</text>
   </g>
 </svg>
 <figcaption>Inference over a distributed model. The servers hold shares of the weights and never see the client's input; the decoder does the addition it always did, plus two comparisons per activation.</figcaption>

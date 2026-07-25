@@ -119,7 +119,7 @@ mjx-container{overflow-x:auto;overflow-y:hidden}
 <script>
 window.MathJax = {
   tex: {inlineMath: [['$','$']], displayMath: [['$$','$$']]},
-  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code']}
+  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code','svg']}
 };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -164,6 +164,36 @@ Our paper asks the question that follows immediately, and that the literature ha
 <b>where did the firewall itself come from?</b>
 </p>
 
+
+<figure>
+<svg viewBox="0 0 700 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="At a glance: the problem, the idea, and the result.">
+ <g font-family="Georgia,serif">
+  <rect x="4" y="18" width="216" height="132" rx="5" fill="#fdf1ec" stroke="#e0bcac"/>
+  <text x="112" y="42" text-anchor="middle" fill="#b4552d" font-size="11.5" letter-spacing="1.6">THE PROBLEM</text>
+  <text x="112" y="70" text-anchor="middle" fill="#8a4a26" font-size="12.5">A reverse firewall is bought</text>
+  <text x="112" y="88" text-anchor="middle" fill="#8a4a26" font-size="12.5">hardware. A Trojan inside it</text>
+  <text x="112" y="106" text-anchor="middle" fill="#8a4a26" font-size="12.5">reopens the covert channel</text>
+  <text x="112" y="124" text-anchor="middle" fill="#8a4a26" font-size="12.5">the firewall was built to shut.</text>
+
+  <rect x="242" y="18" width="216" height="132" rx="5" fill="#fbf7ef" stroke="#ddc99b"/>
+  <text x="350" y="42" text-anchor="middle" fill="#8a6d1f" font-size="11.5" letter-spacing="1.6">THE IDEA</text>
+  <text x="350" y="70" text-anchor="middle" fill="#6f5716" font-size="12.5">Make the guarantee robust,</text>
+  <text x="350" y="88" text-anchor="middle" fill="#6f5716" font-size="12.5">then compile the firewall</text>
+  <text x="350" y="106" text-anchor="middle" fill="#6f5716" font-size="12.5">with Private Circuits III:</text>
+  <text x="350" y="124" text-anchor="middle" fill="#6f5716" font-size="12.5">share, replicate, vote, test.</text>
+
+  <rect x="480" y="18" width="216" height="132" rx="5" fill="#eef6fa" stroke="#a8cee0"/>
+  <text x="588" y="42" text-anchor="middle" fill="#1d6a8f" font-size="11.5" letter-spacing="1.6">THE RESULT</text>
+  <text x="588" y="70" text-anchor="middle" fill="#15516e" font-size="12.5">Tr-RF for coin tossing and</text>
+  <text x="588" y="88" text-anchor="middle" fill="#15516e" font-size="12.5">oblivious transfer — and the</text>
+  <text x="588" y="106" text-anchor="middle" fill="#15516e" font-size="12.5">first reverse firewall anyone</text>
+  <text x="588" y="124" text-anchor="middle" fill="#15516e" font-size="12.5">has actually built and run.</text>
+
+  <text x="350" y="12" text-anchor="middle" fill="#8fa3b0" font-size="11" letter-spacing="2">AT A GLANCE</text>
+ </g>
+</svg>
+</figure>
+
 <h2>Reverse firewalls in one picture</h2>
 
 <figure>
@@ -196,14 +226,14 @@ Our paper asks the question that follows immediately, and that the literature ha
   <text x="78" y="183" text-anchor="middle" fill="#b4552d" font-size="11.5">still subverted</text>
 
   <path d="M138 170 L212 170" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr1)" fill="none"/>
-  <text x="175" y="162" text-anchor="middle" fill="#5a6570" font-size="11">$m$</text>
+  <text x="175" y="162" text-anchor="middle" fill="#5a6570" font-size="11">m</text>
 
   <rect x="216" y="140" width="150" height="60" rx="4" fill="#1d6a8f"/>
   <text x="291" y="163" text-anchor="middle" fill="#fff" font-size="13.5">reverse firewall</text>
   <text x="291" y="181" text-anchor="middle" fill="#cfe6f2" font-size="11.5">re-randomize</text>
 
   <path d="M366 170 L440 170" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr1)" fill="none"/>
-  <text x="403" y="162" text-anchor="middle" fill="#5a6570" font-size="11">$m'$</text>
+  <text x="403" y="162" text-anchor="middle" fill="#5a6570" font-size="11">m′</text>
 
   <rect x="444" y="144" width="126" height="52" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
   <text x="507" y="165" text-anchor="middle" fill="#1d6a8f" font-size="12.5">distribution</text>
@@ -238,6 +268,63 @@ firewall does the symmetric thing to $(u_i, e_i)$. Every value on the wire has b
 re-drawn; a subverted Bob has nowhere to hide a bit.
 </p>
 </div>
+
+<figure>
+<svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Message flow of oblivious transfer with reverse firewalls on both sides, showing re-randomization and de-randomization.">
+ <defs>
+  <marker id="tf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+   <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+  </marker>
+ </defs>
+ <g font-family="Georgia,serif">
+  <rect x="14" y="10" width="118" height="34" rx="4" fill="#1a2e4a"/>
+  <text x="73" y="32" text-anchor="middle" fill="#fff" font-size="13">Bob (choice b)</text>
+  <rect x="204" y="10" width="104" height="34" rx="4" fill="#1d6a8f"/>
+  <text x="256" y="32" text-anchor="middle" fill="#fff" font-size="13">W_B</text>
+  <rect x="392" y="10" width="104" height="34" rx="4" fill="#1d6a8f"/>
+  <text x="444" y="32" text-anchor="middle" fill="#fff" font-size="13">W_A</text>
+  <rect x="568" y="10" width="118" height="34" rx="4" fill="#1a2e4a"/>
+  <text x="627" y="32" text-anchor="middle" fill="#fff" font-size="13">Alice (m₀, m₁)</text>
+
+  <g stroke="#dde5ea" stroke-width="1.2">
+   <line x1="73" y1="48" x2="73" y2="300"/>
+   <line x1="256" y1="48" x2="256" y2="300"/>
+   <line x1="444" y1="48" x2="444" y2="300"/>
+   <line x1="627" y1="48" x2="627" y2="300"/>
+  </g>
+
+  <path d="M73 78 L248 78" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <text x="160" y="71" text-anchor="middle" fill="#5a6570" font-size="12">g, c, d = gʸ, h = cʸgᵇ</text>
+
+  <rect x="192" y="92" width="128" height="34" rx="3" fill="#eef6fa" stroke="#a8cee0"/>
+  <text x="256" y="106" text-anchor="middle" fill="#1d6a8f" font-size="11.5">re-randomize</text>
+  <text x="256" y="120" text-anchor="middle" fill="#1d6a8f" font-size="11.5">with α, x′, y′</text>
+
+  <path d="M256 142 L436 142" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <text x="346" y="135" text-anchor="middle" fill="#5a6570" font-size="12">g′, c′, d′, h′</text>
+
+  <rect x="382" y="156" width="124" height="30" rx="3" fill="#eef6fa" stroke="#a8cee0"/>
+  <text x="444" y="176" text-anchor="middle" fill="#1d6a8f" font-size="11.5">abort if g = 1ᴳ</text>
+
+  <path d="M444 202 L619 202" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <path d="M619 224 L452 224" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <text x="536" y="217" text-anchor="middle" fill="#5a6570" font-size="12">uᵢ, eᵢ</text>
+
+  <rect x="382" y="236" width="124" height="30" rx="3" fill="#eef6fa" stroke="#a8cee0"/>
+  <text x="444" y="256" text-anchor="middle" fill="#1d6a8f" font-size="11.5">re-randomize again</text>
+
+  <path d="M436 282 L264 282" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <text x="350" y="275" text-anchor="middle" fill="#5a6570" font-size="12">u′ᵢ, e′ᵢ</text>
+
+  <path d="M248 300 L81 300" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tf)" fill="none"/>
+  <text x="164" y="294" text-anchor="middle" fill="#5a6570" font-size="12">de-randomized — Bob recovers m_b</text>
+
+  <text x="627" y="322" text-anchor="end" fill="#8fa3b0" font-size="11.5" font-style="italic">every value on the wire has been re-drawn</text>
+ </g>
+</svg>
+<figcaption>Oblivious transfer with a firewall on each side. Neither firewall learns b, m₀ or m₁ — they only replace randomness, which is exactly what a subverted endpoint needs in order to signal.</figcaption>
+</figure>
+
 
 <h2>The question nobody was asking</h2>
 
@@ -350,12 +437,77 @@ firewall's circuit contains Trojans, up to the tolerated threshold.</li>
 under the same condition.</li>
 </ul>
 
+
+<figure>
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of what the classic reverse firewall guarantee covers versus what Trojan-resilient reverse firewalls cover.">
+ <g font-family="Georgia,serif">
+  <rect x="10" y="14" width="330" height="172" rx="5" fill="#fff" stroke="#c9d5dd"/>
+  <text x="175" y="38" text-anchor="middle" fill="#1a2e4a" font-size="13.5">classic RF, since 2015</text>
+
+  <text x="36" y="72" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="58" y="72" fill="#3d4650" font-size="12.5">host machine subverted at the fab</text>
+  <text x="36" y="100" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="58" y="100" fill="#3d4650" font-size="12.5">adversary reads the whole transcript</text>
+  <text x="36" y="128" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="58" y="128" fill="#3d4650" font-size="12.5">firewall never sees a secret</text>
+  <text x="36" y="160" fill="#b4552d" font-size="15">✗</text>
+  <text x="58" y="156" fill="#b4552d" font-size="12.5">firewall itself contains a Trojan</text>
+  <text x="58" y="172" fill="#b4552d" font-size="11.5" font-style="italic">— assumed away, never stated</text>
+
+  <rect x="360" y="14" width="330" height="172" rx="5" fill="#f7fbfd" stroke="#a8cee0"/>
+  <text x="525" y="38" text-anchor="middle" fill="#1d6a8f" font-size="13.5">Tr-RF, this work</text>
+
+  <text x="386" y="72" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="408" y="72" fill="#3d4650" font-size="12.5">everything on the left, unchanged</text>
+  <text x="386" y="100" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="408" y="100" fill="#3d4650" font-size="12.5">robust exfiltration resistance</text>
+  <text x="386" y="128" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="408" y="128" fill="#3d4650" font-size="12.5">robust security preservation</text>
+  <text x="386" y="160" fill="#1d6a8f" font-size="15">✓</text>
+  <text x="408" y="156" fill="#3d4650" font-size="12.5">firewall itself contains a Trojan</text>
+  <text x="408" y="172" fill="#5a6570" font-size="11.5" font-style="italic">— up to the tolerated threshold</text>
+ </g>
+</svg>
+<figcaption>The difference is one row, and it is the row the whole threat model implies. Everything else carries over.</figcaption>
+</figure>
+
 <p>
 Defining the property is the easy half. The hard half is that you cannot inspect your way to
 it: a Trojan with a rare trigger passes every functional test, and imaging every gate of every
 chip you buy is not a deployment strategy. What you need is a construction that keeps working
 <em>even if some of its components are malicious</em>, without knowing which.
 </p>
+
+
+<figure>
+<svg viewBox="0 0 700 165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Timeline: reverse firewalls 2015, Private Circuits III 2016, TERRA 2025.">
+ <g font-family="Georgia,serif">
+  <line x1="60" y1="70" x2="650" y2="70" stroke="#c9d5dd" stroke-width="1.4"/>
+
+  <circle cx="110" cy="70" r="7" fill="#1a2e4a"/>
+  <text x="110" y="50" text-anchor="middle" fill="#1a2e4a" font-size="13">Eurocrypt 2015</text>
+  <text x="110" y="94" text-anchor="middle" fill="#3d4650" font-size="12">reverse firewalls</text>
+  <text x="110" y="110" text-anchor="middle" fill="#5a6570" font-size="11.5">Mironov &amp;</text>
+  <text x="110" y="125" text-anchor="middle" fill="#5a6570" font-size="11.5">Stephens-Davidowitz</text>
+
+  <circle cx="355" cy="70" r="7" fill="#1a2e4a"/>
+  <text x="355" y="50" text-anchor="middle" fill="#1a2e4a" font-size="13">CCS 2016</text>
+  <text x="355" y="94" text-anchor="middle" fill="#3d4650" font-size="12">Private Circuits III</text>
+  <text x="355" y="110" text-anchor="middle" fill="#5a6570" font-size="11.5">Dziembowski, Faust</text>
+  <text x="355" y="125" text-anchor="middle" fill="#5a6570" font-size="11.5">&amp; Standaert</text>
+
+  <circle cx="600" cy="70" r="8" fill="#1d6a8f"/>
+  <text x="600" y="50" text-anchor="middle" fill="#1d6a8f" font-size="13">ESORICS 2025</text>
+  <text x="600" y="94" text-anchor="middle" fill="#1d6a8f" font-size="12">TERRA</text>
+  <text x="600" y="110" text-anchor="middle" fill="#5a6570" font-size="11.5">the two lines meet,</text>
+  <text x="600" y="125" text-anchor="middle" fill="#5a6570" font-size="11.5">on real hardware</text>
+
+  <text x="232" y="152" text-anchor="middle" fill="#8fa3b0" font-size="11.5" font-style="italic">a decade of definitions</text>
+  <text x="478" y="152" text-anchor="middle" fill="#8fa3b0" font-size="11.5" font-style="italic">no one had built one</text>
+ </g>
+</svg>
+<figcaption>Two independent lines of work — subversion-resistant protocols and Trojan-resilient circuits — that turn out to need each other.</figcaption>
+</figure>
 
 <h2>Borrowing a hammer: Private Circuits III</h2>
 
@@ -393,18 +545,18 @@ mini-circuits do the arithmetic on shares, in triplicate, under a vote.
     <path d="M148 151 C 196 151, 200 151, 248 151"/>
     <path d="M148 166 C 196 166, 200 240, 248 240"/>
   </g>
-  <text x="198" y="108" text-anchor="middle" fill="#5a6570" font-size="11" font-style="italic">$[g]_p, [c]_p, \ldots$</text>
+  <text x="198" y="108" text-anchor="middle" fill="#5a6570" font-size="11" font-style="italic">[g]ₚ, [c]ₚ, …</text>
 
   <rect x="252" y="38" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="327" y="58" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^0$</text>
-  <text x="327" y="75" text-anchor="middle" fill="#5a6570" font-size="11.5">$\textsc{Exp}$, $\textsc{Mult}$, $\textsc{Inv}$</text>
+  <text x="327" y="58" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit Γ⁰</text>
+  <text x="327" y="75" text-anchor="middle" fill="#5a6570" font-size="11.5">Exp, Mult, Inv</text>
 
   <rect x="252" y="127" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="327" y="147" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^1$</text>
+  <text x="327" y="147" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit Γ¹</text>
   <text x="327" y="164" text-anchor="middle" fill="#5a6570" font-size="11.5">same computation</text>
 
   <rect x="252" y="216" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
-  <text x="327" y="236" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^2$</text>
+  <text x="327" y="236" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit Γ²</text>
   <text x="327" y="253" text-anchor="middle" fill="#5a6570" font-size="11.5">same computation</text>
 
   <rect x="266" y="196" width="42" height="14" rx="7" fill="#fdf1ec" stroke="#d9a892"/>
@@ -421,7 +573,7 @@ mini-circuits do the arithmetic on shares, in triplicate, under a vote.
   <text x="561" y="164" text-anchor="middle" fill="#cfe6f2" font-size="11.5">outvoted, discarded</text>
 
   <path d="M620 152 L664 152" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr5)" fill="none"/>
-  <text x="676" y="149" text-anchor="middle" fill="#1a2e4a" font-size="12">$g'$</text>
+  <text x="676" y="149" text-anchor="middle" fill="#1a2e4a" font-size="12">g′</text>
 
   <rect x="252" y="278" width="368" height="18" rx="9" fill="#fbf7ef" stroke="#d8c79a"/>
   <text x="436" y="291" text-anchor="middle" fill="#8a6d1f" font-size="11.5">random testing, repeated &mdash; a Trojan that fires often enough to matter gets caught</text>
@@ -444,24 +596,24 @@ $(x', y') \leftarrow \mathbb{Z}_p^2$, secret-shares $g, c, d, h$ as $[g]_p, [c]_
 [h]_p$ among the mini-circuits, and distributes $\alpha, x', y'$.</li>
 
 <li><b>Mini-circuits exponentiate.</b> Each invokes the public exponentiation protocol
-&mdash; $\textsc{Exp}([g]_p, \alpha)$ and friends &mdash; to get $[g^{\alpha}]_p,
+&mdash; $\mathsf{Exp}([g]_p, \alpha)$ and friends &mdash; to get $[g^{\alpha}]_p,
 [c^{\alpha}]_p, [d^{\alpha}]_p, [h^{\alpha}]_p$, then again for the cross terms
 $[g^{\alpha x'}]_p, [g^{\alpha y'}]_p, [c^{\alpha y'}]_p, [d^{\alpha x'}]_p,
 [g^{\alpha x' y'}]_p$.</li>
 
 <li><b>Mini-circuits multiply.</b> Secure multiplication combines those into shares of $c'$,
-$d'$ and $h'$ &mdash; $h'$ needing one further $\textsc{Mult}$ over the results of the previous
+$d'$ and $h'$ &mdash; $h'$ needing one further $\mathsf{Mult}$ over the results of the previous
 two.</li>
 
-<li><b>Master reconstructs.</b> $g' = \textsc{Reconstruct}([g^{\alpha}]_p)$, and likewise for
+<li><b>Master reconstructs.</b> $g' = \mathsf{Reconstruct}([g^{\alpha}]_p)$, and likewise for
 $c', d', h'$ &mdash; the same four values the plain firewall would have produced, now computed
 by a circuit no single component of which ever saw them.</li>
 </ol>
 
 <p>
 The return path works the same way. To produce $e'_i = e_i / u_i^{y'}$, the master shares
-$e_0, e_1, u_0, u_1$; the mini-circuits run $\textsc{Exp}$ to get $[u_i^{y'}]_p$, a private
-inverse protocol $\textsc{Inv}$ to get $[u_i^{-y'}]_p$, and $\textsc{Mult}$ to reach
+$e_0, e_1, u_0, u_1$; the mini-circuits run $\mathsf{Exp}$ to get $[u_i^{y'}]_p$, a private
+inverse protocol $\mathsf{Inv}$ to get $[u_i^{-y'}]_p$, and $\mathsf{Mult}$ to reach
 $[e'_i]_p$; the master reconstructs. Alice's firewall is rebuilt along the same lines,
 including the $g = 1_{\mathbb{G}}$ abort check, which stays in the master.
 </p>
@@ -513,15 +665,15 @@ gives a handle on whether the code that is running is the code that was meant to
   <text x="148" y="64" text-anchor="middle" fill="#c8d6e0" font-size="11.5">share / reconstruct</text>
 
   <rect x="248" y="26" width="122" height="50" rx="4" fill="#1d6a8f"/>
-  <text x="309" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^0$</text>
+  <text x="309" y="47" text-anchor="middle" fill="#fff" font-size="12.5">Γ⁰</text>
   <text x="309" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
 
   <rect x="382" y="26" width="122" height="50" rx="4" fill="#1d6a8f"/>
-  <text x="443" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^1$</text>
+  <text x="443" y="47" text-anchor="middle" fill="#fff" font-size="12.5">Γ¹</text>
   <text x="443" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
 
   <rect x="516" y="26" width="124" height="50" rx="4" fill="#1d6a8f"/>
-  <text x="578" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^2$</text>
+  <text x="578" y="47" text-anchor="middle" fill="#fff" font-size="12.5">Γ²</text>
   <text x="578" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
 
   <text x="350" y="16" text-anchor="middle" fill="#5a6570" font-size="11.5" font-style="italic">the abstract components of Private Circuits III, given somewhere real to live</text>
