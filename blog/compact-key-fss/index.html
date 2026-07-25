@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shrinking the Keys: Compact p-Party FSS with a Non-linear Decoder — Chandan Kumar</title>
+<meta name="description" content="A walkthrough of Compact Key Function Secret Sharing with Non-linear Decoder (IACR CiC 2024): why p-party FSS keys were so large, and how trading a comparison at decode time buys a much smaller key.">
+<style>
+:root{
+  --navy:#1a2e4a; --teal:#1d6a8f; --rule:#b0bec5; --ink:#23292f;
+  --muted:#5a6570; --wash:#f5f8fa; --wash2:#fbf7ef; --gold:#8a6d1f;
+  --grid:#dde5ea;
+}
+*{box-sizing:border-box}
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:17px; line-height:1.68; color:var(--ink);
+  background:#fff; max-width:760px; margin:0 auto; padding:0 22px 80px;
+}
+a{color:var(--teal); text-decoration:none}
+a:hover{text-decoration:underline}
+nav.top{
+  margin:28px 0 40px; font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+}
+nav.top a{margin-right:15px;color:#666}
+nav.top a:hover{color:var(--teal);text-decoration:none}
+h1{font-size:33px;line-height:1.22;font-weight:600;color:var(--navy);margin:0 0 10px}
+h2{
+  font-size:18px;font-weight:600;font-variant:small-caps;letter-spacing:.06em;
+  color:var(--navy);margin:52px 0 16px;padding-bottom:5px;border-bottom:1px solid var(--rule);
+}
+h3{font-size:16.5px;font-weight:600;color:var(--navy);margin:30px 0 10px}
+p{margin:0 0 15px}
+.meta{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13.5px;color:var(--muted);margin:0 0 6px
+}
+.tags{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--muted);margin-bottom:26px}
+.tags span{
+  display:inline-block;background:var(--wash);border:1px solid var(--grid);
+  border-radius:99px;padding:1px 9px;margin-right:5px;color:#456
+}
+.standfirst{
+  font-size:17.5px;color:#3d4650;border-left:3px solid var(--teal);
+  padding:2px 0 2px 18px;margin:0 0 30px;font-style:italic
+}
+.lede{font-size:18px}
+figure{margin:30px 0}
+figure svg{display:block;width:100%;height:auto}
+figcaption{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13px;color:var(--muted);margin-top:9px;text-align:center;line-height:1.5
+}
+.box{
+  background:var(--wash);border:1px solid var(--grid);border-left:3px solid var(--teal);
+  border-radius:3px;padding:14px 18px;margin:24px 0;font-size:16px
+}
+.box.warn{background:#fdf6f3;border-left-color:#b4552d}
+.box.idea{background:var(--wash2);border-left-color:var(--gold)}
+.box .lbl{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:5px
+}
+.box p:last-child{margin-bottom:0}
+table.data{border-collapse:collapse;width:100%;margin:24px 0;font-size:14.5px}
+table.data th,table.data td{border-bottom:1px solid var(--grid);padding:8px 10px;text-align:left;vertical-align:top}
+table.data th{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)
+}
+table.data tr.hi td{background:var(--wash);font-weight:600;color:var(--navy)}
+table.grid{border-collapse:collapse;margin:20px auto;font-size:14px;font-family:"SF Mono",Menlo,Consolas,monospace}
+table.grid td,table.grid th{border:1px solid var(--grid);padding:7px 13px;text-align:center}
+table.grid th{background:var(--wash);color:var(--muted);font-weight:600}
+td.zero{color:#9aa5ad}
+td.beta{background:#e8f2f8;color:var(--teal);font-weight:700}
+td.mix{background:#fdf3e0}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;background:var(--wash);padding:1px 5px;border-radius:3px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:24px 0}
+.steps li{
+  counter-increment:s;position:relative;padding:0 0 18px 46px;margin:0;
+  border-left:1px solid var(--grid);
+}
+.steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps li::before{
+  content:counter(s);position:absolute;left:-14px;top:-2px;width:27px;height:27px;
+  border-radius:50%;background:var(--navy);color:#fff;font-family:-apple-system,Helvetica,sans-serif;
+  font-size:13px;display:flex;align-items:center;justify-content:center
+}
+.steps li b{color:var(--navy)}
+.readtime{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;
+  color:var(--muted);border:1px solid var(--grid);border-radius:99px;padding:2px 10px
+}
+.pull{
+  font-size:19px;color:var(--navy);font-style:italic;text-align:center;
+  margin:32px 0;padding:0 20px;line-height:1.5
+}
+hr.sec{border:0;border-top:1px solid var(--grid);margin:44px 0}
+.endnote{font-size:15px;color:var(--muted);margin-top:12px}
+.bib{
+  background:#fafbfc;border:1px solid var(--grid);border-radius:3px;padding:12px 14px;
+  font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;color:#40484f;
+  white-space:pre-wrap;overflow-x:auto;line-height:1.5
+}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule);font-size:14px;color:#888}
+mjx-container{overflow-x:auto;overflow-y:hidden}
+@media(max-width:620px){
+  body{font-size:16.5px}
+  h1{font-size:27px}
+  table.grid{font-size:12.5px}
+  table.grid td,table.grid th{padding:5px 8px}
+}
+</style>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$','$']], displayMath: [['$$','$$']]},
+  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav class="top">
+  <a href="../../index.html">&larr; Chandan Kumar</a>
+  <a href="../index.html">All notes</a>
+</nav>
+
+<h1>Shrinking the Keys: Compact <em>p</em>-Party FSS with a Non-linear Decoder</h1>
+<p class="meta">Posted 12 August 2024 &middot; <span class="readtime">~25 min read</span></p>
+<p class="tags">
+  <span>function secret sharing</span><span>DPF</span><span>DCF</span>
+  <span>seed-homomorphic PRG</span><span>PPML</span>
+</p>
+
+<p class="standfirst">
+Based on joint work with <b>Sikhar Patranabis</b> and <b>Debdeep Mukhopadhyay</b> &mdash;
+<i>Compact Key Function Secret Sharing with Non-linear Decoder</i>, IACR Communications in
+Cryptology, Vol. 1, Issue 2 (2024). This post is the intuition; the paper carries the
+constructions and the proofs.
+</p>
+
+<p class="lede">
+Function secret sharing has a two-party problem. Almost every efficient construction in the
+literature splits a function between exactly two servers, because that is where the beautiful
+$O(n)$-sized keys live. The moment you want three servers, or five, or ten &mdash; which is
+exactly what you want if your threat model dislikes trusting a single pair of machines &mdash;
+key sizes stop being logarithmic and start being measured in megabytes.
+</p>
+
+<p>
+This paper asks a narrow question with a practical edge: <b>can we make those $p$-party keys
+smaller if we are willing to give the decoder a little more work to do?</b> The answer turns out
+to be yes, and the price is unusually cheap &mdash; one or two comparisons at the very end of the
+protocol, performed by a party that was going to add up the shares anyway.
+</p>
+
+<h2>The setting, in one picture</h2>
+
+<p>
+An FSS scheme for a function class $\mathcal{F}$ takes a function $f$ and splits it into $p$
+succinctly described functions $f_1,\dots,f_p$ such that $\sum_i f_i = f$, and such that any
+$p-1$ of them together tell you nothing about $f$. Each server gets one share, evaluates it on a
+common input, and sends back a partial result. Somebody adds the partials up and recovers
+$f(x)$ &mdash; without any single server ever learning which function it was helping to compute.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A dealer splits a function into p keys; servers evaluate them and a decoder recombines the partial results.">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+  </defs>
+  <rect x="8" y="92" width="118" height="62" rx="4" fill="#1a2e4a"/>
+  <text x="67" y="117" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="14">dealer</text>
+  <text x="67" y="137" text-anchor="middle" fill="#c8d6e0" font-family="Georgia,serif" font-size="13" font-style="italic">knows f</text>
+
+  <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#ar)">
+    <path d="M128 108 C 175 108, 175 42, 222 42"/>
+    <path d="M128 120 C 175 120, 175 108, 222 108"/>
+    <path d="M128 140 C 175 140, 175 200, 222 200"/>
+  </g>
+
+  <g font-family="Georgia,serif" font-size="13">
+    <rect x="226" y="20" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
+    <text x="280" y="39" text-anchor="middle" fill="#1a2e4a">server 1</text>
+    <text x="280" y="55" text-anchor="middle" fill="#5a6570" font-size="12">key $k_1$</text>
+
+    <rect x="226" y="86" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
+    <text x="280" y="105" text-anchor="middle" fill="#1a2e4a">server 2</text>
+    <text x="280" y="121" text-anchor="middle" fill="#5a6570" font-size="12">key $k_2$</text>
+
+    <text x="280" y="160" text-anchor="middle" fill="#8fa3b0" font-size="18">&#8942;</text>
+
+    <rect x="226" y="178" width="108" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
+    <text x="280" y="197" text-anchor="middle" fill="#1a2e4a">server p</text>
+    <text x="280" y="213" text-anchor="middle" fill="#5a6570" font-size="12">key $k_p$</text>
+  </g>
+
+  <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#ar)">
+    <path d="M336 42 C 390 42, 400 108, 452 116"/>
+    <path d="M336 108 C 390 108, 400 112, 452 122"/>
+    <path d="M336 200 C 390 200, 400 140, 452 130"/>
+  </g>
+  <text x="394" y="88" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="12" font-style="italic">partial</text>
+  <text x="394" y="103" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="12" font-style="italic">results</text>
+
+  <rect x="456" y="92" width="112" height="62" rx="4" fill="#1d6a8f"/>
+  <text x="512" y="117" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="14">decoder</text>
+  <text x="512" y="137" text-anchor="middle" fill="#cfe6f2" font-family="Georgia,serif" font-size="12">combine</text>
+
+  <path d="M570 123 L 626 123" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar)" fill="none"/>
+  <text x="662" y="119" text-anchor="middle" fill="#1a2e4a" font-family="Georgia,serif" font-size="15">$f(x)$</text>
+  <text x="662" y="139" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="11">and nothing more</text>
+
+  <text x="280" y="243" text-anchor="middle" fill="#5a6570" font-family="Georgia,serif" font-size="12" font-style="italic">any p&#8722;1 of these keys reveal nothing about f</text>
+</svg>
+<figcaption>The shape of every FSS protocol. The interesting question is always: how big is each key, and how hard does the decoder have to work?</figcaption>
+</figure>
+
+<p>
+Two function classes carry most of the practical weight. A <b>distributed point function</b>
+(DPF) shares the function $f_{\alpha,\beta}$ that outputs $\beta$ at the single input $\alpha$
+and the identity everywhere else. A <b>distributed comparison function</b> (DCF) shares
+$f^{<}_{\alpha,\beta}$, which outputs $\beta$ on every input at or above a threshold $\alpha$.
+DPFs power private information retrieval, anonymous messaging, and distributed ORAM; DCFs are
+the workhorse behind secure comparison, and therefore behind every $\mathsf{ReLU}$ in a
+privacy-preserving neural network.
+</p>
+
+<div class="box">
+<span class="lbl">Why <em>p</em> parties at all</span>
+<p>
+Two-party FSS has keys of size $O(\lambda n)$ &mdash; wonderfully small. But it forces you to
+bet the entire protocol on two servers not colluding. Spreading the trust over $p$ servers
+weakens that assumption to "at least one of $p$ is honest", which is a far easier thing to
+arrange in the real world across jurisdictions, vendors, or organizations. The catch is that
+the known $p$-party constructions pay for it in key size.
+</p>
+</div>
+
+<h2>Where the megabytes come from</h2>
+
+<p>
+The naive $p$-party construction just additively secret-shares the entire evaluation table:
+$|\mathbb{G}| \cdot 2^n$ bits per party. Hopeless for any real domain. The standard fix,
+going back to Boyle, Gilboa and Ishai (Eurocrypt 2015), is to fold the one-dimensional table
+into two dimensions &mdash; $\mu$ columns by $\nu$ rows &mdash; so that a key only has to
+describe a row vector and a column vector rather than the whole grid.
+</p>
+
+<p>
+That reshaping is where the schemes differ, and where the cost lives. In BGI15, built from
+plain PRGs, every row needs $2^{p-1}$ seeds, because the correction machinery has to work for
+every subset of parties. Riposte (S&amp;P 2015) improved matters by switching to a
+<b>seed-homomorphic</b> PRG, which cuts the count to two vectors of row length plus one of
+column length. Our construction pushes it to one seed per row, and moves the correction words
+out of the secret key entirely.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of how many seeds each scheme stores per row of the evaluation table.">
+  <g font-family="Georgia,serif">
+    <text x="105" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">Boyle et al. 2015</text>
+    <text x="105" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">$2^{p-1}$ seeds per row</text>
+    <text x="350" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">Riposte</text>
+    <text x="350" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">2 seeds per row</text>
+    <text x="595" y="20" text-anchor="middle" font-size="14" fill="#1a2e4a">This work</text>
+    <text x="595" y="37" text-anchor="middle" font-size="12" fill="#5a6570" font-style="italic">1 seed per row</text>
+  </g>
+
+  <g stroke="#b0bec5" fill="#fff">
+    <rect x="42" y="52" width="126" height="128"/>
+    <rect x="287" y="52" width="126" height="128"/>
+    <rect x="532" y="52" width="126" height="128"/>
+  </g>
+
+  <g fill="#1a2e4a">
+    <rect x="50" y="60" width="12" height="12" rx="2"/><rect x="66" y="60" width="12" height="12" rx="2"/>
+    <rect x="82" y="60" width="12" height="12" rx="2"/><rect x="98" y="60" width="12" height="12" rx="2"/>
+    <rect x="114" y="60" width="12" height="12" rx="2"/><rect x="130" y="60" width="12" height="12" rx="2"/>
+    <rect x="146" y="60" width="12" height="12" rx="2"/>
+    <rect x="50" y="90" width="12" height="12" rx="2"/><rect x="66" y="90" width="12" height="12" rx="2"/>
+    <rect x="82" y="90" width="12" height="12" rx="2"/><rect x="98" y="90" width="12" height="12" rx="2"/>
+    <rect x="114" y="90" width="12" height="12" rx="2"/><rect x="130" y="90" width="12" height="12" rx="2"/>
+    <rect x="146" y="90" width="12" height="12" rx="2"/>
+    <rect x="50" y="120" width="12" height="12" rx="2"/><rect x="66" y="120" width="12" height="12" rx="2"/>
+    <rect x="82" y="120" width="12" height="12" rx="2"/><rect x="98" y="120" width="12" height="12" rx="2"/>
+    <rect x="114" y="120" width="12" height="12" rx="2"/><rect x="130" y="120" width="12" height="12" rx="2"/>
+    <rect x="146" y="120" width="12" height="12" rx="2"/>
+    <rect x="50" y="150" width="12" height="12" rx="2"/><rect x="66" y="150" width="12" height="12" rx="2"/>
+    <rect x="82" y="150" width="12" height="12" rx="2"/><rect x="98" y="150" width="12" height="12" rx="2"/>
+    <rect x="114" y="150" width="12" height="12" rx="2"/><rect x="130" y="150" width="12" height="12" rx="2"/>
+    <rect x="146" y="150" width="12" height="12" rx="2"/>
+  </g>
+
+  <g fill="#1d6a8f">
+    <rect x="295" y="60" width="12" height="12" rx="2"/><rect x="311" y="60" width="12" height="12" rx="2"/>
+    <rect x="295" y="90" width="12" height="12" rx="2"/><rect x="311" y="90" width="12" height="12" rx="2"/>
+    <rect x="295" y="120" width="12" height="12" rx="2"/><rect x="311" y="120" width="12" height="12" rx="2"/>
+    <rect x="295" y="150" width="12" height="12" rx="2"/><rect x="311" y="150" width="12" height="12" rx="2"/>
+  </g>
+
+  <g fill="#1d6a8f">
+    <rect x="540" y="60" width="12" height="12" rx="2"/>
+    <rect x="540" y="90" width="12" height="12" rx="2"/>
+    <rect x="540" y="120" width="12" height="12" rx="2"/>
+    <rect x="540" y="150" width="12" height="12" rx="2"/>
+  </g>
+
+  <rect x="566" y="56" width="86" height="120" rx="3" fill="#fbf7ef" stroke="#d8c79a" stroke-dasharray="3 3"/>
+  <text x="609" y="106" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#8a6d1f">correction</text>
+  <text x="609" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#8a6d1f">words &mdash;</text>
+  <text x="609" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#8a6d1f">public</text>
+
+  <g font-family="Georgia,serif" font-size="12" fill="#5a6570" text-anchor="middle">
+    <text x="105" y="200">key grows with $2^{p-1}$</text>
+    <text x="350" y="200">key grows with $2\nu + \mu$</text>
+    <text x="595" y="200">secret part: $\nu$ seeds</text>
+    <text x="595" y="216" fill="#8a6d1f">rest moves out of the key</text>
+  </g>
+</svg>
+<figcaption>Each dark square is a seed that has to live inside somebody's secret key. Our scheme keeps one seed per row and publishes the correction words as a public parameter &mdash; which is safe as long as discrete log is hard in the output group.</figcaption>
+</figure>
+
+<h3>Concretely, in megabytes</h3>
+
+<p>
+Asymptotics hide the sting, so take a plausible configuration: $p = 5$ parties, domain
+$n = 32$, an evaluation table split evenly into $2^{16}$ rows and $2^{16}$ columns, security
+parameter $\lambda = 256$, group size $|\mathbb{G}| = 256$.
+</p>
+
+<table class="data">
+<thead><tr><th>Scheme</th><th>Assumption</th><th>Key size (DPF)</th></tr></thead>
+<tbody>
+<tr><td>Boyle et al. (Eurocrypt 2015)</td><td>PRG</td><td>32 MB</td></tr>
+<tr><td>Riposte (S&amp;P 2015)</td><td>seed-homomorphic PRG</td><td>6 MB</td></tr>
+<tr class="hi"><td>This work</td><td>seed-homomorphic PRG</td><td>~4 MB</td></tr>
+</tbody>
+</table>
+
+<p>
+For the comparison function the gap is not a constant factor but an exponential one. The only
+prior $p$-party DCF, again from BGI15, generates $q^{p-1}$ seeds per row, where $q$ is the
+order of the group the seeds are drawn from. Our DCF keeps the same share size as our DPF and
+pays only a $3\times$ larger public parameter. That is the difference between "a footnote in a
+theory paper" and "something you can actually deploy in a neural network layer".
+</p>
+
+<h2>The one gadget you need: a seed-homomorphic PRG</h2>
+
+<p>
+Everything hinges on a pseudorandom generator whose seed space is a group and whose output
+space is a group, such that
+</p>
+
+<p style="text-align:center">$\mathsf{G}(s_1 \oplus s_2) \;=\; \mathsf{G}(s_1) \otimes \mathsf{G}(s_2).$</p>
+
+<p>
+There is an almost embarrassingly simple instantiation. Take a cyclic group $\mathbb{G}$ of
+prime order $q$ where DDH is hard, fix generators $g_1,\dots,g_4$, and define
+$\mathsf{G}(s) = (g_1^{s}, g_2^{s}, g_3^{s}, g_4^{s})$. Componentwise multiplication of
+$\mathsf{G}(s_1)$ and $\mathsf{G}(s_2)$ gives $(g_i^{s_1+s_2})_i = \mathsf{G}(s_1+s_2)$, and the
+homomorphism holds by inspection.
+</p>
+
+<div class="box idea">
+<span class="lbl">Why this is the whole trick</span>
+<p>
+Additive secret sharing lives in the exponent. If the $p$ servers hold shares
+$sh_1,\dots,sh_p$ of a seed $s$, then each can locally compute $\mathsf{G}(sh_i)$, and the
+componentwise product of those outputs is exactly $\mathsf{G}(s)$ &mdash; without anyone ever
+reconstructing $s$. One seed per row suddenly suffices, because the sharing structure does the
+work that $2^{p-1}$ separate seeds were doing before.
+</p>
+</div>
+
+<h2>A worked example: the DPF, with four bits and three parties</h2>
+
+<p>
+Take $f_{\alpha,\beta}: \{0,1\}^4 \to \mathbb{G}$ with $\alpha = 1001$, and three parties
+$P_1, P_2, P_3$. Split $\alpha$ down the middle: the first half $\gamma = 10$ names a
+<b>row</b>, the second half $\delta = 01$ names a <b>column</b>. The evaluation table has
+$\beta$ in exactly one cell.
+</p>
+
+<table class="grid">
+<tr><th>$f_{1001,\beta}$</th><th>00</th><th>01</th><th>10</th><th>11</th></tr>
+<tr><th>00</th><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td></tr>
+<tr><th>01</th><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td></tr>
+<tr><th>10</th><td class="zero">$1_\mathbb{G}$</td><td class="beta">$\beta$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td></tr>
+<tr><th>11</th><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td></tr>
+</table>
+
+<h3>Key generation, in two moves</h3>
+
+<ol class="steps">
+<li><b>Correction words.</b> The dealer picks one seed $s_\gamma$ for the target row
+$\gamma = 10$, and computes, for every column $\delta'$,
+$$cw_{\delta'} = \begin{cases} \beta \otimes \mathsf{Inv}\!\left(\mathsf{G}^{(\delta')}(s_\gamma)\right), & \delta' = 01,\\[4pt] 1_\mathbb{G} \otimes \mathsf{Inv}\!\left(\mathsf{G}^{(\delta')}(s_\gamma)\right), & \text{otherwise.}\end{cases}$$
+These four values $CW = (cw_{00}, cw_{01}, cw_{10}, cw_{11})$ are published. They are computed
+only for the target row, but nothing about them reveals <em>which</em> row that was.</li>
+
+<li><b>Seed shares.</b> For every non-target row, the dealer hands the parties additive shares
+of $0_S$. For the target row $\gamma = 10$, it hands them shares of $s_\gamma$:
+$$sh_{1,j} \oplus sh_{2,j} \oplus sh_{3,j} = \begin{cases} s_\gamma, & j = 10,\\ 0_S, & \text{otherwise.}\end{cases}$$
+Each party's key is just its column of shares &mdash; one group element per row.</li>
+</ol>
+
+<h3>Evaluation, and why it works</h3>
+
+<p>
+On input $x = (\gamma^*, \delta^*)$, party $P_i$ looks up its share for row $\gamma^*$ and
+outputs a single group element:
+$\mathsf{PartComp}_i = \mathsf{G}^{(\delta^*)}(sh_{i,\gamma^*})$.
+The decoder multiplies the three partials together with the public correction word:
+</p>
+
+<p style="text-align:center">$\mathsf{Res} = cw_{\delta^*} \otimes \mathsf{PartComp}_1 \otimes \mathsf{PartComp}_2 \otimes \mathsf{PartComp}_3 = cw_{\delta^*} \otimes \mathsf{G}^{(\delta^*)}\!\left(sh_{1,\gamma^*} \oplus sh_{2,\gamma^*} \oplus sh_{3,\gamma^*}\right).$</p>
+
+<p>Three cases cover everything:</p>
+
+<table class="data">
+<thead><tr><th>Input</th><th>Row / column</th><th>Shares reconstruct to</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>$x = 1101$</td><td>wrong row</td><td>$0_S$</td><td>$cw_{01}$ &rarr; decoder outputs $1_\mathbb{G}$</td></tr>
+<tr class="hi"><td>$x = 1001$</td><td>right row, right column</td><td>$s_\gamma$</td><td>$\beta \otimes \mathsf{Inv}(\mathsf{G}^{(01)}(s_\gamma)) \otimes \mathsf{G}^{(01)}(s_\gamma) = \beta$</td></tr>
+<tr><td>$x = 1011$</td><td>right row, wrong column</td><td>$s_\gamma$</td><td>$1_\mathbb{G}$</td></tr>
+</tbody>
+</table>
+
+<p>
+Notice what carries the security. Two parties pooling their shares see nothing: additive
+sharing hides $s_\gamma$ until all $p$ pieces are present. The correction words are public,
+but recovering $\beta$ from $cw_{\delta'}$ would mean inverting $\mathsf{G}$ &mdash; that is
+the discrete log problem in $\mathbb{G}$.
+</p>
+
+<p class="pull">
+One seed per row instead of $2^{p-1}$, and the corrections moved from every key into a single
+public table. That is the whole DPF improvement.
+</p>
+
+<h2>The comparison function breaks the pattern</h2>
+
+<p>
+Now try to run the same construction for $f^{<}_{1001,\beta}$, which outputs $\beta$ on every
+input from $1001$ upward. Write out its table and the difficulty is visible immediately.
+</p>
+
+<table class="grid">
+<tr><th>$f^{<}_{1001,\beta}$</th><th>00</th><th>01</th><th>10</th><th>11</th><th style="border:none;background:none"></th></tr>
+<tr><th>00</th><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td style="border:none;background:none;font-family:Georgia,serif;color:#5a6570;font-style:italic;font-size:12px">all identity</td></tr>
+<tr><th>01</th><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td class="zero">$1_\mathbb{G}$</td><td style="border:none;background:none;font-family:Georgia,serif;color:#5a6570;font-style:italic;font-size:12px">all identity</td></tr>
+<tr><th>10</th><td class="mix">$1_\mathbb{G}$</td><td class="mix">$\beta$</td><td class="mix">$\beta$</td><td class="mix">$\beta$</td><td style="border:none;background:none;font-family:Georgia,serif;color:#8a6d1f;font-style:italic;font-size:12px">mixed &mdash; the awkward one</td></tr>
+<tr><th>11</th><td class="beta">$\beta$</td><td class="beta">$\beta$</td><td class="beta">$\beta$</td><td class="beta">$\beta$</td><td style="border:none;background:none;font-family:Georgia,serif;color:#5a6570;font-style:italic;font-size:12px">all $\beta$</td></tr>
+</table>
+
+<p>
+A DPF table has exactly one interesting row. A DCF table has <b>three kinds</b> of row: rows
+entirely below the threshold, rows entirely above it, and the single row where the threshold
+falls in the middle. One correction word can no longer describe them all, and once you have
+three correction words, the decoder faces a question it never had to answer before: which one
+of them was the right one?
+</p>
+
+<div class="box warn">
+<span class="lbl">Where the linear approach dies</span>
+<p>
+Riposte's reconstruction works because there is exactly one correction word $v[\delta]$, so
+the partial computation $g[\delta] + b[\gamma]\,v[\delta]$ stays linear and the shares simply
+add up. Introduce three correction words and the parties would have to compute against all
+three independently &mdash; but only one combination yields the correct evaluation, and
+addition alone cannot tell you which. Something has to <em>compare</em>.
+</p>
+</div>
+
+<p>
+That is the concession the paper makes, and it names it in the title: the decoder becomes
+<b>non-linear</b>. Instead of summing partial results, it sums them a few different ways and
+picks the answer by comparison. In exchange, the key size collapses from $q^{p-1}$ seeds per
+row to the same one-seed-per-row structure as the DPF.
+</p>
+
+<h3>Three correction words, three kinds of row</h3>
+
+<p>
+The dealer now samples three seeds and binds each to a row type: $s_{\gamma_1}$ for the
+all-identity rows, $s_{\gamma_2}$ for the mixed row, $s_{\gamma_3}$ for the all-$\beta$ rows.
+Correction words $CW_1, CW_2, CW_3$ are built against them the same way as before. Seed shares
+follow the row's type &mdash; shares of $0_S$ for rows below the threshold, of $s_{\gamma_2}$
+for the mixed row, of $s_{\gamma_3}$ for rows above it.
+</p>
+
+<p>
+Each party now returns <b>two</b> partial computations rather than one: $\mathsf{PartComp}_{i,1}$
+on column $\delta^*$, and $\mathsf{PartComp}_{i,2}$ on the neighbouring column
+$\delta^* \pm 1$. The second one is what lets the decoder distinguish "this row is entirely
+$\beta$" from "this row happens to contain $\beta$ at this column".
+</p>
+
+<figure>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decision flow of the non-linear decoder, with four possible results and three outcomes.">
+  <defs>
+    <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+  </defs>
+  <g font-family="Georgia,serif" font-size="13.5">
+
+  <rect x="240" y="8" width="220" height="46" rx="4" fill="#1a2e4a"/>
+  <text x="350" y="28" text-anchor="middle" fill="#fff" font-size="13">collect all partials</text>
+  <text x="350" y="45" text-anchor="middle" fill="#c8d6e0" font-size="12">from the p servers</text>
+
+  <path d="M350 54 L350 84" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+
+  <rect x="216" y="88" width="268" height="44" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="350" y="106" text-anchor="middle" fill="#1a2e4a" font-size="13">compute $\mathsf{Res}_1$ with $CW_1$</text>
+  <text x="350" y="123" text-anchor="middle" fill="#5a6570" font-size="12">does it equal $cw^1_{\delta^*}$ ?</text>
+
+  <path d="M216 110 L120 110 L120 172" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+  <text x="163" y="103" text-anchor="middle" fill="#1d6a8f" font-size="12" font-style="italic">yes</text>
+  <rect x="50" y="176" width="140" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
+  <text x="120" y="196" text-anchor="middle" fill="#1d6a8f" font-size="13">output $1_\mathbb{G}$</text>
+  <text x="120" y="211" text-anchor="middle" fill="#5a6570" font-size="11">below the threshold</text>
+
+  <path d="M350 132 L350 162" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+  <text x="372" y="152" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">no</text>
+
+  <rect x="216" y="166" width="268" height="60" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="350" y="185" text-anchor="middle" fill="#1a2e4a" font-size="13">compute $\mathsf{Res}_2$, $\mathsf{Res}_3$ with $CW_3$</text>
+  <text x="350" y="202" text-anchor="middle" fill="#5a6570" font-size="12">on columns $\delta^*$ and $\delta^*\!\pm\!1$</text>
+  <text x="350" y="219" text-anchor="middle" fill="#5a6570" font-size="12">do they agree?</text>
+
+  <path d="M484 196 L580 196 L580 258" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+  <text x="536" y="189" text-anchor="middle" fill="#1d6a8f" font-size="12" font-style="italic">yes</text>
+  <rect x="510" y="262" width="140" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
+  <text x="580" y="282" text-anchor="middle" fill="#1d6a8f" font-size="13">output $\mathsf{Res}_2 = \beta$</text>
+  <text x="580" y="297" text-anchor="middle" fill="#5a6570" font-size="11">row is entirely $\beta$</text>
+
+  <path d="M350 226 L350 262" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+  <text x="372" y="250" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">no</text>
+
+  <rect x="216" y="266" width="268" height="44" rx="4" fill="#fdf8ee" stroke="#d8c79a"/>
+  <text x="350" y="284" text-anchor="middle" fill="#8a6d1f" font-size="13">compute $\mathsf{Res}_4$ with $CW_2$</text>
+  <text x="350" y="301" text-anchor="middle" fill="#8a6d1f" font-size="12">the mixed row</text>
+
+  <path d="M350 310 L350 340" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar2)" fill="none"/>
+  <rect x="255" y="344" width="190" height="42" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
+  <text x="350" y="364" text-anchor="middle" fill="#1d6a8f" font-size="13">output $\mathsf{Res}_4$</text>
+  <text x="350" y="379" text-anchor="middle" fill="#5a6570" font-size="11">$1_\mathbb{G}$ or $\beta$, per column</text>
+  </g>
+</svg>
+<figcaption>The non-linear decoder. At most two comparisons stand between the partial results and the answer &mdash; cheap for a client that was already going to aggregate shares.</figcaption>
+</figure>
+
+<p>
+Walking the four cases makes the logic concrete. For $x = 0110$ the row lies below the
+threshold, the shares reconstruct $0_S$, and $\mathsf{Res}_1$ matches $cw^1_{\delta^*}$
+straight away &mdash; output $1_\mathbb{G}$, done in one comparison. For $x = 1101$ the row is
+above the threshold, so the shares rebuild $s_{\gamma_3}$; $\mathsf{Res}_1$ fails, but
+$\mathsf{Res}_2$ and $\mathsf{Res}_3$ agree because every column of that row embeds $\beta$.
+For inputs landing in the mixed row &mdash; $x = 1000$ and $x = 1010$ &mdash; neither test
+fires, and only $CW_2$ resolves the cell correctly.
+</p>
+
+<p>
+An interval function comes almost free at this point: chain two DCFs and the key size doubles.
+</p>
+
+<h2>What it buys: a $\mathsf{ReLU}$ you can afford</h2>
+
+<p>
+The motivation for shrinking DCF keys is not aesthetic. In a privacy-preserving inference
+system, a single neural-network layer evaluates <em>thousands</em> of comparison functions, one
+per activation. Each of them needs its own FSS key sitting on every server. Multiply BGI15's
+$q^{p-1}$-seeds-per-row by a few thousand activations and the storage bill alone rules the
+approach out.
+</p>
+
+<p>
+The paper prototypes the obvious application: a pre-trained model additively shared across $p$
+servers, and a client who wants inference without handing over its input. Linear layers use
+Beaver triples; non-linear layers use our DCF through the standard offset-function trick, so
+that servers only ever see masked values.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Inference pipeline: client masks its input, servers compute linear and non-linear layers on masked data, decoder unmasks.">
+  <defs>
+    <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+  </defs>
+  <g font-family="Georgia,serif">
+
+  <rect x="8" y="96" width="104" height="66" rx="4" fill="#1d6a8f"/>
+  <text x="60" y="122" text-anchor="middle" fill="#fff" font-size="14">client</text>
+  <text x="60" y="141" text-anchor="middle" fill="#cfe6f2" font-size="12">input $x$</text>
+
+  <path d="M112 129 L166 129" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar3)" fill="none"/>
+  <text x="139" y="120" text-anchor="middle" fill="#5a6570" font-size="11.5">$x - r$</text>
+
+  <rect x="170" y="34" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="245" y="55" text-anchor="middle" fill="#1a2e4a" font-size="13">server 1 &nbsp;$[W]_1$</text>
+  <text x="245" y="73" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
+
+  <rect x="170" y="100" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="245" y="121" text-anchor="middle" fill="#1a2e4a" font-size="13">server 2 &nbsp;$[W]_2$</text>
+  <text x="245" y="139" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
+
+  <text x="245" y="178" text-anchor="middle" fill="#8fa3b0" font-size="17">&#8942;</text>
+
+  <rect x="170" y="192" width="150" height="52" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="245" y="213" text-anchor="middle" fill="#1a2e4a" font-size="13">server p &nbsp;$[W]_p$</text>
+  <text x="245" y="231" text-anchor="middle" fill="#5a6570" font-size="11.5">DCF key, Beaver share</text>
+
+  <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#ar3)">
+    <path d="M322 60 C 370 60, 380 120, 424 126"/>
+    <path d="M322 126 C 370 126, 380 128, 424 132"/>
+    <path d="M322 218 C 370 218, 380 146, 424 140"/>
+  </g>
+
+  <rect x="428" y="98" width="118" height="62" rx="4" fill="#1a2e4a"/>
+  <text x="487" y="122" text-anchor="middle" fill="#fff" font-size="13">trusted decoder</text>
+  <text x="487" y="140" text-anchor="middle" fill="#c8d6e0" font-size="11.5">add, then compare</text>
+
+  <path d="M548 129 L604 129" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#ar3)" fill="none"/>
+  <rect x="608" y="104" width="84" height="50" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
+  <text x="650" y="126" text-anchor="middle" fill="#1d6a8f" font-size="13">$\mathsf{ReLU}$</text>
+  <text x="650" y="143" text-anchor="middle" fill="#5a6570" font-size="11">next layer</text>
+
+  <text x="350" y="16" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">servers see only masked values &mdash; never $x$, never the activations</text>
+  </g>
+</svg>
+<figcaption>Inference over a distributed model. The servers hold shares of the weights and never see the client's input; the decoder does the addition it always did, plus two comparisons per activation.</figcaption>
+</figure>
+
+<p>
+$\mathsf{ReLU}$ decomposes into two comparison functions, so each activation consumes two DCF
+keys with $(\beta_0, \beta_1) = (1, -r)$ when the input exceeds the mask and $(0,0)$ otherwise.
+The client's extra burden over a conventional FSS decode is two comparisons &mdash; addition
+and comparison are exactly the operations a thin client can be expected to run locally.
+</p>
+
+<h2>The honest caveat</h2>
+
+<div class="box warn">
+<span class="lbl">Function privacy needs a trusted decoder</span>
+<p>
+An adversary who can see every party's partial computations can probe the scheme: $2^{n/2}$
+queries, one per row of the evaluation table, are enough to spot the target row from the
+aggregated values. We patch this by masking each party's partial output with a share of an
+output mask $r_{\mathsf{out}}$ that only the decoder holds, which pushes the adversary back to
+needing all $2^n$ inputs. That is fine for the application here &mdash; the client <em>is</em>
+the decoder and has every reason to be trusted with its own query &mdash; but it is not
+universal. Achieving unconditional function privacy for FSS with non-linear decoding is left
+open.
+</p>
+</div>
+
+<p>
+Two other boundaries worth stating plainly. The construction is public-key: it needs a
+seed-homomorphic PRG, so evaluation is group exponentiation rather than a few AES calls, and
+it inherits a discrete-log (or lattice) assumption that symmetric-key FSS does not need. And
+the comparison the decoder performs is not free of structure &mdash; it is what makes the
+scheme non-linear, which means it does not compose into every protocol that expected plain
+additive reconstruction.
+</p>
+
+<h2>Takeaways</h2>
+
+<ul>
+<li>Seed-homomorphic PRGs let $p$-party FSS carry <b>one seed per row</b> instead of
+$2^{p-1}$, because additive sharing already lives in the exponent.</li>
+<li>Pushing correction words out of the secret key and into a <b>public parameter</b> is safe
+under discrete log, and removes a whole vector from every party's key.</li>
+<li>The comparison function's evaluation table has <b>three</b> row types, not one &mdash;
+which is precisely why linear reconstruction cannot survive the jump from DPF to DCF.</li>
+<li>Letting the decoder <b>compare</b> rather than only add turns an $O(q^{p})$ key blowup
+into the same compact structure as the DPF, at a cost of at most two comparisons.</li>
+<li>Concretely: 32 MB &rarr; 6 MB &rarr; ~4 MB for a five-party DPF, and the first
+$p$-party DCF small enough to put thousands of them in a neural-network layer.</li>
+</ul>
+
+<hr class="sec">
+
+<h2>Reference</h2>
+
+<p>
+Chandan Kumar, Sikhar Patranabis, Debdeep Mukhopadhyay.
+<b>Compact Key Function Secret Sharing with Non-linear Decoder.</b>
+<i>IACR Communications in Cryptology</i>, Vol. 1, Issue 2, July 2024.
+[<a href="https://cic.iacr.org/p/1/2/8" target="_blank" rel="noopener">paper</a>]
+[<a href="https://eprint.iacr.org/2024/1062" target="_blank" rel="noopener">ePrint 2024/1062</a>]
+</p>
+
+<div class="bib">@article{kumar2024compact,
+  title   = {Compact Key Function Secret Sharing with Non-linear Decoder},
+  author  = {Kumar, Chandan and Patranabis, Sikhar and Mukhopadhyay, Debdeep},
+  journal = {IACR Communications in Cryptology},
+  volume  = {1}, number = {2}, year = {2024},
+  doi     = {10.62056/a3c3c3w9p}
+}</div>
+
+<p class="endnote">
+Questions, corrections, or a use case I should know about &mdash;
+<a href="mailto:cchaudhary278@kgpian.iitkgp.ac.in">write to me</a>.
+</p>
+
+<footer>
+  Chandan Kumar &middot; <a href="../../index.html">home</a> &middot; <a href="../index.html">notes</a>
+</footer>
+
+</body>
+</html>

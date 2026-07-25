@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Guards the Guard? Reverse Firewalls That Survive a Hardware Trojan — Chandan Kumar</title>
+<meta name="description" content="A walkthrough of TERRA (ESORICS 2025): why a Trojan inside a reverse firewall breaks exfiltration resistance, how Private Circuits III repairs it, and what it took to build the first practical RF on OP-TEE.">
+<style>
+:root{
+  --navy:#1a2e4a; --teal:#1d6a8f; --rule:#b0bec5; --ink:#23292f;
+  --muted:#5a6570; --wash:#f5f8fa; --wash2:#fbf7ef; --gold:#8a6d1f;
+  --grid:#dde5ea;
+}
+*{box-sizing:border-box}
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:17px; line-height:1.68; color:var(--ink);
+  background:#fff; max-width:760px; margin:0 auto; padding:0 22px 80px;
+}
+a{color:var(--teal); text-decoration:none}
+a:hover{text-decoration:underline}
+nav.top{
+  margin:28px 0 40px; font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+}
+nav.top a{margin-right:15px;color:#666}
+nav.top a:hover{color:var(--teal);text-decoration:none}
+h1{font-size:33px;line-height:1.22;font-weight:600;color:var(--navy);margin:0 0 10px}
+h2{
+  font-size:18px;font-weight:600;font-variant:small-caps;letter-spacing:.06em;
+  color:var(--navy);margin:52px 0 16px;padding-bottom:5px;border-bottom:1px solid var(--rule);
+}
+h3{font-size:16.5px;font-weight:600;color:var(--navy);margin:30px 0 10px}
+p{margin:0 0 15px}
+.meta{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13.5px;color:var(--muted);margin:0 0 6px
+}
+.tags{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--muted);margin-bottom:26px}
+.tags span{
+  display:inline-block;background:var(--wash);border:1px solid var(--grid);
+  border-radius:99px;padding:1px 9px;margin-right:5px;color:#456
+}
+.standfirst{
+  font-size:17.5px;color:#3d4650;border-left:3px solid var(--teal);
+  padding:2px 0 2px 18px;margin:0 0 30px;font-style:italic
+}
+.lede{font-size:18px}
+figure{margin:30px 0}
+figure svg{display:block;width:100%;height:auto}
+figcaption{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13px;color:var(--muted);margin-top:9px;text-align:center;line-height:1.5
+}
+.box{
+  background:var(--wash);border:1px solid var(--grid);border-left:3px solid var(--teal);
+  border-radius:3px;padding:14px 18px;margin:24px 0;font-size:16px
+}
+.box.warn{background:#fdf6f3;border-left-color:#b4552d}
+.box.idea{background:var(--wash2);border-left-color:var(--gold)}
+.box .lbl{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:5px
+}
+.box p:last-child{margin-bottom:0}
+table.data{border-collapse:collapse;width:100%;margin:24px 0;font-size:14.5px}
+table.data th,table.data td{border-bottom:1px solid var(--grid);padding:8px 10px;text-align:left;vertical-align:top}
+table.data th{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)
+}
+table.data tr.hi td{background:var(--wash);font-weight:600;color:var(--navy)}
+table.grid{border-collapse:collapse;margin:20px auto;font-size:14px;font-family:"SF Mono",Menlo,Consolas,monospace}
+table.grid td,table.grid th{border:1px solid var(--grid);padding:7px 13px;text-align:center}
+table.grid th{background:var(--wash);color:var(--muted);font-weight:600}
+td.zero{color:#9aa5ad}
+td.beta{background:#e8f2f8;color:var(--teal);font-weight:700}
+td.mix{background:#fdf3e0}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;background:var(--wash);padding:1px 5px;border-radius:3px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:24px 0}
+.steps li{
+  counter-increment:s;position:relative;padding:0 0 18px 46px;margin:0;
+  border-left:1px solid var(--grid);
+}
+.steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps li::before{
+  content:counter(s);position:absolute;left:-14px;top:-2px;width:27px;height:27px;
+  border-radius:50%;background:var(--navy);color:#fff;font-family:-apple-system,Helvetica,sans-serif;
+  font-size:13px;display:flex;align-items:center;justify-content:center
+}
+.steps li b{color:var(--navy)}
+.readtime{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;
+  color:var(--muted);border:1px solid var(--grid);border-radius:99px;padding:2px 10px
+}
+.pull{
+  font-size:19px;color:var(--navy);font-style:italic;text-align:center;
+  margin:32px 0;padding:0 20px;line-height:1.5
+}
+hr.sec{border:0;border-top:1px solid var(--grid);margin:44px 0}
+.endnote{font-size:15px;color:var(--muted);margin-top:12px}
+.bib{
+  background:#fafbfc;border:1px solid var(--grid);border-radius:3px;padding:12px 14px;
+  font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;color:#40484f;
+  white-space:pre-wrap;overflow-x:auto;line-height:1.5
+}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule);font-size:14px;color:#888}
+mjx-container{overflow-x:auto;overflow-y:hidden}
+@media(max-width:620px){
+  body{font-size:16.5px}
+  h1{font-size:27px}
+  table.grid{font-size:12.5px}
+  table.grid td,table.grid th{padding:5px 8px}
+}
+</style>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$','$']], displayMath: [['$$','$$']]},
+  options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav class="top">
+  <a href="../../index.html">&larr; Chandan Kumar</a>
+  <a href="../index.html">All notes</a>
+</nav>
+
+<h1>Who Guards the Guard? Reverse Firewalls That Survive a Hardware Trojan</h1>
+<p class="meta">Posted 26 September 2025 &middot; <span class="readtime">~25 min read</span></p>
+<p class="tags">
+  <span>reverse firewalls</span><span>subversion</span><span>hardware Trojans</span>
+  <span>private circuits</span><span>OP-TEE</span>
+</p>
+
+<p class="standfirst">
+Based on joint work with <b>Nimish Mishra</b>, <b>Suvradip Chakraborty</b>, <b>Satrajit Ghosh</b>
+and <b>Debdeep Mukhopadhyay</b> &mdash; <i>TERRA: Trojan-Resilient Reverse-Firewall for
+Cryptographic Applications</i>, ESORICS 2025. This post is the intuition; the paper carries the
+definitions, the proofs, and the implementation details.
+</p>
+
+<p class="lede">
+Cryptographic reverse firewalls exist because of an uncomfortable thought experiment: what if
+the machine running your protocol is working against you? Not the network, not the other party
+&mdash; your own hardware, subverted somewhere between the fab and your desk, quietly steering
+its "random" choices so that every message you send leaks a little of your secret key.
+</p>
+
+<p>
+Mironov and Stephens-Davidowitz gave that thought experiment a defence at Eurocrypt 2015. Put
+a small, separate box on the wire. Let it re-randomize everything leaving the machine. If it
+does its job, the subverted host loses its covert channel, and the protocol's guarantees
+survive even though the host does not deserve them.
+</p>
+
+<p>
+Our paper asks the question that follows immediately, and that the literature had left alone:
+<b>where did the firewall itself come from?</b>
+</p>
+
+<h2>Reverse firewalls in one picture</h2>
+
+<figure>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A subverted machine leaks key bits; a reverse firewall re-randomizes the outgoing message and closes the channel.">
+  <defs>
+    <marker id="tr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+    <marker id="trR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#b4552d"/>
+    </marker>
+  </defs>
+  <g font-family="Georgia,serif">
+
+  <text x="18" y="20" font-size="12.5" fill="#b4552d" font-style="italic">without a firewall</text>
+  <rect x="18" y="30" width="120" height="52" rx="4" fill="#fff" stroke="#d9a892"/>
+  <text x="78" y="51" text-anchor="middle" fill="#b4552d" font-size="13">Alice's machine</text>
+  <text x="78" y="69" text-anchor="middle" fill="#b4552d" font-size="11.5">subverted</text>
+  <path d="M138 56 L560 56" stroke="#b4552d" stroke-width="1.3" marker-end="url(#trR)" fill="none" stroke-dasharray="5 3"/>
+  <text x="345" y="46" text-anchor="middle" fill="#b4552d" font-size="12">message + hidden key bits, one at a time</text>
+  <rect x="564" y="30" width="118" height="52" rx="4" fill="#fdf1ec" stroke="#d9a892"/>
+  <text x="623" y="51" text-anchor="middle" fill="#b4552d" font-size="13">adversary</text>
+  <text x="623" y="69" text-anchor="middle" fill="#b4552d" font-size="11.5">just listens</text>
+
+  <line x1="18" y1="104" x2="682" y2="104" stroke="#dde5ea"/>
+
+  <text x="18" y="134" font-size="12.5" fill="#1d6a8f" font-style="italic">with a reverse firewall</text>
+  <rect x="18" y="144" width="120" height="52" rx="4" fill="#fff" stroke="#d9a892"/>
+  <text x="78" y="165" text-anchor="middle" fill="#b4552d" font-size="13">Alice's machine</text>
+  <text x="78" y="183" text-anchor="middle" fill="#b4552d" font-size="11.5">still subverted</text>
+
+  <path d="M138 170 L212 170" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr1)" fill="none"/>
+  <text x="175" y="162" text-anchor="middle" fill="#5a6570" font-size="11">$m$</text>
+
+  <rect x="216" y="140" width="150" height="60" rx="4" fill="#1d6a8f"/>
+  <text x="291" y="163" text-anchor="middle" fill="#fff" font-size="13.5">reverse firewall</text>
+  <text x="291" y="181" text-anchor="middle" fill="#cfe6f2" font-size="11.5">re-randomize</text>
+
+  <path d="M366 170 L440 170" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr1)" fill="none"/>
+  <text x="403" y="162" text-anchor="middle" fill="#5a6570" font-size="11">$m'$</text>
+
+  <rect x="444" y="144" width="126" height="52" rx="4" fill="#eef6fa" stroke="#9ec6da"/>
+  <text x="507" y="165" text-anchor="middle" fill="#1d6a8f" font-size="12.5">distribution</text>
+  <text x="507" y="182" text-anchor="middle" fill="#1d6a8f" font-size="12.5">independent of key</text>
+
+  <path d="M570 170 L616 170" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr1)" fill="none"/>
+  <text x="655" y="167" text-anchor="middle" fill="#5a6570" font-size="12">nothing leaks</text>
+
+  <text x="350" y="230" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">the firewall never learns Alice's secrets &mdash; it only mixes fresh randomness into what leaves the box</text>
+  </g>
+</svg>
+<figcaption>The reverse firewall is deliberately untrusted with secrets. It cannot help Alice compute; it can only destroy the structure a subverted implementation would need in order to signal.</figcaption>
+</figure>
+
+<p>
+The property that matters is <b>exfiltration resistance</b>. Informally: an adversary who
+compromised Alice's machine and watches the wire should not be able to distinguish the
+firewall's output from the output it would get if Alice were running honestly. If that holds,
+the covert channel is gone, whatever the subverted code was trying to do with it.
+</p>
+
+<div class="box">
+<span class="lbl">Concretely, in an oblivious transfer</span>
+<p>
+In the OT protocol from the original RF paper, Bob sends $(g, c, d = g^{y}, h = c^{y}g^{b})$.
+Bob's firewall picks fresh $\alpha, x', y'$ and rewrites this as
+$g' = g^{\alpha}$, $c' = c^{\alpha}g'^{x'}$, $d' = d^{\alpha}g'^{y'}$,
+$h' = h^{\alpha}c^{\alpha y'}d^{\alpha x'}g'^{x'y'}$ &mdash; a fresh, correctly distributed
+tuple encoding the same choice bit. On the way back it de-randomizes,
+$e'_i \leftarrow e_i / u_i^{y'}$, so Bob still decrypts the message he asked for. Alice's
+firewall does the symmetric thing to $(u_i, e_i)$. Every value on the wire has been
+re-drawn; a subverted Bob has nowhere to hide a bit.
+</p>
+</div>
+
+<h2>The question nobody was asking</h2>
+
+<p>
+Every guarantee above is a statement about a <em>specification</em>. It says: if a box computes
+this re-randomization function, exfiltration resistance holds. It says nothing about the box.
+</p>
+
+<p>
+And notice the awkward position the firewall occupies. It must be physically separate from
+Alice's machine, or it would be subverted along with it. It is small, special-purpose hardware.
+It is, in other words, exactly the kind of component you buy from somebody else &mdash;
+designed by one vendor, fabricated by another, integrated by a third. The trust model that
+motivates reverse firewalls in the first place, a supply chain you cannot vouch for, applies
+with full force to the firewall itself.
+</p>
+
+<p class="pull">
+We build the firewall because we do not trust the manufacturer of the host.
+Then we buy the firewall from a manufacturer.
+</p>
+
+<p>
+So: suppose the firewall contains a hardware Trojan. Not a broken firewall &mdash; one that
+computes the right function almost always, and misbehaves on a rare trigger, which is what
+real Trojans are designed to do. What happens to exfiltration resistance?
+</p>
+
+<h2>A Trojan turns the guard into the leak</h2>
+
+<p>
+The failure is not subtle once you see it. The firewall's whole job is to replace the
+adversary-chosen randomness with randomness the adversary cannot predict. A Trojan sitting in
+the re-randomization path can simply decline to do that &mdash; reuse a nonce, bias a value,
+pass a message through untouched on the trigger condition. The output still looks like a valid
+protocol message. It is only the <em>distribution</em> that has been quietly restored to the
+one the subverted host wanted.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A Trojan inside the reverse firewall suppresses re-randomization on a trigger, restoring the covert channel.">
+  <defs>
+    <marker id="tr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+    <marker id="tr4r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#b4552d"/>
+    </marker>
+  </defs>
+  <g font-family="Georgia,serif">
+
+  <rect x="14" y="82" width="120" height="56" rx="4" fill="#fff" stroke="#d9a892"/>
+  <text x="74" y="105" text-anchor="middle" fill="#b4552d" font-size="13">Alice's machine</text>
+  <text x="74" y="123" text-anchor="middle" fill="#b4552d" font-size="11.5">subverted</text>
+
+  <path d="M134 110 L204 110" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr4)" fill="none"/>
+
+  <rect x="208" y="66" width="188" height="88" rx="4" fill="#fff" stroke="#1d6a8f" stroke-width="1.4"/>
+  <text x="302" y="88" text-anchor="middle" fill="#1d6a8f" font-size="13.5">reverse firewall</text>
+  <rect x="232" y="100" width="140" height="40" rx="3" fill="#fdf1ec" stroke="#b4552d" stroke-dasharray="4 3"/>
+  <text x="302" y="118" text-anchor="middle" fill="#b4552d" font-size="12.5">Trojan</text>
+  <text x="302" y="133" text-anchor="middle" fill="#b4552d" font-size="11">skips re-randomization</text>
+  <text x="302" y="172" text-anchor="middle" fill="#5a6570" font-size="11.5" font-style="italic">rare trigger &mdash; correct on every test input</text>
+
+  <path d="M396 110 L468 110" stroke="#b4552d" stroke-width="1.3" marker-end="url(#tr4r)" fill="none" stroke-dasharray="5 3"/>
+
+  <rect x="472" y="82" width="128" height="56" rx="4" fill="#fdf1ec" stroke="#d9a892"/>
+  <text x="536" y="105" text-anchor="middle" fill="#b4552d" font-size="13">covert channel</text>
+  <text x="536" y="123" text-anchor="middle" fill="#b4552d" font-size="11.5">restored</text>
+
+  <path d="M600 110 L648 110" stroke="#b4552d" stroke-width="1.3" marker-end="url(#tr4r)" fill="none"/>
+  <text x="668" y="106" text-anchor="middle" fill="#b4552d" font-size="12">key</text>
+  <text x="668" y="121" text-anchor="middle" fill="#b4552d" font-size="12">bits</text>
+
+  <text x="350" y="204" text-anchor="middle" fill="#5a6570" font-size="12" font-style="italic">exfiltration resistance was proved for the specification, not for this circuit</text>
+  </g>
+</svg>
+<figcaption>The Trojan does not need to break the protocol. It only needs to stop protecting it, occasionally, in a way that testing will not catch.</figcaption>
+</figure>
+
+<p>
+This is worse than an ordinary implementation bug for two reasons. First, the party being
+protected has no way to detect it: Alice's machine is already compromised, and the transcript
+looks fine to everyone. Second, the firewall was <em>designed</em> to be untrusted, so nobody
+put integrity machinery inside it. The security argument silently assumed a component that
+behaves according to spec &mdash; in a setting whose entire premise is that components do not.
+</p>
+
+<div class="box warn">
+<span class="lbl">The claim, stated carefully</span>
+<p>
+A Trojan-affected reverse firewall implementation can break exfiltration resistance, and with
+it the RF's security guarantees collapse entirely. Nothing in the prior definitions rules this
+out, because those definitions quantify over protocol transcripts, not over circuits.
+</p>
+</div>
+
+<h2>Trojan-resilient reverse firewalls</h2>
+
+<p>
+The repair starts with the definition. We extend the standard RF notion with an additional
+<b>Trojan resilience</b> property, giving <b>Tr-RF</b>, and correspondingly strengthen the two
+guarantees you care about into their robust forms:
+</p>
+
+<ul>
+<li><b>Robust exfiltration resistance</b> &mdash; exfiltration resistance holds even when the
+firewall's circuit contains Trojans, up to the tolerated threshold.</li>
+<li><b>Robust security preservation</b> &mdash; the underlying protocol's security is preserved
+under the same condition.</li>
+</ul>
+
+<p>
+Defining the property is the easy half. The hard half is that you cannot inspect your way to
+it: a Trojan with a rare trigger passes every functional test, and imaging every gate of every
+chip you buy is not a deployment strategy. What you need is a construction that keeps working
+<em>even if some of its components are malicious</em>, without knowing which.
+</p>
+
+<h2>Borrowing a hammer: Private Circuits III</h2>
+
+<p>
+Dziembowski, Faust and Standaert (CCS 2016) built exactly that hammer, for a different nail.
+Their Private Circuits III compiler takes a circuit and produces a Trojan-resilient version
+by combining three ideas: split the computation across many small components so that no single
+one sees anything meaningful, replicate each component and take a majority vote, and use
+<b>testing amplification</b> &mdash; randomly test components often enough that a Trojan which
+misbehaves often enough to matter is caught, while one that misbehaves rarely enough to escape
+testing is too rare to help the adversary.
+</p>
+
+<p>
+The architecture that comes out is a <b>master circuit</b> surrounded by replicated
+<b>mini-circuits</b>. The master handles secret-sharing, dispatch, and reconstruction. The
+mini-circuits do the arithmetic on shares, in triplicate, under a vote.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Master circuit secret-shares inputs to replicated mini-circuits, which compute on shares under majority voting and random testing.">
+  <defs>
+    <marker id="tr5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3b0"/>
+    </marker>
+  </defs>
+  <g font-family="Georgia,serif">
+
+  <rect x="20" y="118" width="128" height="66" rx="4" fill="#1a2e4a"/>
+  <text x="84" y="143" text-anchor="middle" fill="#fff" font-size="13.5">master circuit</text>
+  <text x="84" y="161" text-anchor="middle" fill="#c8d6e0" font-size="11.5">shares &amp; reconstructs</text>
+
+  <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#tr5)">
+    <path d="M148 136 C 196 136, 200 62, 248 62"/>
+    <path d="M148 151 C 196 151, 200 151, 248 151"/>
+    <path d="M148 166 C 196 166, 200 240, 248 240"/>
+  </g>
+  <text x="198" y="108" text-anchor="middle" fill="#5a6570" font-size="11" font-style="italic">$[g]_p, [c]_p, \ldots$</text>
+
+  <rect x="252" y="38" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="327" y="58" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^0$</text>
+  <text x="327" y="75" text-anchor="middle" fill="#5a6570" font-size="11.5">$\textsc{Exp}$, $\textsc{Mult}$, $\textsc{Inv}$</text>
+
+  <rect x="252" y="127" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="327" y="147" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^1$</text>
+  <text x="327" y="164" text-anchor="middle" fill="#5a6570" font-size="11.5">same computation</text>
+
+  <rect x="252" y="216" width="150" height="48" rx="4" fill="#fff" stroke="#b0bec5"/>
+  <text x="327" y="236" text-anchor="middle" fill="#1a2e4a" font-size="13">mini-circuit $\Gamma^2$</text>
+  <text x="327" y="253" text-anchor="middle" fill="#5a6570" font-size="11.5">same computation</text>
+
+  <rect x="266" y="196" width="42" height="14" rx="7" fill="#fdf1ec" stroke="#d9a892"/>
+  <text x="287" y="206" text-anchor="middle" fill="#b4552d" font-size="10">Trojan</text>
+
+  <g stroke="#8fa3b0" stroke-width="1.2" fill="none" marker-end="url(#tr5)">
+    <path d="M402 62 C 448 62, 452 138, 498 146"/>
+    <path d="M402 151 C 448 151, 452 150, 498 152"/>
+    <path d="M402 240 C 448 240, 452 165, 498 158"/>
+  </g>
+
+  <rect x="502" y="124" width="118" height="56" rx="4" fill="#1d6a8f"/>
+  <text x="561" y="147" text-anchor="middle" fill="#fff" font-size="13">majority vote</text>
+  <text x="561" y="164" text-anchor="middle" fill="#cfe6f2" font-size="11.5">outvoted, discarded</text>
+
+  <path d="M620 152 L664 152" stroke="#8fa3b0" stroke-width="1.2" marker-end="url(#tr5)" fill="none"/>
+  <text x="676" y="149" text-anchor="middle" fill="#1a2e4a" font-size="12">$g'$</text>
+
+  <rect x="252" y="278" width="368" height="18" rx="9" fill="#fbf7ef" stroke="#d8c79a"/>
+  <text x="436" y="291" text-anchor="middle" fill="#8a6d1f" font-size="11.5">random testing, repeated &mdash; a Trojan that fires often enough to matter gets caught</text>
+  </g>
+</svg>
+<figcaption>Private Circuits III in one diagram. No mini-circuit ever holds a value in the clear, a corrupted one is outvoted, and testing amplification bounds how rarely a surviving Trojan can act.</figcaption>
+</figure>
+
+<h3>Rebuilding Bob's firewall out of shares</h3>
+
+<p>
+Applying this to the OT firewall is where the work is. Every operation the firewall performed
+in the clear must become an operation on secret shares. Take the re-randomization of
+$(g, c, d, h)$:
+</p>
+
+<ol class="steps">
+<li><b>Master shares the inputs.</b> It samples $\alpha \in \mathbb{Z}_p^{*}$ and
+$(x', y') \leftarrow \mathbb{Z}_p^2$, secret-shares $g, c, d, h$ as $[g]_p, [c]_p, [d]_p,
+[h]_p$ among the mini-circuits, and distributes $\alpha, x', y'$.</li>
+
+<li><b>Mini-circuits exponentiate.</b> Each invokes the public exponentiation protocol
+&mdash; $\textsc{Exp}([g]_p, \alpha)$ and friends &mdash; to get $[g^{\alpha}]_p,
+[c^{\alpha}]_p, [d^{\alpha}]_p, [h^{\alpha}]_p$, then again for the cross terms
+$[g^{\alpha x'}]_p, [g^{\alpha y'}]_p, [c^{\alpha y'}]_p, [d^{\alpha x'}]_p,
+[g^{\alpha x' y'}]_p$.</li>
+
+<li><b>Mini-circuits multiply.</b> Secure multiplication combines those into shares of $c'$,
+$d'$ and $h'$ &mdash; $h'$ needing one further $\textsc{Mult}$ over the results of the previous
+two.</li>
+
+<li><b>Master reconstructs.</b> $g' = \textsc{Reconstruct}([g^{\alpha}]_p)$, and likewise for
+$c', d', h'$ &mdash; the same four values the plain firewall would have produced, now computed
+by a circuit no single component of which ever saw them.</li>
+</ol>
+
+<p>
+The return path works the same way. To produce $e'_i = e_i / u_i^{y'}$, the master shares
+$e_0, e_1, u_0, u_1$; the mini-circuits run $\textsc{Exp}$ to get $[u_i^{y'}]_p$, a private
+inverse protocol $\textsc{Inv}$ to get $[u_i^{-y'}]_p$, and $\textsc{Mult}$ to reach
+$[e'_i]_p$; the master reconstructs. Alice's firewall is rebuilt along the same lines,
+including the $g = 1_{\mathbb{G}}$ abort check, which stays in the master.
+</p>
+
+<div class="box idea">
+<span class="lbl">Why this restores the guarantee</span>
+<p>
+A Trojan in a mini-circuit is now in a bad position. It sees only shares, so it cannot tell
+which value it is corrupting or what the protocol state is; it is replicated, so any deviation
+is outvoted; and testing amplification bounds how often it can act without being detected. The
+paper proves the two robust properties formally &mdash; robust exfiltration resistance and
+robust security preservation for both the coin-tossing and OT instantiations, via
+simulation-based arguments that reduce to the underlying RF's guarantees.
+</p>
+</div>
+
+<h2>From paper to Raspberry Pi</h2>
+
+<p>
+Private Circuits III comes with assumptions that are easy to write down and awkward to obtain:
+components that are genuinely isolated, a master circuit that can be trusted to share and
+reconstruct, and a testing procedure that a Trojan cannot detect and evade. A construction that
+needs those assumptions is only as real as your ability to supply them.
+</p>
+
+<p>
+So we built it. The Tr-RF for coin tossing and for oblivious transfer is implemented on the
+Open Portable Trusted Execution Environment (OP-TEE) over ARM TrustZone, on Raspberry Pi 3 and
+4. TrustZone's secure/normal world split gives the isolation between master and mini-circuits;
+trusted applications give the mini-circuits their separation from one another; remote
+attestation &mdash; hardware measurements plus application state, signed by the OEM &mdash;
+gives a handle on whether the code that is running is the code that was meant to run.
+</p>
+
+<figure>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Implementation stack: Raspberry Pi hardware, ARM TrustZone, OP-TEE, with master circuit and mini-circuits as trusted applications.">
+  <g font-family="Georgia,serif">
+  <rect x="60" y="188" width="580" height="44" rx="4" fill="#eef2f5" stroke="#b0bec5"/>
+  <text x="350" y="215" text-anchor="middle" fill="#1a2e4a" font-size="13">Raspberry Pi 3 / 4 &nbsp;&middot;&nbsp; ARM Cortex-A</text>
+
+  <rect x="60" y="136" width="580" height="44" rx="4" fill="#e4ecf1" stroke="#b0bec5"/>
+  <text x="350" y="163" text-anchor="middle" fill="#1a2e4a" font-size="13">ARM TrustZone &nbsp;&middot;&nbsp; secure world / normal world split</text>
+
+  <rect x="60" y="84" width="580" height="44" rx="4" fill="#dae5ec" stroke="#b0bec5"/>
+  <text x="350" y="111" text-anchor="middle" fill="#1a2e4a" font-size="13">OP-TEE &nbsp;&middot;&nbsp; trusted OS, isolated trusted applications</text>
+
+  <rect x="60" y="26" width="176" height="50" rx="4" fill="#1a2e4a"/>
+  <text x="148" y="47" text-anchor="middle" fill="#fff" font-size="13">master circuit</text>
+  <text x="148" y="64" text-anchor="middle" fill="#c8d6e0" font-size="11.5">share / reconstruct</text>
+
+  <rect x="248" y="26" width="122" height="50" rx="4" fill="#1d6a8f"/>
+  <text x="309" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^0$</text>
+  <text x="309" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
+
+  <rect x="382" y="26" width="122" height="50" rx="4" fill="#1d6a8f"/>
+  <text x="443" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^1$</text>
+  <text x="443" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
+
+  <rect x="516" y="26" width="124" height="50" rx="4" fill="#1d6a8f"/>
+  <text x="578" y="47" text-anchor="middle" fill="#fff" font-size="12.5">$\Gamma^2$</text>
+  <text x="578" y="64" text-anchor="middle" fill="#cfe6f2" font-size="11">trusted app</text>
+
+  <text x="350" y="16" text-anchor="middle" fill="#5a6570" font-size="11.5" font-style="italic">the abstract components of Private Circuits III, given somewhere real to live</text>
+  </g>
+</svg>
+<figcaption>Mapping theory onto silicon. To our knowledge this is the first practical implementation of a reverse firewall for any cryptographic functionality.</figcaption>
+</figure>
+
+<p>
+That last sentence is worth dwelling on. Reverse firewalls had been studied for a decade
+&mdash; for message transmission, for actively secure MPC, for OT extension, for PAKE &mdash;
+and the constructions were sound. But nobody had built one. Which is precisely how a gap like
+the Trojan question stays invisible: it is not visible from inside a specification, only from
+the point where you have to ask a manufacturer for a box.
+</p>
+
+<h2>What this changes</h2>
+
+<ul>
+<li>An untrusted-by-design component still has to be <b>manufactured by somebody</b>. If your
+threat model admits subverted hardware, it admits a subverted firewall, and the original
+guarantees do not survive that.</li>
+<li>Exfiltration resistance is a property of a <b>circuit</b>, not only of a transcript. Tr-RF
+makes that explicit with robust exfiltration resistance and robust security preservation.</li>
+<li>Private Circuits III turns out to be the right tool: share, replicate, vote, test. The
+translation cost is real &mdash; every clear-text operation becomes a protocol over shares
+&mdash; but it is a compilation, not a redesign.</li>
+<li>OP-TEE and TrustZone can supply the isolation assumptions that PC-III needs, which is what
+takes the construction from "provable" to "running on a Pi".</li>
+<li>More generally: protocol specifications should be evaluated in
+<b>implementation-specific</b> contexts. Some security properties simply cannot be stated,
+let alone checked, at the level of abstraction where we usually prove them.</li>
+</ul>
+
+<p>
+The natural next question is what else leaks once you look at the physical layer rather than
+the transcript &mdash; which is where our follow-up work on structural leakages in PC-III
+goes, mounting a correlation power attack on TrustZone's shared power rails against a live
+deployment of exactly this construction. But that is another post.
+</p>
+
+<hr class="sec">
+
+<h2>Reference</h2>
+
+<p>
+Chandan Kumar, Nimish Mishra, Suvradip Chakraborty, Satrajit Ghosh, Debdeep Mukhopadhyay.
+<b>TERRA: Trojan-Resilient Reverse-Firewall for Cryptographic Applications.</b>
+<i>ESORICS 2025</i>, Toulouse, France. LNCS vol. 16054, pp. 226&ndash;246.
+[<a href="https://link.springer.com/chapter/10.1007/978-3-032-07891-9_12" target="_blank" rel="noopener">paper</a>]
+[<a href="https://eprint.iacr.org/2025/761" target="_blank" rel="noopener">ePrint 2025/761</a>]
+</p>
+
+<div class="bib">@inproceedings{kumar2025terra,
+  title     = {{TERRA}: Trojan-Resilient Reverse-Firewall for Cryptographic Applications},
+  author    = {Kumar, Chandan and Mishra, Nimish and Chakraborty, Suvradip
+               and Ghosh, Satrajit and Mukhopadhyay, Debdeep},
+  booktitle = {Computer Security -- ESORICS 2025},
+  series    = {Lecture Notes in Computer Science}, volume = {16054},
+  pages     = {226--246}, publisher = {Springer, Cham}, year = {2025},
+  doi       = {10.1007/978-3-032-07891-9_12}
+}</div>
+
+<p class="endnote">
+Background reading: Mironov and Stephens-Davidowitz,
+<i>Cryptographic Reverse Firewalls</i> (Eurocrypt 2015), for the original notion; and
+Dziembowski, Faust and Standaert, <i>Private Circuits III</i> (CCS 2016), for the
+Trojan-resilience machinery.
+</p>
+
+<footer>
+  Chandan Kumar &middot; <a href="../../index.html">home</a> &middot; <a href="../index.html">notes</a>
+</footer>
+
+</body>
+</html>

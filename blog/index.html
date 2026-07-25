@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes — Chandan Kumar</title>
+<meta name="description" content="Long-form notes on my papers: function secret sharing, encrypted search, reverse firewalls, and implementation security.">
+<style>
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.6;color:#23292f;background:#fff;
+  max-width:760px;margin:0 auto;padding:0 22px 70px;
+}
+a{color:#1d6a8f;text-decoration:none}
+a:hover{text-decoration:underline}
+nav.top{
+  margin:28px 0 42px;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:13px;letter-spacing:.05em;text-transform:uppercase;
+}
+nav.top a{margin-right:15px;color:#666}
+nav.top a:hover{color:#1d6a8f;text-decoration:none}
+h1{font-size:30px;font-weight:600;color:#1a2e4a;margin:0 0 8px}
+.intro{color:#4a545e;margin:0 0 40px;max-width:620px}
+article{padding:22px 0;border-top:1px solid #dde5ea}
+article:last-of-type{border-bottom:1px solid #dde5ea}
+.date{
+  font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:12.5px;color:#7a848c;letter-spacing:.03em;margin-bottom:5px
+}
+h2{font-size:19px;font-weight:600;margin:0 0 7px;line-height:1.35}
+h2 a{color:#1a2e4a}
+h2 a:hover{color:#1d6a8f;text-decoration:none}
+.blurb{color:#4a545e;font-size:16px;margin:0 0 9px}
+.foot{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;color:#7a848c}
+.foot span{
+  display:inline-block;background:#f5f8fa;border:1px solid #dde5ea;border-radius:99px;
+  padding:1px 9px;margin-right:5px;color:#456
+}
+.venue{font-style:italic;color:#5a6570;font-size:14.5px}
+footer{margin-top:50px;padding-top:16px;border-top:1px solid #b0bec5;font-size:14px;color:#888}
+@media(max-width:600px){h1{font-size:26px}}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a href="../index.html">&larr; Chandan Kumar</a>
+</nav>
+
+<h1>Notes</h1>
+<p class="intro">
+Longer write-ups of my own papers &mdash; the version I would give at a whiteboard, with the
+motivation restored and the proofs left in the paper. Roughly half an hour each.
+</p>
+
+<article>
+  <p class="date">26 September 2025</p>
+  <h2><a href="terra/index.html">Who Guards the Guard? Reverse Firewalls That Survive a Hardware Trojan</a></h2>
+  <p class="venue">TERRA &middot; ESORICS 2025</p>
+  <p class="blurb">
+    Reverse firewalls defend you against your own subverted machine. But the firewall is
+    hardware too, bought from somebody. A Trojan inside it quietly restores the covert
+    channel the firewall was built to close &mdash; so we redefine the guarantee, rebuild the
+    firewall out of secret-shared components, and put the result on a Raspberry Pi.
+  </p>
+  <p class="foot"><span>reverse firewalls</span><span>hardware Trojans</span><span>OP-TEE</span> &middot; ~25 min</p>
+</article>
+
+<article>
+  <p class="date">12 August 2024</p>
+  <h2><a href="compact-key-fss/index.html">Shrinking the Keys: Compact <em>p</em>-Party FSS with a Non-linear Decoder</a></h2>
+  <p class="venue">IACR Communications in Cryptology, Vol. 1(2)</p>
+  <p class="blurb">
+    Function secret sharing is beautifully cheap for two servers and painfully expensive for
+    more. By moving to seed-homomorphic PRGs and letting the decoder compare rather than only
+    add, the keys shrink from 32 MB to about 4 MB &mdash; and the comparison function becomes
+    small enough to put thousands of them in a neural-network layer.
+  </p>
+  <p class="foot"><span>FSS</span><span>DPF / DCF</span><span>PPML</span> &middot; ~25 min</p>
+</article>
+
+<footer>
+  Chandan Kumar &middot; <a href="../index.html">home</a>
+</footer>
+
+</body>
+</html>
